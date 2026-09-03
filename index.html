@@ -159,6 +159,22 @@ var SEED_STRATEGIES = [
         id: '2.1', name: 'การบริหารทรัพยากรบุคคลอย่างมีประสิทธิผล (Effective Human Resource Management)',
         desc: 'บริหารจัดการบุคลากรให้เหมาะสม มีประสิทธิภาพและสอดคล้องกับทิศทางองค์กร',
         groups: [
+          { id: '2.1.1', name: 'การบริหารจัดการบุคลากรให้เหมาะสม (HRM)', desc: 'วิเคราะห์และจัดอัตรากำลังตามภาระงาน จัดคนให้ตรงกับตำแหน่ง ควบคุมต้นทุนบุคลากร และดูแล Engagement/Well-being ของพนักงาน', projects: [
+            { name: 'Smart Workforce Optimization & Smart Shift Management', desc: 'วิเคราะห์และจัดอัตรากำลังตามภาระงาน พยากรณ์ความต้องการของบุคลากรจากจำนวนผู้ป่วย แนวโน้มบริการ และจัดตารางเวรตามปริมาณผู้รับบริการ' },
+            { name: 'Right Person Right Job', desc: 'จัดบุคลากรให้ตรงกับตำแหน่งและสมรรถนะ' },
+            { name: 'HR Cost & Productivity Management', desc: 'ควบคุมต้นทุนและเพิ่ม Productivity โดยวิเคราะห์ข้อมูลอัตรากำลัง/ผู้รับบริการ/รายได้จากหน่วยงาน' },
+            { name: 'Workforce Flexibility & Multi-Skill', desc: 'พัฒนาคนให้สามารถทำงานทดแทนกันได้ (Multifunction) THAMC มีนโยบายพนักงาน Multi-Function' },
+            { name: 'Critical Workforce & Succession Plan', desc: 'เตรียมบุคลากรทดแทนตำแหน่งสำคัญ เช่น ตำแหน่งที่จะเกษียณ ตำแหน่งที่มีการโยกย้าย/เสี่ยงลาออก' },
+            { name: 'HR Analytics Dashboard', desc: 'ใช้ข้อมูล HR เช่น อัตรากำลัง อัตราการลาออก ในการบริหารจัดการกำลังคน' },
+            { name: 'Employee Voice Program', desc: 'เปิดช่องทางให้บุคลากรเสนอปัญหาและข้อเสนอแนะ ร่วมกับโครงการเสียงบุคลากรสร้างการเปลี่ยนแปลง (THAMC Employee Voice & Action) โดยรวบรวมข้อมูลที่ได้รับไปปรับใช้ดำเนินการจริง' },
+            { name: 'Work Life Balance & Well Balance', desc: 'ปรับรูปแบบตารางเวรและสวัสดิการ เพื่อเพิ่มความสมดุลในชีวิต สำรวจความสุขในการทำงาน' },
+            { name: 'Digital & Data-Driven HR', desc: 'รวมข้อมูลบุคลากร การลา การอบรม Competency อยู่ในโปรแกรม THAMC HR' },
+            { name: 'Stay Interview Program', desc: 'สัมภาษณ์บุคลากรที่ยังอยู่ เพื่อค้นหาสิ่งที่ทำให้อยากอยู่ และปัจจัยที่อาจทำให้ลาออก รวมถึง Engagement ร่วมกับองค์กร' },
+            { name: 'Career Pathway Program', desc: 'สร้างเส้นทางความก้าวหน้าในสายอาชีพอย่างชัดเจน' },
+            { name: 'Employee Referral Program', desc: 'ให้บุคลากรปัจจุบันช่วยแนะนำผู้สมัครที่มีคุณภาพเข้ามาทำงาน' },
+            { name: 'การจ้างงาน Recruitment', desc: 'มีความรวดเร็ว Fast Tracking ในการ Recruitment รับบุคลากรที่ตรงตามสมรรถนะและค่านิยมของ THAMC' },
+            { name: 'ช่องทางให้คำปรึกษากับพนักงาน', desc: 'กรณีที่พนักงานเผชิญกับปัญหา เปิดช่องทางที่ HR รับฟังปัญหาของพนักงาน รับฟังโดยไม่ตัดสิน' }
+          ]},
           { id: '2.1.2', name: 'HRD / Learning Needs', desc: 'บริหารจัดการบุคลากรให้เหมาะสม มีประสิทธิภาพและสอดคล้องกับทิศทางองค์กร ด้านประสิทธิภาพต้นทุน', projects: [
             { name: 'New Staff Fast Track: 90 Days', desc: 'พัฒนาพนักงานใหม่ให้สามารถปรับตัวและเรียนรู้งานได้อย่างรวดเร็วภายในช่วง 90 วันแรก พร้อมสร้างความเข้าใจในบทบาท หน้าที่ และวัฒนธรรมองค์กร' },
             { name: 'Learning Academy / THMC Learning Center', desc: 'จัดตั้งศูนย์กลางการเรียนรู้และพัฒนาศักยภาพบุคลากรอย่างต่อเนื่อง เพื่อสร้างระบบการเรียนรู้ที่ตอบโจทย์ทั้งทักษะในปัจจุบันและการเตรียมความพร้อมสำหรับอนาคต' },
@@ -168,6 +184,24 @@ var SEED_STRATEGIES = [
             { name: 'Future Leader Development Program', desc: 'พัฒนาผู้นำรุ่นใหม่ให้มีความพร้อมทั้งด้าน Leadership และความสามารถในการขับเคลื่อนองค์กร เพื่อสร้าง Leadership Pipeline และเตรียมผู้นำสำหรับอนาคต' },
             { name: 'Smart Hospital Digital Skill Upgrade', desc: 'ยกระดับทักษะด้าน Digital ของบุคลากร เพื่อรองรับการพัฒนา Smart Hospital และการนำเทคโนโลยีมาใช้ในการทำงาน' },
             { name: 'Happy Smart Workplace Design', desc: 'ออกแบบสภาพแวดล้อมและรูปแบบการทำงานให้เอื้อต่อความสุข ประสิทธิภาพ และความร่วมมือของบุคลากร โดยผสานแนวคิด Smart Workplace' }
+          ]},
+          { id: '2.1.3', name: 'Personnel Engagement Project', desc: 'สร้างการยอมรับ พื้นที่รับฟัง และความผูกพันของบุคลากรต่อองค์กร ผ่านกิจกรรมสื่อสารและการดูแลสุขภาวะอย่างต่อเนื่อง', projects: [
+            { name: 'THAMC Recognition & Appreciation Program', desc: 'สร้างระบบการยกย่องบุคลากรที่มีผลงานโดดเด่นและพฤติกรรมที่สะท้อนค่านิยมองค์กร เพื่อให้เกิดความภาคภูมิใจและแรงบันดาลใจในการทำงาน' },
+            { name: 'THAMC Employee Voice & Action', desc: 'เปิดโอกาสให้บุคลากรทุกระดับเสนอความคิดเห็น ปัญหา และแนวทางปรับปรุงการทำงาน พร้อมนำข้อเสนอที่เป็นไปได้ไปดำเนินการจริง' },
+            { name: 'THAMC Town Hall ผู้บริหารพบปะบุคลากร', desc: 'เวทีพบปะสื่อสารโดยตรงระหว่างผู้บริหารและบุคลากร เพื่อรับฟังความคิดเห็น ชี้แจงนโยบาย และสร้างความเข้าใจร่วมกันในการขับเคลื่อนองค์กร' },
+            { name: 'THAMC Proud Team (สร้างทีมแห่งความภาคภูมิใจ)', desc: 'สร้างความภาคภูมิใจในหน่วยงานและองค์กร ผ่านการนำเสนอผลงานที่ทีมทำได้จริง โดยเน้น "ผลงานของเรา – ผลลัพธ์ของเรา – ผู้ป่วยได้รับประโยชน์อย่างไร"' },
+            { name: 'Happy & Smart Workplace Design (ออกแบบงานให้มีความสุขและมีประสิทธิภาพ)', desc: 'ปรับปรุงกระบวนการทำงานที่สร้างภาระโดยไม่จำเป็น เพื่อให้บุคลากรทำงานได้ง่ายขึ้น มีเวลาสำหรับผู้ป่วยมากขึ้น และเกิดประสิทธิภาพสูงสุด' },
+            { name: 'THAMC Growth Path (เส้นทางการเติบโตและพัฒนาศักยภาพบุคลากร)', desc: 'สร้างความชัดเจนเกี่ยวกับโอกาสในการพัฒนาและความก้าวหน้าในสายงาน เพื่อให้บุคลากรมองเห็นอนาคตของตนเองภายในองค์กร' },
+            { name: 'THAMC Well-being Check-in (ระบบดูแลสุขภาวะและความสุขของบุคลากร)', desc: 'สร้างระบบติดตามระดับความสุข ความผูกพัน และปัจจัยที่ทำให้บุคลากรมีความสุข/ไม่มีความสุขอย่างต่อเนื่อง เพื่อให้ HR และผู้บริหารสามารถแก้ปัญหาได้ตรงจุด' }
+          ]},
+          { id: '2.1.4', name: 'การบริหารคนเก่งและแผนสืบทอดตำแหน่ง (Talent Management & Succession Plan)', desc: 'ระบุ ประเมิน และพัฒนา Talent อย่างเป็นระบบ พร้อมวางแผนสืบทอดตำแหน่งสำคัญเพื่อลดความเสี่ยงขององค์กร', projects: [
+            { name: 'THAMC Talent Identification & Pipeline', desc: 'กำหนดเกณฑ์คัดเลือก Talent โดยประเมิน Performance × Potential ด้วย 9-Box Grid จัดทำ Talent Profile และวิเคราะห์ Competency Gap เพื่อระบุ High Performer / High Potential อย่างเป็นระบบ' },
+            { name: 'Critical Position Mapping', desc: 'สำรวจและระบุตำแหน่งสำคัญของสายแพทย์ พยาบาล วิชาชีพทางการแพทย์ และสายบริหาร/สนับสนุน โดยพิจารณาผลกระทบต่อบริการ ความเชี่ยวชาญ และความยากในการทดแทน' },
+            { name: 'THAMC Talent Review', desc: 'ทบทวน Talent อย่างน้อยปีละ 1 ครั้ง โดยผู้บริหารและหัวหน้าหน่วยงานร่วมประเมินผลงาน ศักยภาพ ความพร้อม และแผนพัฒนา เพื่อให้ Talent Pool เป็นปัจจุบัน' },
+            { name: 'THAMC Future Leader & Successor Academy', desc: 'พัฒนาผู้นำรุ่นใหม่ด้าน Leadership, Business Acumen, Financial Management, Digital Health, Quality & Patient Safety และ Service Excellence' },
+            { name: 'Individual Development Plan (IDP)', desc: 'จัดทำแผนพัฒนารายบุคคลจาก Competency Gap ผ่าน Training, Coaching, Mentoring, Job Rotation และ Strategic Project Assignment' },
+            { name: 'Successor Readiness Program', desc: 'กำหนดผู้สืบทอด Critical Position และประเมินความพร้อมเป็น Ready Now / Ready in 1–2 Years / Ready in 3–5 Years เพื่อเห็นความเสี่ยงและเร่งพัฒนาได้ตรงจุด' },
+            { name: 'Talent Recognition & Reward', desc: 'สร้างระบบยกย่องและ Recognition รวมถึงเปิดโอกาสให้ Talent เข้าร่วมโครงการยุทธศาสตร์ เพื่อสร้างแรงจูงใจและความภาคภูมิใจ' }
           ]}
         ]
       }
@@ -206,26 +240,54 @@ function fyQuarters(fys){
 
 /* ---------- state ---------- */
 var STORE_KEY = 'thamc_strategy_os_v1';
+var SEED_VERSION = 2; // bump whenever SEED_STRATEGIES gains/changes content, to merge into existing saved data
 var D; // persisted data
-var UI = { tab: 'dashboard', editMode: false, entryView: 'table', entryQuarter: null, openStrat: {}, openGroup: {}, entryOpenGroup: {}, modalProjectId: null, modalSaved: '', importMsg: '', connMsg: '' };
+var UI = { tab: 'dashboard', editMode: false, entryView: 'table', entryQuarter: null, openStrat: {}, openGroup: {}, entryOpenGroup: {}, modalProjectId: null, modalSaved: '', importMsg: '', connMsg: '', printFilter: null, printDialogOpen: false, printSelection: {} };
+
+// adds any strategy/sub/group/project present in the current SEED but missing from saved data (matched by code/id),
+// without touching anything the user already edited or entered results for.
+function mergeSeedUpdates(data){
+  var seed = seedStrategies();
+  seed.forEach(function(seedStrat){
+    var strat = data.strategies.filter(function(s){ return s.code===seedStrat.code; })[0];
+    if (!strat) { data.strategies.push(seedStrat); return; }
+    seedStrat.subs.forEach(function(seedSub){
+      var sub = strat.subs.filter(function(u){ return u.id===seedSub.id; })[0];
+      if (!sub) { strat.subs.push(seedSub); return; }
+      seedSub.groups.forEach(function(seedGroup){
+        var group = sub.groups.filter(function(g){ return g.id===seedGroup.id; })[0];
+        if (!group) { sub.groups.push(seedGroup); return; }
+        var existingNames = group.projects.map(function(p){ return p.name; });
+        seedGroup.projects.forEach(function(seedProj){
+          if (existingNames.indexOf(seedProj.name)===-1) group.projects.push(seedProj);
+        });
+      });
+    });
+  });
+  data.seedVersion = SEED_VERSION;
+  return data;
+}
 
 function loadData(){
+  var data;
   try {
     var raw = localStorage.getItem(STORE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) data = JSON.parse(raw);
   } catch(e){}
-  return { strategies: seedStrategies(), fiscalYears: ['2568','2569'], currentQuarter: '2569 Q4', entries: {}, details: {}, sheetUrl: '' };
+  if (!data) return { strategies: seedStrategies(), fiscalYears: ['2568','2569'], currentQuarter: '2569 Q4', entries: {}, details: {}, sheetUrl: '', seedVersion: SEED_VERSION };
+  if (data.seedVersion !== SEED_VERSION) data = mergeSeedUpdates(data);
+  return data;
 }
 function saveData(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(D)); } catch(e){} }
 
 D = loadData();
+saveData();
 if (!UI.entryQuarter) UI.entryQuarter = D.currentQuarter;
 
 /* ---------- data helpers ---------- */
-function eachProject(cb){
-  D.strategies.forEach(function(s,si){ s.subs.forEach(function(u,ui){ u.groups.forEach(function(g,gi){ g.projects.forEach(function(p,pi){ cb(p,{s:s,u:u,g:g,si:si,ui:ui,gi:gi,pi:pi}); }); }); }); });
-}
-function findProject(pid){ var found=null; eachProject(function(p,ctx){ if (p.id===pid) found={p:p,ctx:ctx}; }); return found; }
+function visibleStrategies(){ return UI.printFilter ? D.strategies.filter(function(s){ return UI.printFilter.indexOf(s.code)!==-1; }) : D.strategies; }
+function eachProject(cb, strategies){ (strategies||visibleStrategies()).forEach(function(s,si){ s.subs.forEach(function(u,ui){ u.groups.forEach(function(g,gi){ g.projects.forEach(function(p,pi){ cb(p,{s:s,u:u,g:g,si:si,ui:ui,gi:gi,pi:pi}); }); }); }); }); }
+function findProject(pid){ var found=null; D.strategies.forEach(function(s,si){ s.subs.forEach(function(u,ui){ u.groups.forEach(function(g,gi){ g.projects.forEach(function(p,pi){ if (p.id===pid) found={p:p,ctx:{s:s,u:u,g:g,si:si,ui:ui,gi:gi,pi:pi}}; }); }); }); }); return found; }
 function getEntry(pid, q){ return (D.entries[pid+'__'+q]) || { status:'ยังไม่เริ่ม', percent:0, note:'' }; }
 function setEntry(pid, q, patch){
   var key = pid+'__'+q;
@@ -253,8 +315,27 @@ function render(){
       renderSidebar() +
       '<main class="main">' + renderTab() + '</main>' +
       (UI.modalProjectId ? renderModal() : '') +
+      (UI.printDialogOpen ? renderPrintDialog() : '') +
     '</div>';
   attachActions(root);
+}
+
+function renderPrintDialog(){
+  var allChecked = D.strategies.every(function(s){ return UI.printSelection[s.code]; });
+  var rows = D.strategies.map(function(s){
+    return '<label class="row" style="gap:10px;padding:8px 0;cursor:pointer"><input type="checkbox" data-act="toggle-print-strat" data-code="'+esc(s.code)+'" '+(UI.printSelection[s.code]?'checked':'')+'><span>ยุทธศาสตร์ '+esc(s.code)+' — '+esc(s.name)+'</span></label>';
+  }).join('');
+  return '<div class="modal-backdrop" data-act="cancel-print-bg"><div class="modal" style="max-width:480px" onclick="event.stopPropagation()">' +
+    '<div class="modal-sec"><div style="font-size:15px;font-weight:600;margin-bottom:4px">เลือกยุทธศาสตร์ที่จะพิมพ์</div><div class="muted" style="font-size:12px">เลือกได้มากกว่า 1 ยุทธศาสตร์ หรือเลือกทั้งหมด</div></div>' +
+    '<div class="modal-sec">' +
+      '<label class="row" style="gap:10px;padding-bottom:8px;border-bottom:1px solid #f0eae9;margin-bottom:6px;cursor:pointer"><input type="checkbox" data-act="toggle-print-all" '+(allChecked?'checked':'')+'><span style="font-weight:600">ทั้งหมด</span></label>' +
+      rows +
+    '</div>' +
+    '<div class="modal-sec row" style="border-bottom:none">' +
+      '<button class="btn" data-act="confirm-print">พิมพ์</button>' +
+      '<button class="btn btn-outline" data-act="cancel-print">ยกเลิก</button>' +
+    '</div>' +
+  '</div></div>';
 }
 
 function navItem(key, num, label){
@@ -306,11 +387,12 @@ function groupStatusCounts(g, q){
   });
   return { notStarted:notStarted, inProgress:inProgress, done:done, total:g.projects.length };
 }
-function eachGroup(cb){ D.strategies.forEach(function(s){ s.subs.forEach(function(u){ u.groups.forEach(function(g){ cb(g,s,u); }); }); }); }
+function eachGroup(cb, strategies){ (strategies||visibleStrategies()).forEach(function(s){ s.subs.forEach(function(u){ u.groups.forEach(function(g){ cb(g,s,u); }); }); }); }
 
 function renderDashboard(){
-  var totalProjects=0; eachProject(function(){ totalProjects++; });
-  var stratCards = D.strategies.map(function(s){
+  var strategies = visibleStrategies();
+  var totalProjects=0; eachProject(function(){ totalProjects++; }, strategies);
+  var stratCards = strategies.map(function(s){
     var count=0, done=0, subCount=s.subs.length;
     s.subs.forEach(function(u){ u.groups.forEach(function(g){ g.projects.forEach(function(p){ count++; if (getEntry(p.id, D.currentQuarter).status==='สำเร็จ') done++; }); }); });
     var pct = count ? Math.round(done/count*100) : 0;
@@ -337,19 +419,19 @@ function renderDashboard(){
         '<span class="pill" style="background:#fdf6e5;color:#7a5b06">ดำเนินการ '+c.inProgress+'</span>' +
         '<span class="pill" style="background:#edf6f1;color:#2f5f45">สำเร็จ '+c.done+'</span>' +
       '</div></div>';
-  });
+  }, strategies);
 
   return '<div>' +
     '<div class="row no-print" style="justify-content:space-between;padding-bottom:18px;border-bottom:1px solid #f0eae9">' +
       '<div><div class="eyebrow">DASHBOARD</div><h1>ภาพรวมความคืบหน้า</h1><div class="muted" style="font-size:13px">สรุปสถานะยุทธศาสตร์ กลยุทธ์ และโครงการทั้งหมด '+totalProjects+' โครงการ</div></div>' +
       '<div class="row" style="gap:8px">' +
-        '<button class="btn btn-outline" data-act="print">พิมพ์รายงาน</button>' +
+        '<button class="btn btn-outline" data-act="open-print-dialog">พิมพ์รายงาน</button>' +
         '<button class="btn" data-act="set-tab" data-tab="entry">เปิดรอบบันทึกผล</button>' +
       '</div>' +
     '</div>' +
     '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:22px 0 26px">' +
-      statCard('ยุทธศาสตร์', D.strategies.length, '#241b1c') + statCard('กลยุทธ์', (function(){var n=0;D.strategies.forEach(function(s){n+=s.subs.length});return n;})(), '#241b1c') +
-      statCard('กลุ่มโครงการ', (function(){var n=0;eachGroup(function(){n++});return n;})(), '#241b1c') + statCard('โครงการ', totalProjects, '#8f2436') +
+      statCard('ยุทธศาสตร์', strategies.length, '#241b1c') + statCard('กลยุทธ์', (function(){var n=0;strategies.forEach(function(s){n+=s.subs.length});return n;})(), '#241b1c') +
+      statCard('กลุ่มโครงการ', (function(){var n=0;eachGroup(function(){n++}, strategies);return n;})(), '#241b1c') + statCard('โครงการ', totalProjects, '#8f2436') +
     '</div>' +
     '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:26px">'+stratCards+'</div>' +
     '<div style="border-radius:16px;padding:24px 26px;margin-bottom:26px;background:linear-gradient(120deg,#5e1523 0%,#8f2436 100%);color:#fff">' +
@@ -360,13 +442,13 @@ function renderDashboard(){
       '</div></div>' +
     '<h2>กลุ่มโครงการ</h2>' +
     '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:26px">'+groupCards+'</div>' +
-    '<h2>สถานะรายไตรมาส</h2>' + renderTimelineTable() +
+    '<h2>สถานะรายไตรมาส</h2>' + renderTimelineTable(strategies) +
   '</div>';
 }
 function statCard(label,value,color){ return '<div class="card" style="padding:16px 18px"><div style="font-size:11.5px;color:#7a6f6e;font-weight:500">'+label+'</div><div class="mono" style="font-size:30px;font-weight:600;margin-top:10px;color:'+color+'">'+value+'</div></div>'; }
 function loopStep(title,desc){ return '<div style="background:rgba(255,255,255,.1);border-radius:12px;padding:15px 16px"><div class="mono" style="font-size:12px;color:#f2b526;letter-spacing:.08em;font-weight:600">'+title+'</div><div style="font-size:12px;line-height:1.65;margin-top:9px;color:rgba(255,255,255,.88)">'+desc+'</div></div>'; }
 
-function renderTimelineTable(){
+function renderTimelineTable(strategies){
   var quarters = fyQuarters(D.fiscalYears);
   var head = quarters.map(function(q){
     var isCur = q===D.currentQuarter;
@@ -384,7 +466,7 @@ function renderTimelineTable(){
       return '<td style="padding:8px 6px;background:'+(isCur?'#fdf1f2':'transparent')+'"><div style="width:100%;height:22px;border-radius:7px;background:'+color+'" title="'+q+'"></div></td>';
     }).join('');
     rows += '<tr style="border-top:1px solid #f2eceb"><td style="padding:12px 14px"><div style="font-size:12.5px;font-weight:500">'+esc(g.name)+'</div><div class="mono" style="font-size:10.5px;color:#9b8f8e;margin-top:3px">'+esc(g.id)+'</div></td>'+cells+'</tr>';
-  });
+  }, strategies);
   var legend = STATUS_LIST.map(function(l){ return '<div class="row" style="gap:8px"><span style="width:14px;height:14px;border-radius:4px;background:'+STATUS_COLORS[l]+'"></span>'+l+'</div>'; }).join('');
   return '<div class="card" style="padding:6px 8px 10px;overflow-x:auto"><table class="table" style="min-width:900px"><thead><tr><th style="width:280px">กลุ่มกลยุทธ์</th>'+head+'</tr></thead><tbody>'+rows+'</tbody></table></div>' +
     '<div class="row no-print" style="gap:20px;margin-top:16px;font-size:12px;color:#4c4241">'+legend+'</div>';
@@ -392,7 +474,8 @@ function renderTimelineTable(){
 
 /* ---------- strategy (view + edit) ---------- */
 function renderStrategy(){
-  var body = D.strategies.map(function(s,si){
+  var strategies = visibleStrategies();
+  var body = strategies.map(function(s,si){
     var open = !!UI.openStrat[s.code];
     var header = UI.editMode ?
       ('<div style="display:grid;grid-template-columns:70px 1fr;gap:14px;align-items:start">' +
@@ -453,7 +536,7 @@ function renderStrategy(){
     '<div class="row no-print" style="justify-content:space-between">' +
       '<div><div class="eyebrow">STRATEGY MAP</div><h1>รายละเอียดยุทธศาสตร์</h1><div class="muted" style="font-size:13px;margin-bottom:10px">ยุทธศาสตร์ › กลยุทธ์ › กลุ่มโครงการ › โครงการ / กิจกรรม</div></div>' +
       '<div class="row" style="gap:8px">' +
-        '<button class="btn btn-outline" data-act="print">พิมพ์รายงาน</button>' +
+        '<button class="btn btn-outline" data-act="open-print-dialog">พิมพ์รายงาน</button>' +
         '<button class="btn '+(UI.editMode?'':'btn-outline')+'" data-act="toggle-edit">'+(UI.editMode?'ออกจากโหมดแก้ไข':'แก้ไขโครงสร้าง')+'</button>' +
       '</div>' +
     '</div>' +
@@ -532,7 +615,7 @@ function renderTimeline(){
   return '<div>' +
     '<div class="row no-print" style="justify-content:space-between">' +
       '<div><div class="eyebrow">TIMELINE</div><h1>สถานะรายไตรมาส</h1><div class="muted" style="font-size:13px;margin-bottom:18px">ครอบคลุมปีงบประมาณ '+D.fiscalYears.join('–')+' ไตรมาสปัจจุบันเน้นด้วยพื้นหลังอ่อน</div></div>' +
-      '<button class="btn btn-outline" data-act="print">พิมพ์รายงาน</button>' +
+      '<button class="btn btn-outline" data-act="open-print-dialog">พิมพ์รายงาน</button>' +
     '</div>' +
     renderTimelineTable() +
   '</div>';
@@ -690,7 +773,18 @@ function handleAction(act, el, e){
 
   if (act==='set-tab'){ UI.tab = ds.tab; render(); return; }
   if (act==='toggle-edit'){ UI.editMode = !UI.editMode; render(); return; }
-  if (act==='print'){ window.print(); return; }
+  if (act==='open-print-dialog'){ UI.printSelection = {}; D.strategies.forEach(function(s){ UI.printSelection[s.code]=true; }); UI.printDialogOpen = true; render(); return; }
+  if (act==='toggle-print-strat'){ UI.printSelection[ds.code] = !UI.printSelection[ds.code]; render(); return; }
+  if (act==='toggle-print-all'){ var v = el.checked; D.strategies.forEach(function(s){ UI.printSelection[s.code]=v; }); render(); return; }
+  if (act==='cancel-print' || act==='cancel-print-bg'){ if (act==='cancel-print-bg' && e.target!==el) return; UI.printDialogOpen = false; render(); return; }
+  if (act==='confirm-print'){
+    var codes = Object.keys(UI.printSelection).filter(function(c){ return UI.printSelection[c]; });
+    UI.printFilter = codes.length && codes.length < D.strategies.length ? codes : null;
+    UI.printDialogOpen = false;
+    render();
+    setTimeout(function(){ window.print(); }, 60);
+    return;
+  }
 
   if (act==='toggle-strat'){ UI.openStrat = {}; UI.openStrat[D.strategies[si].code] = !UI.openStrat[D.strategies[si].code]; render(); return; }
   if (act==='toggle-group'){ UI.openGroup[ds.gid] = !UI.openGroup[ds.gid]; render(); return; }
@@ -786,6 +880,7 @@ function handleImport(e){
 }
 
 render();
+window.onafterprint = function(){ if (UI.printFilter) { UI.printFilter = null; render(); } };
 </script>
 </body>
 </html>

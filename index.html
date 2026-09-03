@@ -6,6 +6,8 @@
 <title>ระบบบริหารกลยุทธ์และตัวชี้วัด — ศูนย์การแพทย์ธรรมศาสตร์</title>
 <meta name="theme-color" content="#5e1523">
 <link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -262,7 +264,9 @@ function fyQuarters(fys){
 var STORE_KEY = 'thamc_strategy_os_v1';
 var SEED_VERSION = 2; // bump whenever SEED_STRATEGIES gains/changes content, to merge into existing saved data
 var D; // persisted data
-var UI = { tab: 'dashboard', editMode: false, entryView: 'table', entryQuarter: null, openStrat: {}, openGroup: {}, entryOpenGroup: {}, modalProjectId: null, modalSaved: '', importMsg: '', connMsg: '', printFilter: null, printDialogOpen: false, printSelection: {} };
+var UI = { tab: 'dashboard', editMode: false, entryView: 'table', entryQuarter: null, openStrat: {}, openGroup: {}, entryOpenGroup: {}, modalProjectId: null, modalSaved: '', importMsg: '', connMsg: '', printFilter: null, printDialogOpen: false, printSelection: {}, isAdmin: false, adminPromptOpen: false, adminInput: '', adminError: '' };
+var ADMIN_CODE = 'THAMC2569';
+try { UI.isAdmin = sessionStorage.getItem('thamc_admin') === '1'; } catch(e){}
 
 // adds any strategy/sub/group/project present in the current SEED but missing from saved data (matched by code/id),
 // without touching anything the user already edited or entered results for.
@@ -337,8 +341,23 @@ function render(){
       renderMobileTabbar() +
       (UI.modalProjectId ? renderModal() : '') +
       (UI.printDialogOpen ? renderPrintDialog() : '') +
+      (UI.adminPromptOpen ? renderAdminPrompt() : '') +
     '</div>';
   attachActions(root);
+}
+
+function renderAdminPrompt(){
+  return '<div class="modal-backdrop" data-act="close-admin-bg"><div class="modal" style="max-width:420px" onclick="event.stopPropagation()">' +
+    '<div class="modal-sec"><div style="font-size:15px;font-weight:600;margin-bottom:4px">เข้าสู่ระบบแอดมิน</div><div class="muted" style="font-size:12px">กรอกรหัสแอดมินเพื่อเข้าหน้าตั้งค่า/นำเข้าข้อมูล</div></div>' +
+    '<div class="modal-sec">' +
+      '<input type="password" id="admin-code-input" placeholder="รหัสแอดมิน" value="'+esc(UI.adminInput)+'" data-act="admin-input" style="width:100%"><br>' +
+      '<div style="color:#a5321f;font-size:12px;margin-top:8px;min-height:16px">'+esc(UI.adminError)+'</div>' +
+    '</div>' +
+    '<div class="modal-sec row" style="border-bottom:none">' +
+      '<button class="btn" data-act="admin-submit">เข้าสู่ระบบ</button>' +
+      '<button class="btn btn-outline" data-act="close-admin">ยกเลิก</button>' +
+    '</div>' +
+  '</div></div>';
 }
 
 const MTAB_ICONS = {
@@ -352,11 +371,18 @@ function mtabSvg(key, active){
   return '<svg viewBox="0 0 24 24" fill="none" stroke="'+(active?'#8f2436':'#9b8f8e')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+MTAB_ICONS[key]+'</svg>';
 }
 function renderMobileTabbar(){
-  const tabs = [['dashboard','หน้าหลัก'],['strategy','ยุทธศาสตร์'],['entry','บันทึกผล'],['timeline','Timeline'],['settings','ตั้งค่า']];
-  return '<div class="mobile-tabbar no-print">' + tabs.map(function(t){
-    const active = UI.tab===t[0];
+  var tabs = [['dashboard','หน้าหลัก'],['strategy','ยุทธศาสตร์'],['entry','บันทึกผล'],['timeline','Timeline']];
+  var html = tabs.map(function(t){
+    var active = UI.tab===t[0];
     return '<div class="mtab" data-act="set-tab" data-tab="'+t[0]+'" style="'+(active?'background:#fdf1f2':'')+'">' + mtabSvg(t[0], active) + '<span style="color:'+(active?'#8f2436':'#9b8f8e')+'">'+t[1]+'</span></div>';
-  }).join('') + '</div>';
+  }).join('');
+  if (UI.isAdmin) {
+    var active5 = UI.tab==='settings';
+    html += '<div class="mtab" data-act="set-tab" data-tab="settings" style="'+(active5?'background:#fdf1f2':'')+'">' + mtabSvg('settings', active5) + '<span style="color:'+(active5?'#8f2436':'#9b8f8e')+'">ตั้งค่า</span></div>';
+  } else {
+    html += '<div class="mtab" data-act="open-admin-prompt">' + mtabSvg('settings', false) + '<span style="color:#9b8f8e">แอดมิน</span></div>';
+  }
+  return '<div class="mobile-tabbar no-print">' + html + '</div>';
 }
 
 function renderPrintDialog(){
@@ -383,6 +409,12 @@ function navItem(key, num, label){
     '<span class="mono" style="font-size:10.5px;width:20px;text-align:center;color:'+(active?'#f2b526':'rgba(242,181,38,.55)')+'">'+num+'</span>' +
     '<span style="flex:1;text-align:left">'+label+'</span></button>';
 }
+function adminNavItem(){
+  if (UI.isAdmin) return navItem('settings','05','ตั้งค่า/นำเข้าข้อมูล');
+  return '<button class="navbtn" data-act="open-admin-prompt" style="opacity:.6">' +
+    '<span class="mono" style="font-size:10.5px;width:20px;text-align:center;color:rgba(242,181,38,.55)">•</span>' +
+    '<span style="flex:1;text-align:left">แอดมิน</span></button>';
+}
 
 function renderSidebar(){
   var stratCount = D.strategies.length;
@@ -402,7 +434,7 @@ function renderSidebar(){
     '</div>' +
     '<div style="margin-top:22px;display:flex;flex-direction:column;gap:3px">' +
       '<div style="font-size:10px;font-weight:600;letter-spacing:.12em;color:rgba(243,230,232,.42);padding:0 4px 6px">เมนูงาน</div>' +
-      navItem('dashboard','01','Dashboard') + navItem('strategy','02','ยุทธศาสตร์') + navItem('entry','03','บันทึกผลดำเนินงาน') + navItem('timeline','04','Timeline') + navItem('settings','05','ตั้งค่า/นำเข้าข้อมูล') +
+      navItem('dashboard','01','Dashboard') + navItem('strategy','02','ยุทธศาสตร์') + navItem('entry','03','บันทึกผลดำเนินงาน') + navItem('timeline','04','Timeline') + adminNavItem() +
     '</div>' +
     '<div style="margin-top:auto;padding-top:22px;font-size:10.5px;line-height:1.7;color:rgba(243,230,232,.45)">ข้อมูลบันทึกในเบราว์เซอร์นี้ + ส่งขึ้น Google Sheet<br>ไฟล์นี้ deploy ได้ตรงบน GitHub Pages</div>' +
   '</div>';
@@ -810,8 +842,22 @@ function handleAction(act, el, e){
   var ds = el.dataset;
   var si = ds.si!==undefined ? Number(ds.si) : null, ui = ds.ui!==undefined ? Number(ds.ui) : null, gi = ds.gi!==undefined ? Number(ds.gi) : null, pi = ds.pi!==undefined ? Number(ds.pi) : null;
 
-  if (act==='set-tab'){ UI.tab = ds.tab; render(); return; }
+  if (act==='set-tab'){ if (ds.tab==='settings' && !UI.isAdmin) { UI.adminPromptOpen = true; render(); return; } UI.tab = ds.tab; render(); return; }
   if (act==='toggle-edit'){ UI.editMode = !UI.editMode; render(); return; }
+  if (act==='open-admin-prompt'){ UI.adminPromptOpen = true; UI.adminInput=''; UI.adminError=''; render(); return; }
+  if (act==='close-admin' || act==='close-admin-bg'){ if (act==='close-admin-bg' && e.target!==el) return; UI.adminPromptOpen = false; render(); return; }
+  if (act==='admin-input'){ UI.adminInput = el.value; return; }
+  if (act==='admin-submit'){
+    var v = (document.getElementById('admin-code-input')||{}).value || UI.adminInput;
+    if (v === ADMIN_CODE) {
+      UI.isAdmin = true; UI.adminPromptOpen = false; UI.adminError=''; UI.tab = 'settings';
+      try { sessionStorage.setItem('thamc_admin','1'); } catch(e2){}
+    } else {
+      UI.adminError = 'รหัสไม่ถูกต้อง';
+    }
+    render();
+    return;
+  }
   if (act==='open-print-dialog'){ UI.printSelection = {}; D.strategies.forEach(function(s){ UI.printSelection[s.code]=true; }); UI.printDialogOpen = true; render(); return; }
   if (act==='toggle-print-strat'){ UI.printSelection[ds.code] = !UI.printSelection[ds.code]; render(); return; }
   if (act==='toggle-print-all'){ var v = el.checked; D.strategies.forEach(function(s){ UI.printSelection[s.code]=v; }); render(); return; }

@@ -180,32 +180,33 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;color:inherit
 
         <sc-for list="{{ strategyDetail }}" as="strat" hint-placeholder-count="2">
           <div style="background:#fff;border:1px solid #ece5e4;border-radius:16px;margin-bottom:14px;overflow:hidden">
-            <div onClick="{{ strat.onToggle }}" style="display:grid;grid-template-columns:52px 1fr auto;gap:18px;align-items:center;padding:20px 22px;cursor:pointer" style-hover="background:#faf7f6">
-              <div style="width:52px;height:52px;border-radius:13px;background:#fdf1f2;color:#8f2436;display:flex;align-items:center;justify-content:center;font:600 20px/1 'IBM Plex Mono',monospace">{{ strat.code }}</div>
+            <div onClick="{{ strat.onToggle }}" style="display:grid;grid-template-columns:56px 1fr auto;gap:18px;align-items:center;padding:22px 24px;cursor:pointer;background:linear-gradient(120deg,#5e1523 0%,#8f2436 100%);color:#fff">
+              <div style="width:56px;height:56px;border-radius:14px;background:#f2b526;color:#5e1523;display:flex;align-items:center;justify-content:center;font:600 24px/1 'IBM Plex Mono',monospace">{{ strat.code }}</div>
               <div style="min-width:0">
-                <div style="font-size:16.5px;font-weight:600;line-height:1.4">{{ strat.name }}</div>
-                <div style="font-size:12px;color:#7a6f6e;line-height:1.65;margin-top:5px;max-width:780px">{{ strat.goal }}</div>
+                <div style="font-size:10.5px;font-weight:600;letter-spacing:.14em;color:#f2b526">ยุทธศาสตร์ที่ {{ strat.code }}</div>
+                <div style="font-size:19px;font-weight:600;line-height:1.4;margin-top:6px">{{ strat.name }}</div>
+                <div style="font-size:12px;color:rgba(255,255,255,.78);line-height:1.7;margin-top:6px;max-width:780px">{{ strat.goal }}</div>
               </div>
-              <div style="font-size:11.5px;color:#8f2436;font-weight:500;white-space:nowrap">{{ strat.toggleLabel }}</div>
+              <div style="font-size:11.5px;color:#f2b526;font-weight:500;white-space:nowrap">{{ strat.toggleLabel }}</div>
             </div>
 
             <sc-if value="{{ strat.open }}" hint-placeholder-val="{{ false }}">
-              <div style="padding:0 22px 20px">
+              <div style="padding:4px 24px 22px;background:#fff">
                 <sc-for list="{{ strat.subs }}" as="sub" hint-placeholder-count="2">
-                  <div style="border-top:1px solid #f2eceb;padding-top:18px;margin-bottom:8px">
-                    <div style="display:flex;align-items:center;gap:9px">
-                      <span style="font:600 11px 'IBM Plex Mono',monospace;padding:4px 9px;border-radius:20px;background:#fdf1f2;color:#8f2436">{{ sub.id }}</span>
-                      <span style="font-size:14.5px;font-weight:600">{{ sub.name }}</span>
+                  <div style="border-left:3px solid #f2b526;padding:4px 0 4px 18px;margin:22px 0 10px">
+                    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+                      <span style="font:600 12px 'IBM Plex Mono',monospace;padding:5px 11px;border-radius:8px;background:#8f2436;color:#fff">กลยุทธ์ {{ sub.id }}</span>
+                      <span style="font-size:16px;font-weight:600;line-height:1.4">{{ sub.name }}</span>
                     </div>
-                    <div style="font-size:12px;color:#7a6f6e;line-height:1.7;margin:9px 0 14px;max-width:840px">{{ sub.desc }}</div>
+                    <div style="font-size:12.5px;color:#7a6f6e;line-height:1.75;margin:10px 0 16px;max-width:840px">{{ sub.desc }}</div>
 
                     <sc-for list="{{ sub.groups }}" as="grp" hint-placeholder-count="2">
-                      <div style="background:#faf7f6;border-radius:12px;margin-bottom:9px;overflow:hidden">
-                        <div onClick="{{ grp.onToggle }}" style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer" style-hover="background:#f4eeed">
-                          <span style="font:600 11px 'IBM Plex Mono',monospace;color:#7a6f6e">{{ grp.id }}</span>
-                          <span style="font-size:13px;font-weight:500;flex:1">{{ grp.name }}</span>
-                          <span style="font-size:11px;color:#9b8f8e">{{ grp.count }} โครงการ</span>
-                          <span style="font-size:11.5px;color:#8f2436;font-weight:500">{{ grp.toggleLabel }}</span>
+                      <div style="background:#fff;border:1px solid #e6dedd;border-radius:12px;margin:0 0 8px 16px;overflow:hidden">
+                        <div onClick="{{ grp.onToggle }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer" style-hover="background:#faf7f6">
+                          <span style="font:500 11px 'IBM Plex Mono',monospace;color:#8f2436;background:#fdf1f2;padding:4px 8px;border-radius:7px">{{ grp.id }}</span>
+                          <span style="font-size:13.5px;font-weight:500;flex:1;min-width:0">{{ grp.name }}</span>
+                          <span style="font-size:11px;color:#9b8f8e;white-space:nowrap">{{ grp.count }} โครงการ</span>
+                          <span style="font-size:11.5px;color:#8f2436;font-weight:500;white-space:nowrap">{{ grp.toggleLabel }}</span>
                         </div>
                         <sc-if value="{{ grp.open }}" hint-placeholder-val="{{ false }}">
                           <div style="padding:0 16px 16px">

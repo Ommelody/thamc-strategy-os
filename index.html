@@ -64,6 +64,12 @@ label.field span{font-size:12px;font-weight:500;color:#4c4241}
   body{background:#fff}
 }
 .mobile-tabbar{display:none}
+.project-print-sheet{display:none}
+body.printing-project .app,body.printing-project .no-print,body.printing-project .mobile-tabbar{display:none !important}
+body.printing-project .project-print-sheet{display:block}
+.project-print-sheet table{width:100%;border-collapse:collapse}
+.project-print-sheet td,.project-print-sheet th{border:1px solid #ccc;padding:8px 10px;vertical-align:top;font-size:12px}
+.project-print-sheet{-webkit-print-color-adjust:exact;print-color-adjust:exact;color-adjust:exact}
 @media (max-width:860px){
   .sidebar{display:none}
   .main{padding:18px 16px 100px !important}
@@ -99,7 +105,25 @@ var SEED_STRATEGIES = [
             { name: 'ออกแบบแพ็กเกจการรักษาแบบเหมาจ่าย (Value-Based Bundled Pricing)', desc: 'จัดทำแพ็กเกจราคาเหมาจ่ายครอบคลุมทุกขั้นตอน เช่น แพ็กเกจผ่าตัดพร้อมผู้ช่วยส่วนตัวและติดตามผลถึงบ้าน เพื่อดึงดูดผู้ป่วยชำระเงินเองและแข่งขันกับโรงพยาบาลเอกชน' },
             { name: 'ศูนย์ให้คำปรึกษาความเห็นที่สองทางการแพทย์ (Second Opinion Expert Center)', desc: 'บริการให้คำปรึกษาความเห็นที่สองทางการแพทย์สำหรับผู้ป่วยจากโรงพยาบาลอื่นที่ต้องการความมั่นใจจากทีมแพทย์ผู้เชี่ยวชาญของ THAMC (ให้บริการออนไลน์ได้)' },
             { name: 'ขยายฐานลูกค้าผ่านพันธมิตรบริษัทประกันสุขภาพ (Insurance Partnerships)', desc: 'เจรจาจัดทำ Co-Promotion ร่วมกับบริษัทประกันชั้นนำ เพื่อให้ THAMC เป็นโรงพยาบาลคู่สัญญาหลัก (Preferred Provider) สำหรับผู้ป่วยกลุ่มโรคเฉพาะทาง' },
-            { name: 'Corporate Health & Wellness Programs (B2B)', desc: 'จัดทีมรุกทำสัญญาตรวจสุขภาพประจำปีกับบริษัท มหาวิทยาลัย โรงงาน และหน่วยงานรัฐ พร้อมพ่วงบริการฉีดวัคซีนไข้หวัดใหญ่และประเมินความเสี่ยงออฟฟิศซินโดรม' },
+            { name: 'Corporate Health & Wellness Programs (B2B)', desc: 'จัดทีมรุกทำสัญญาตรวจสุขภาพประจำปีกับบริษัท มหาวิทยาลัย โรงงาน และหน่วยงานรัฐ พร้อมพ่วงบริการฉีดวัคซีนไข้หวัดใหญ่และประเมินความเสี่ยงออฟฟิศซินโดรม',
+              detail: {
+                target: 'Primary Target\n1. บริษัทเอกชนและสถานประกอบการในพื้นที่กรุงเทพมหานคร ปทุมธานี และจังหวัดใกล้เคียง\n2. หน่วยงานภาครัฐ รัฐวิสาหกิจ และสถาบันการศึกษา\n3. องค์กรที่มีพนักงานตั้งแต่ 50 คนขึ้นไป และมีความต้องการตรวจสุขภาพหรือส่งเสริมสุขภาพพนักงาน\n4. กลุ่มองค์กรที่ต้องการบริการสุขภาพแบบเหมาจ่ายหรือสัญญาบริการรายปี',
+                output: 'Output\n- มี Corporate Health Package ที่ตอบโจทย์ความต้องการขององค์กร\n- มีฐานข้อมูลและรายชื่อองค์กรเป้าหมาย\n- มีข้อเสนอการให้บริการสำหรับองค์กร (Corporate Health Proposal)\n- มีองค์กรที่เข้าร่วมโครงการและทำข้อตกลงความร่วมมือ\n- มีจำนวนผู้รับบริการจากกลุ่มองค์กรเพิ่มขึ้น\n\nOutcome\n- เพิ่มรายได้จากกลุ่มลูกค้าองค์กร และรายได้แบบ Recurring จากสัญญารายปี\n- เพิ่มจำนวนผู้รับบริการใหม่ และการใช้บริการต่อเนื่องจากลูกค้าองค์กร\n- ลดความเสี่ยง NCDs และส่งเสริมสุขภาวะของพนักงานองค์กรคู่ค้า\n- สร้างภาพลักษณ์ศูนย์การแพทย์ในฐานะ Strategic Health Partner',
+                kpi: '- จำนวนองค์กรที่เข้าร่วมโครงการ/ทำสัญญาความร่วมมือ\n- จำนวนผู้รับบริการจากกลุ่มองค์กร\n- รายได้จากกลุ่มลูกค้าองค์กร (Revenue per Corporate Client)\n- อัตราการต่อสัญญาในปีถัดไป',
+                budget: '110,000 บาท/ปี',
+                area: 'ศูนย์การแพทย์ธรรมศาสตร์ และสถานประกอบการ/องค์กรคู่ค้าในพื้นที่กรุงเทพมหานคร ปทุมธานี และจังหวัดใกล้เคียง และภาคกลางตอนบน',
+                owner: 'Project Owner ที่ THAMC แต่งตั้ง ร่วมกับ Clinical, Operations, Finance, HR, IT',
+                startMonth: 12, endMonth: 23,
+                steps: [
+                  { name: 'วิเคราะห์ศักยภาพบริการและกำหนด Corporate Health Package / กำหนดกลุ่มองค์กรเป้าหมาย ออกแบบระบบและเตรียมความพร้อม', from: 12, to: 13 },
+                  { name: 'จัดทำฐานข้อมูลองค์กรเป้าหมาย และจัดทำ Proposal, Package และอัตราค่าบริการ', from: 14, to: 15 },
+                  { name: 'ประชาสัมพันธ์ เข้าพบ/นำเสนอแพ็กเกจแก่บริษัทและหน่วยงานเป้าหมาย', from: 16, to: 17 },
+                  { name: 'เจรจาเงื่อนไข จัดทำข้อตกลง/สัญญาความร่วมมือ และเริ่มให้บริการ', from: 18, to: 18 },
+                  { name: 'ดำเนินการให้บริการ ติดตามจำนวนผู้รับบริการ รายได้ และความพึงพอใจ', from: 19, to: 21 },
+                  { name: 'ประเมินผลโครงการ สรุปรายได้ วิเคราะห์ต้นทุน–ผลตอบแทน และจัดทำแผนต่อสัญญา/ขยายฐานองค์กรในปีถัดไป', from: 22, to: 23 }
+                ]
+              }
+            },
             { name: 'Personalized Health Screening', desc: 'ยกระดับโปรแกรมตรวจสุขภาพจากพื้นฐานสู่เชิงลึก เช่น การตรวจยีนประเมินความเสี่ยงมะเร็ง คลินิกเวชศาสตร์ชะลอวัย และคลินิกจัดการน้ำหนัก' },
             { name: '"Prehab" ก่อนการผ่าตัด', desc: 'บริการเตรียมความพร้อมร่างกายและโภชนาการก่อนผ่าตัดใหญ่ ช่วยให้ผู้ป่วยฟื้นตัวไวขึ้น เป็นบริการเสริมที่สร้างรายได้และผลลัพธ์การรักษาที่ดีไปพร้อมกัน' },
             { name: 'Home Health Care & Rehabilitation', desc: 'ส่งนักกายภาพบำบัด พยาบาล หรือผู้ดูแล ลงพื้นที่ให้บริการฟื้นฟูสมรรถภาพผู้ป่วยติดเตียงหรือผู้ป่วยหลังผ่าตัดถึงบ้าน' },
@@ -228,6 +252,55 @@ var SEED_STRATEGIES = [
         ]
       }
     ]
+  },
+  {
+    code: '3', name: 'การบริหารงานที่โปร่งใสและมีประสิทธิภาพ',
+    goal: 'ขับเคลื่อนองค์กรด้วยนวัตกรรม กระบวนการที่มีประสิทธิภาพ และการใช้ทรัพยากรอย่างคุ้มค่า เพื่อสร้างความโปร่งใส มาตรฐาน และผลลัพธ์ที่ยั่งยืน',
+    subs: [
+      {
+        id: '3.1', name: 'Innovative Administrative (นวัตกรรมการบริหารจัดการ)',
+        desc: 'พัฒนาระบบงานและนวัตกรรม เพื่อเพิ่มประสิทธิภาพ ลดความซับซ้อน และยกระดับการให้บริการ',
+        groups: [
+          { id: '3.1.1', name: 'Smart Administration / Admin. Dashboard', desc: 'พัฒนาระบบบริหารจัดการอัจฉริยะ ด้วยข้อมูลแบบเรียลไทม์ (Dashboard) เพื่อการตัดสินใจที่แม่นยำและรวดเร็ว', projects: [
+            { name: 'THAMC Data & KPI Mapping', desc: 'กำหนด KPI • เจ้าของข้อมูล • แหล่งข้อมูล • นิยามและสูตรคำนวณ' },
+            { name: 'Data Integration', desc: 'เชื่อม HIS / SAP / HR และสร้างฐานข้อมูลกลาง' },
+            { name: 'Data Governance & Quality', desc: 'กำหนดสิทธิ์เข้าถึง • ตรวจคุณภาพข้อมูล • ทบทวนความถูกต้องสม่ำเสมอ' },
+            { name: 'Data Security', desc: 'กำหนดมาตรการรักษาความมั่นคงปลอดภัยของข้อมูล การควบคุมสิทธิ์ การติดตามการเข้าถึง และการป้องกันข้อมูลรั่วไหล' },
+            { name: 'Executive Command Center', desc: 'แสดง Revenue • Patient Volume • Cost • Bed/OR/Clinic Utilization • Waiting Time และเพิ่มการติดตามแพทย์ลงตรวจแบบ Real-time ว่าลงตรวจตามเวลาที่กำหนดหรือไม่' },
+            { name: 'Revenue, Flow & Capacity', desc: 'ติดตามรายได้และผู้ป่วย • วิเคราะห์ Queue/Bottleneck • หา Capacity ที่ยังว่าง' },
+            { name: 'Cost, Supply & Performance', desc: 'ติดตามต้นทุน • Stock/Expiry • Productivity • ผลลัพธ์ราย Service Line' },
+            { name: 'Early Warning & Alert', desc: 'แจ้งเตือน Revenue ต่ำกว่าเป้า • Waiting Time สูง • Utilization ผิดปกติ • Stock ต่ำ' },
+            { name: 'Action & Escalation Workflow', desc: 'กำหนดผู้รับผิดชอบ • Response Time • Escalation (การยกระดับ) • ติดตาม Action จนปิดประเด็น' },
+            { name: 'Adoption & Performance Review', desc: 'อบรมผู้ใช้ • ใช้ Dashboard ใน Daily/Weekly Review • ติดตาม KPI และ PDCA (Plan-Do-Check-Act)' },
+            { name: 'Incident Report Alert', desc: 'พัฒนาระบบแจ้งเตือน Incident Report ที่สำคัญให้หน่วยงานหรือผู้เกี่ยวข้องรับทราบอย่างรวดเร็ว' },
+            { name: 'Information Leakage / Critical News Alert', desc: 'ระบบแจ้งเตือนกรณีข่าวรั่วหรือข้อมูลสำคัญที่อาจกระทบองค์กร เพื่อให้ผู้บริหารรับทราบและตัดสินใจได้ทันเวลา' }
+          ]},
+          { id: '3.1.2', name: 'Lean Project', desc: 'ดำเนินโครงการ Lean เพื่อลดความสูญเปล่า ลดขั้นตอนการทำงาน และเพิ่มคุณค่า ให้กับทุกกระบวนการ', projects: [
+            { name: 'Lean Patient Journey', desc: 'ออกแบบเส้นทางผู้ป่วยใหม่ทั้งระบบ' },
+            { name: 'Revenue Leakage Zero', desc: 'ป้องกันรายได้รั่วไหลตั้งแต่ให้บริการถึงเรียกเก็บเงิน' },
+            { name: 'Smart Insurance Claim', desc: 'Digital Claim + ลดเอกสาร + เร่งการอนุมัติ' },
+            { name: 'One Data One Time', desc: 'กรอกข้อมูลครั้งเดียว เชื่อมต่อทุกหน่วยงาน' },
+            { name: 'Lean Process: ลดขั้นตอน เพิ่มความคล่องตัว', desc: 'สำรวจและปรับลดขั้นตอนงานบริการ (Waiting Time) ทุกหน่วยงาน เพิ่มคุณค่าที่จับต้องได้ (Service Mind) / งานสนับสนุนที่ซ้ำซ้อน' },
+            { name: 'Paperless Hospital: ลดกระดาษ ลดงาน ลดต้นทุน', desc: 'เปลี่ยนแบบฟอร์ม/เอกสารที่ไม่จำเป็นเป็น Digital Workflow' },
+            { name: 'Lean HR: ลดขั้นตอนงานบุคคล', desc: 'ปรับกระบวนการลา OT หนังสือรับรอง การสมัครงาน ฯลฯ เป็น Digital Workflow (ยังไม่ 100%)' },
+            { name: 'Smart Inventory: ลดของค้าง ลดของหมดอายุ', desc: 'ใช้ข้อมูล Stock และวันหมดอายุบริหารยา/เวชภัณฑ์' },
+            { name: 'Lean Meeting: ประชุมอย่างมีคุณค่า', desc: 'ลดประชุมที่ไม่จำเป็น ใช้ Agenda/Time Box/Action Tracking' }
+          ]}
+        ]
+      },
+      {
+        id: '3.2', name: 'Utilization Management (การบริหารทรัพยากร)',
+        desc: 'บริหารการใช้ทรัพยากรอย่างเหมาะสม คุ้มค่า และเกิดประโยชน์สูงสุด',
+        groups: [
+          { id: '3.2.1', name: 'Utilization Management', desc: 'บริหารจัดการการใช้ทรัพยากร (คน เตียง ห้อง เครื่องมือ และอุปกรณ์) ให้เกิดประสิทธิภาพสูงสุด ลดความแออัด และเพิ่มศักยภาพการให้บริการ', projects: [
+            { name: 'UM High Risk Case Monitoring', desc: 'พัฒนาระบบติดตามผู้ป่วยกลุ่มเสี่ยงสูงอย่างเป็นระบบ เพื่อให้ได้รับการดูแลที่เหมาะสม ลดความเสี่ยงและการใช้ทรัพยากรที่ไม่จำเป็น' },
+            { name: 'Interdepartmental Capacity Exchange', desc: 'เชื่อมโยงและบริหาร Capacity ของแต่ละหน่วยงานร่วมกัน เพื่อให้ทรัพยากรที่มีอยู่สามารถนำมาใช้ได้เต็มประสิทธิภาพ' },
+            { name: 'Top 10 Cost Driver Reduction', desc: 'ค้นหาและลดต้นทุนจากปัจจัยที่มีผลกระทบสูง โดยใช้ข้อมูลในการกำหนดมาตรการลดต้นทุนอย่างตรงจุด' },
+            { name: 'Zero Waste Resource Management', desc: 'ลดการสูญเปล่าของวัสดุ อุปกรณ์ และทรัพยากรทางการแพทย์ พร้อมเพิ่มประสิทธิภาพการใช้ทรัพยากร' }
+          ]}
+        ]
+      }
+    ]
   }
 ];
 
@@ -262,9 +335,16 @@ function fyQuarters(fys){
 
 /* ---------- state ---------- */
 var STORE_KEY = 'thamc_strategy_os_v1';
-var SEED_VERSION = 2; // bump whenever SEED_STRATEGIES gains/changes content, to merge into existing saved data
+var SEED_VERSION = 5; // bump whenever SEED_STRATEGIES gains/changes content, to merge into existing saved data
+
+// pulls any project.detail baked into the seed into data.details (only if that project has no detail yet), then strips it off the project object
+function syncSeedDetails(data){
+  data.strategies.forEach(function(s){ s.subs.forEach(function(u){ u.groups.forEach(function(g){ g.projects.forEach(function(p){
+    if (p.detail) { if (!data.details[p.id]) data.details[p.id] = p.detail; delete p.detail; }
+  }); }); }); });
+}
 var D; // persisted data
-var UI = { tab: 'dashboard', editMode: false, entryView: 'table', entryQuarter: null, openStrat: {}, openGroup: {}, entryOpenGroup: {}, modalProjectId: null, modalSaved: '', importMsg: '', connMsg: '', printFilter: null, printDialogOpen: false, printSelection: {}, isAdmin: false, adminPromptOpen: false, adminInput: '', adminError: '' };
+var UI = { tab: 'dashboard', editMode: false, entryView: 'table', entryQuarter: null, openStrat: {}, openGroup: {}, entryOpenGroup: {}, modalProjectId: null, modalSaved: '', importMsg: '', connMsg: '', printFilter: null, printDialogOpen: false, printSelection: {}, isAdmin: false, adminPromptOpen: false, adminInput: '', adminError: '', printProjectId: null, previewProjectId: null };
 var ADMIN_CODE = 'THAMC2569';
 try { UI.isAdmin = sessionStorage.getItem('thamc_admin') === '1'; } catch(e){}
 
@@ -281,14 +361,16 @@ function mergeSeedUpdates(data){
       seedSub.groups.forEach(function(seedGroup){
         var group = sub.groups.filter(function(g){ return g.id===seedGroup.id; })[0];
         if (!group) { sub.groups.push(seedGroup); return; }
-        var existingNames = group.projects.map(function(p){ return p.name; });
         seedGroup.projects.forEach(function(seedProj){
-          if (existingNames.indexOf(seedProj.name)===-1) group.projects.push(seedProj);
+          var existingProj = group.projects.filter(function(p){ return p.name===seedProj.name; })[0];
+          if (!existingProj) { group.projects.push(seedProj); return; }
+          if (seedProj.detail && !data.details[existingProj.id]) { data.details[existingProj.id] = seedProj.detail; }
         });
       });
     });
   });
   data.seedVersion = SEED_VERSION;
+  syncSeedDetails(data);
   return data;
 }
 
@@ -298,7 +380,7 @@ function loadData(){
     var raw = localStorage.getItem(STORE_KEY);
     if (raw) data = JSON.parse(raw);
   } catch(e){}
-  if (!data) return { strategies: seedStrategies(), fiscalYears: ['2568','2569'], currentQuarter: '2569 Q4', entries: {}, details: {}, sheetUrl: '', seedVersion: SEED_VERSION };
+  if (!data) { var fresh = { strategies: seedStrategies(), fiscalYears: ['2568','2569'], currentQuarter: '2569 Q4', entries: {}, details: {}, sheetUrl: '', seedVersion: SEED_VERSION }; syncSeedDetails(fresh); return fresh; }
   if (data.seedVersion !== SEED_VERSION) data = mergeSeedUpdates(data);
   return data;
 }
@@ -342,7 +424,7 @@ function render(){
       (UI.modalProjectId ? renderModal() : '') +
       (UI.printDialogOpen ? renderPrintDialog() : '') +
       (UI.adminPromptOpen ? renderAdminPrompt() : '') +
-    '</div>';
+    '</div>' + (UI.printProjectId ? renderProjectPrintSheet(UI.printProjectId) : '') + (UI.previewProjectId ? renderPreviewOverlay(UI.previewProjectId) : '');
   attachActions(root);
 }
 
@@ -821,9 +903,61 @@ function renderModal(){
     '</div>' +
     '<div class="modal-sec row" style="border-bottom:none">' +
       '<button class="btn" data-act="modal-save">บันทึกข้อมูล</button>' +
+      '<button class="btn btn-outline" data-act="preview-project-form">พรีวิวรายงาน</button>' +
+      '<button class="btn btn-outline" data-act="print-project-form">พิมพ์แบบฟอร์มนี้</button>' +
       '<button class="btn btn-outline" data-act="close-modal">ปิด</button>' +
       '<div style="font-size:12px;color:#3f7d58">'+esc(UI.modalSaved)+'</div>' +
     '</div>' +
+  '</div></div>';
+}
+
+/* ---------- project print sheet ---------- */
+function renderProjectPrintBody(pid){
+  var found = findProject(pid);
+  if (!found) return '';
+  var p = found.p, ctx = found.ctx;
+  var det = getDetail(pid);
+  var months = fyMonths(D.fiscalYears);
+  var fyBlock = Math.floor((det.startMonth||0)/12)*12;
+  var monthsSlice = months.slice(fyBlock, fyBlock+12);
+  var monthHead = monthsSlice.map(function(m){ return '<th class="mono" style="font-size:8px;font-weight:600;padding:4px 2px">'+m+'</th>'; }).join('');
+  var stepRows = (det.steps||[]).length ? det.steps.map(function(st,i){
+    var cells = monthsSlice.map(function(m,mi){ var abs=mi+fyBlock; return '<td style="background:'+(abs>=st.from&&abs<=st.to?'#3f7d58':'#fff')+';padding:4px 2px"></td>'; }).join('');
+    return '<tr><td style="width:22px" class="mono">'+(i+1)+'</td><td style="min-width:220px">'+esc(st.name)+'</td>'+cells+'</tr>';
+  }).join('') : '<tr><td colspan="'+(2+monthsSlice.length)+'" style="text-align:center;color:#9b8f8e">ยังไม่ระบุขั้นตอนดำเนินการ</td></tr>';
+  return '<div style="padding:32px;max-width:1100px;margin:0 auto;font-family:\'IBM Plex Sans Thai\',sans-serif;color:#241b1c">' +
+    '<div style="text-align:center;margin-bottom:20px">' +
+      '<div style="font-size:18px;font-weight:700">แผนปฏิบัติการขับเคลื่อนยุทธศาสตร์ศูนย์การแพทย์ธรรมศาสตร์</div>' +
+      '<div style="font-size:12.5px;color:#7a6f6e;margin-top:4px">ยุทธศาสตร์ที่ '+esc(ctx.s.code)+': '+esc(ctx.s.name)+' · กลยุทธ์ '+esc(ctx.u.id)+': '+esc(ctx.u.name)+' · กลุ่ม '+esc(ctx.g.id)+': '+esc(ctx.g.name)+'</div>' +
+    '</div>' +
+    '<table>' +
+      '<tr><th style="width:150px;text-align:left">โครงการ/กิจกรรม</th><td><b>'+esc(p.name)+'</b><br>'+esc(p.desc||'')+'</td></tr>' +
+      '<tr><th style="text-align:left">กลุ่มเป้าหมาย</th><td style="white-space:pre-line">'+esc(det.target)+'</td></tr>' +
+      '<tr><th style="text-align:left">Output / Outcome</th><td style="white-space:pre-line">'+esc(det.output)+'</td></tr>' +
+      '<tr><th style="text-align:left">KPI</th><td style="white-space:pre-line">'+esc(det.kpi)+'</td></tr>' +
+      '<tr><th style="text-align:left">งบประมาณ</th><td>'+esc(det.budget)+'</td></tr>' +
+      '<tr><th style="text-align:left">พื้นที่ดำเนินการ/ผู้รับผิดชอบ</th><td>'+esc(det.area)+(det.owner?'<br><b>ผู้รับผิดชอบ:</b> '+esc(det.owner):'')+'</td></tr>' +
+    '</table>' +
+    '<div style="margin-top:18px;font-size:13px;font-weight:600">ระยะเวลา / ขั้นตอนดำเนินการ ('+esc(months[det.startMonth]||'')+' – '+esc(months[det.endMonth]||'')+')</div>' +
+    '<table style="margin-top:8px">' +
+      '<tr><th style="width:22px"></th><th style="text-align:left;min-width:200px">ขั้นตอน</th>'+monthHead+'</tr>' +
+      stepRows +
+    '</table>' +
+  '</div>';
+}
+function renderProjectPrintSheet(pid){
+  var body = renderProjectPrintBody(pid);
+  return body ? '<div class="project-print-sheet">'+body+'</div>' : '';
+}
+function renderPreviewOverlay(pid){
+  var body = renderProjectPrintBody(pid);
+  if (!body) return '';
+  return '<div class="modal-backdrop no-print" data-act="close-preview-bg"><div class="modal" style="max-width:1000px;max-height:88vh;overflow:auto" onclick="event.stopPropagation()">' +
+    '<div class="modal-sec row" style="justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1">' +
+      '<div style="font-size:13.5px;font-weight:600">พรีวิวแบบฟอร์ม</div>' +
+      '<div class="row" style="gap:8px"><button class="btn" data-act="print-project-form-from-preview" data-pid="'+esc(pid)+'">พิมพ์</button><button class="btn btn-outline" data-act="close-preview">ปิด</button></div>' +
+    '</div>' +
+    '<div style="border-top:1px solid #f0eae9">'+body+'</div>' +
   '</div></div>';
 }
 
@@ -915,6 +1049,22 @@ function handleAction(act, el, e){
   if (act==='step-to'){ var d4=getDetail(UI.modalProjectId); var v2=Number(el.value); var steps4=(d4.steps||[]).map(function(s,i){ return i===Number(ds.si) ? Object.assign({},s,{to:v2, from:Math.min(v2,s.from)}) : s; }); setDetail(UI.modalProjectId,{steps:steps4}); render(); return; }
   if (act==='step-remove'){ var d5=getDetail(UI.modalProjectId); var steps5=(d5.steps||[]).filter(function(s,i){ return i!==Number(ds.si); }); setDetail(UI.modalProjectId,{steps:steps5}); render(); return; }
   if (act==='modal-save'){ pushDetail(UI.modalProjectId); render(); return; }
+  if (act==='preview-project-form'){ UI.previewProjectId = UI.modalProjectId; render(); return; }
+  if (act==='close-preview' || act==='close-preview-bg'){ if (act==='close-preview-bg' && e.target!==el) return; UI.previewProjectId = null; render(); return; }
+  if (act==='print-project-form-from-preview'){
+    UI.printProjectId = ds.pid; UI.previewProjectId = null;
+    render();
+    document.body.classList.add('printing-project');
+    setTimeout(function(){ window.print(); }, 60);
+    return;
+  }
+  if (act==='print-project-form'){
+    UI.printProjectId = UI.modalProjectId;
+    render();
+    document.body.classList.add('printing-project');
+    setTimeout(function(){ window.print(); }, 60);
+    return;
+  }
 
   if (act==='set-sheet-url'){ D.sheetUrl = el.value; return; }
   if (act==='save-sheet-url'){ saveData(); UI.connMsg = 'บันทึก URL แล้ว'; render(); return; }
@@ -965,7 +1115,11 @@ function handleImport(e){
 }
 
 render();
-window.onafterprint = function(){ if (UI.printFilter) { UI.printFilter = null; render(); } };
+window.onafterprint = function(){
+  document.body.classList.remove('printing-project');
+  if (UI.printFilter) { UI.printFilter = null; render(); }
+  if (UI.printProjectId) { UI.printProjectId = null; render(); }
+};
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
 }

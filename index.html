@@ -369,6 +369,77 @@ var SEED_STRATEGIES = [
         ]
       }
     ]
+  },
+  {
+    code: '5', name: 'องค์กรแห่งการเรียนรู้และนวัตกรรม',
+    goal: 'สร้างสังคมแห่งการเรียนรู้ การนำเทคโนโลยีมาใช้ และการดูแลรักษาสิ่งแวดล้อมและสังคม ควบคู่ไปกับการดำเนินงานทางการแพทย์',
+    subs: [
+      {
+        id: '5.1', name: 'Develop Digital health care hospital', desc: '',
+        groups: [
+          { id: '5.1.1', name: 'EMR Service', desc: '', projects: [
+            { name: 'Smart EMR ระบบเวชระเบียนอิเล็กทรอนิกส์อัจฉริยะ', desc: 'พัฒนา EMR ให้มากกว่า "ระบบจัดเก็บข้อมูลผู้ป่วย" แต่เป็นแหล่งข้อมูลสำคัญขององค์กร ที่สามารถเชื่อมโยงข้อมูลจากกระบวนการรักษาและการให้บริการ เพื่อนำไปใช้ประโยชน์ต่อได้' },
+            { name: 'Digital Medical Record Learning System (DMRLS)', desc: 'ระบบการเรียนรู้จากข้อมูลเวชระเบียน นำข้อมูลจาก Digital Medical Record มาสนับสนุนการเรียนรู้ของบุคลากรและองค์กร ทุกการดูแลผู้ป่วยสามารถสร้างบทเรียนและองค์ความรู้ใหม่ได้ หากมีระบบที่ช่วยรวบรวม วิเคราะห์ และถอดบทเรียนอย่างเป็นระบบ' },
+            { name: 'Digital Patient Record Access', desc: 'พัฒนาการเข้าถึงข้อมูลผู้ป่วยให้เหมาะสมกับผู้มีสิทธิ์ใช้งาน เพื่อให้บุคลากรสามารถเข้าถึงข้อมูลที่จำเป็นได้ รวดเร็ว ถูกต้อง และต่อเนื่อง' },
+            { name: 'EMR Clinical Decision Support System (CDSS)', desc: 'นำข้อมูลจาก EMR มาช่วยสนับสนุนบุคลากรทางการแพทย์ในการตัดสินใจ โดยระบบสามารถนำข้อมูลผู้ป่วยมาวิเคราะห์และนำเสนอ Clinical Information / Alert / Recommendation ที่เกี่ยวข้อง' }
+          ]},
+          { id: '5.1.2', name: 'Perform IOT facilities service', desc: '', projects: [
+            { name: 'Smart Medical Device Connect', desc: 'เชื่อม Monitor, Infusion Pump, Ventilator และอุปกรณ์สำคัญเข้าสู่ระบบกลาง' },
+            { name: 'Smart Asset Tracking', desc: 'ติด RFID/BLE Tag กับ Wheelchair, Infusion Pump, Portable Monitor และอุปกรณ์เคลื่อนที่' },
+            { name: 'IOT Maintenance', desc: 'ติด Sensor ตรวจอุณหภูมิ/ความชื้นในตู้เย็นยา คลังยา Lab Server Room และพื้นที่สำคัญ วิเคราะห์ข้อมูลการทำงาน ชั่วโมงใช้งาน Error และ Sensor ของเครื่องมือ' },
+            { name: 'THAMC IoT Data & Innovation Lab', desc: 'รวมข้อมูลจากอุปกรณ์ IoT ทั้งหมดเข้า Dashboard/Data Platform และนำ AI/Data Analytics มาวิเคราะห์' }
+          ]},
+          { id: '5.1.3', name: 'Telemedicine project', desc: '', projects: [
+            { name: 'Telemedicine Follow-up', desc: 'คัดเลือกผู้ป่วยที่เหมาะสมสำหรับการติดตามผ่านระบบออนไลน์ เช่น ติดตามอาการหลังการรักษา ติดตามผลการตรวจ ติดตามการตอบสนองต่อการรักษา ให้คำแนะนำในการดูแลตนเอง และนัดหมายครั้งถัดไป' },
+            { name: 'Chronic Care Telemedicine', desc: 'จัดระบบติดตามผู้ป่วยโรคเรื้อรังเป็นระยะ' },
+            { name: 'Digital Patient Follow-up', desc: 'ให้ผู้ป่วยส่งข้อมูลที่จำเป็นก่อนพบแพทย์ เช่น อาการ ผลตรวจ หรือข้อมูลสุขภาพที่เกี่ยวข้อง เพื่อให้แพทย์ใช้ประกอบการติดตาม' },
+            { name: 'Missed Appointment Follow-up', desc: 'นำระบบแจ้งเตือนและติดตามผู้ป่วยที่ขาดนัด (No-show) มาใช้ เพื่อเพิ่มความต่อเนื่องในการรักษา' },
+            { name: 'Escalation / Refer Back', desc: 'หากระหว่าง Telemedicine พบข้อมูลหรืออาการที่จำเป็นต้องประเมินแบบพบหน้า ให้มีระบบนัดหมายกลับมารับบริการที่ศูนย์การแพทย์' }
+          ]},
+          { id: '5.1.4', name: 'Pharmacy Online Project', desc: '', projects: [
+            { name: 'THAMC Pharmacy Anywhere – Online Pharmacy & Smart Medication Access', desc: 'พัฒนาช่องทางบริการเภสัชกรรมออนไลน์แบบครบวงจร ให้ผู้ป่วยสามารถดำเนินการเรื่องยา เลือกวิธีรับยา และติดตามสถานะได้สะดวก ลดการเดินทางและระยะเวลารอรับยา' },
+            { name: 'THAMC Virtual Pharmacist & Digital Medication Care', desc: 'ให้ผู้ป่วยสามารถเข้าถึงเภสัชกรจากระยะไกล และได้รับการติดตามด้านยาอย่างต่อเนื่อง ทั้งการให้คำปรึกษา การเฝ้าระวัง ADR และปัญหาจากการใช้ยา' },
+            { name: 'THAMC Intelligent Medication Adherence & Personalized Pharmacy Care', desc: 'ใช้ข้อมูลและ AI วิเคราะห์ผู้ป่วยที่มีความเสี่ยงต่อการใช้ยาไม่ต่อเนื่อง และสนับสนุนให้เภสัชกรสามารถดูแลผู้ป่วยเชิงรุกและเฉพาะบุคคล' },
+            { name: 'THAMC Smart Pharmacy Automation & Robotic Dispensing', desc: 'ยกระดับกระบวนการจัดยาและจ่ายยาด้วย Automation/Robotic Technology ลดขั้นตอน ลดความคลาดเคลื่อน เพิ่มความรวดเร็ว และสนับสนุนบริการ Pharmacy Online' }
+          ]}
+        ]
+      },
+      {
+        id: '5.2', name: 'ESG Contribution', desc: '',
+        groups: [
+          { id: '5.2.1', name: 'Energy Saving Project', desc: '', projects: [] },
+          { id: '5.2.2', name: 'CSR project (CPR training, Stroke detection training, etc.)', desc: '', projects: [
+            { name: 'THAMC Health for All', desc: 'โครงการสุขภาพดี เพื่อทุกคน ทุกชุมชน นำองค์ความรู้ ความเชี่ยวชาญ และศักยภาพของโรงพยาบาลไปสร้างเสริมสุขภาพเชิงรุกให้แก่ประชาชน โรงเรียน และกลุ่มเปราะบาง เพื่อส่งเสริมการป้องกันโรค เพิ่ม Health Literacy ลดความเหลื่อมล้ำ และสร้างโอกาสให้ทุกคนเข้าถึงการดูแลสุขภาพอย่างเหมาะสม' },
+            { name: 'THAMC Healthy Hospital', desc: 'บุคลากรสุขภาพดี องค์กรสุขภาพดี เริ่มสร้าง Social Impact จากบุคลากรและผู้ป่วยภายในโรงพยาบาลเอง' }
+          ]},
+          { id: '5.2.4', name: 'G – Governance', desc: '', projects: [
+            { name: 'Good Governance Healthcare Framework', desc: '"โครงการวางรากฐานธรรมาภิบาลองค์กรสุขภาพ" องค์กรมีระบบธรรมาภิบาลอย่างเป็นทางการเป็นครั้งแรก และสามารถนำ Governance ไปเชื่อมกับงาน HR การเงิน พัสดุ การรักษาพยาบาล และการบริหารความเสี่ยง' },
+            { name: 'Transparent Healthcare', desc: '"โครงการองค์กรสุขภาพโปร่งใส ตรวจสอบได้" ผู้บริหาร บุคลากร และผู้รับบริการสามารถเข้าถึงข้อมูลที่ควรเปิดเผยได้ง่ายขึ้น' },
+            { name: 'Ethical Healthcare & Conflict of Interest', desc: '"โครงการองค์กรแพทย์โปร่งใส ไร้ผลประโยชน์ทับซ้อน" จัดทำนโยบาย แนวทางการปฏิบัติ เพื่อตัดวงจร "การเอื้อประโยชน์ – การล็อกสเปก – การรับผลประโยชน์ – การตัดสินใจที่ไม่เป็นกลาง"' },
+            { name: 'Speak Up & Whistleblowing', desc: '"โครงการ Speak Up แจ้งได้ ปลอดภัย ไม่ถูกตอบโต้" สร้างระบบ Anonymous Reporting System: QR Code → Online Form → Governance Unit → ตรวจสอบ → รายงานผล → ปิด Case' }
+          ]}
+        ]
+      },
+      {
+        id: '5.3', name: 'Knowledge Management and Best Practice Sharing', desc: '',
+        groups: [
+          { id: '5.3.1', name: 'KM data lake', desc: '', projects: [
+            { name: 'THAMC Integrated Knowledge, Research & Analytics Hub', desc: 'ศูนย์กลางองค์ความรู้ วิจัย นวัตกรรม และการวิเคราะห์ข้อมูล รวมองค์ความรู้ทางคลินิก คุณภาพ งานวิจัย นวัตกรรม และข้อมูลวิเคราะห์ไว้ในระบบเดียว เพื่อค้นหา ใช้ และต่อยอดได้จริง' },
+            { name: 'Patient Education Knowledge Center', desc: 'ศูนย์ความรู้สำหรับผู้ป่วยและประชาชน พัฒนาสื่อความรู้ที่ถูกต้อง เข้าใจง่าย และเข้าถึงได้ เพื่อสนับสนุนการดูแลตนเองและการตัดสินใจของผู้ป่วยและครอบครัว' },
+            { name: 'Internal Communication & KM Culture', desc: 'การสื่อสารและสร้างวัฒนธรรมการแบ่งปันความรู้ ทำให้บุคลากร THAMC รับรู้ เข้าถึง ใช้ และแบ่งปันองค์ความรู้ร่วมกันอย่างต่อเนื่อง จนเกิดวัฒนธรรมการเรียนรู้ขององค์กร' }
+          ]},
+          { id: '5.3.2', name: 'CQI project', desc: '', projects: [
+            { name: 'CQI for Better Care & CQI Innovation & Best Practice Sharing', desc: 'ส่งเสริมการทำ CQI และต่อยอดผลงานสู่ Best Practice และนวัตกรรม' },
+            { name: 'CQI from Real Problem & CQI–Patient Safety Integration', desc: 'เปลี่ยนปัญหาหน้างานเป็นโอกาสพัฒนา และบูรณาการ CQI กับความปลอดภัยของผู้ป่วย' },
+            { name: 'Internal Communication for CQI & Quality Culture', desc: 'สื่อสารและสร้างการรับรู้เรื่อง CQI เพื่อสนับสนุนวัฒนธรรมคุณภาพในองค์กร' }
+          ]},
+          { id: '5.3.3', name: 'Research and Innovation', desc: '', projects: [
+            { name: 'THAMC Research Incentive & Innovation Fund', desc: 'กองทุนสนับสนุนงานวิจัยและนวัตกรรมเชิงผลตอบแทน' },
+            { name: 'Clinical & Service Innovation Challenge', desc: 'ประกวดนวัตกรรมและงานวิจัยเพื่อพัฒนางานบริการ' }
+          ]}
+        ]
+      }
+    ]
   }
 ];
 
@@ -403,7 +474,7 @@ function fyQuarters(fys){
 
 /* ---------- state ---------- */
 var STORE_KEY = 'thamc_strategy_os_v1';
-var SEED_VERSION = 6; // bump whenever SEED_STRATEGIES gains/changes content, to merge into existing saved data
+var SEED_VERSION = 7; // bump whenever SEED_STRATEGIES gains/changes content, to merge into existing saved data
 
 // pulls any project.detail baked into the seed into data.details (only if that project has no detail yet), then strips it off the project object
 function syncSeedDetails(data){

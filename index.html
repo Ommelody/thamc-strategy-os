@@ -991,7 +991,7 @@ function handleAction(act, el, e){
   if (act==='open-modal'){ UI.modalProjectId = ds.pid; UI.modalSaved=''; render(); return; }
   if (act==='open-strat-preview'){ UI.stratPreviewCode = ds.code; render(); return; }
   if (act==='close-strat-preview' || act==='close-strat-preview-bg'){ if (act==='close-strat-preview-bg' && e.target!==el) return; UI.stratPreviewCode = null; render(); return; }
-  if (act==='strat-preview-open-project'){ UI.stratPreviewCode = null; UI.modalProjectId = ds.pid; UI.modalSaved=''; render(); return; }
+  if (act==='strat-preview-open-project'){ UI.stratPreviewCode = null; UI.previewProjectId = ds.pid; render(); return; }
   if (act==='close-modal' || act==='close-modal-bg'){ if (act==='close-modal-bg' && e.target!==el) return; UI.modalProjectId = null; render(); return; }
 
   if (act==='modal-status'){ setEntry(UI.modalProjectId, UI.entryQuarter, { status: ds.status }); render(); return; }

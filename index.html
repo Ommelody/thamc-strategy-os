@@ -92,356 +92,115 @@ body.printing-project .project-print-sheet{display:block}
 /* ---------- seed data ---------- */
 var SEED_STRATEGIES = [
   {
-    code: '1', name: 'สร้างความมั่นคงทางการเงิน (Financial Strategy)',
-    goal: 'มุ่งเน้นไปที่การบรรลุเป้าหมาย (Target achievement) ในการสร้างความแข็งแกร่งทางธุรกิจ เพื่อให้องค์กรสามารถดำเนินงานและให้บริการทางการแพทย์ได้อย่างต่อเนื่อง',
+    code: '1', name: 'การเติบโตและความยั่งยืนทางการเงิน (Financial Growth & Sustainability)',
+    goal: 'กลไกสร้างการเติบโตของรายได้ (Revenue Growth Engine) — มุ่งเน้นการสร้างความแข็งแกร่งทางธุรกิจ เพื่อให้องค์กรดำเนินงานและให้บริการทางการแพทย์ได้อย่างต่อเนื่อง',
     subs: [
       {
-        id: '1.1', name: 'การสร้างความมั่นคงทางการเงิน (Establish Financial Sustainability)',
-        desc: 'เน้นการบริหารจัดการภายใน เพื่อให้กระแสเงินสดและผลประกอบการขององค์กรมีความมั่นคงในระยะยาว',
+        id: '1.1', name: 'โครงการเรือธง (Flagship Projects)', desc: '',
         groups: [
-          { id: '1.1.1', name: 'Revenue (การสร้างรายได้)', desc: 'มุ่งเน้นการริเริ่มโครงการหรือบริการใหม่ ๆ เพื่อเพิ่มช่องทางรายได้เข้าสู่ศูนย์การแพทย์ เช่น การขยายศักยภาพการรับผู้ป่วย การเปิดศูนย์ความเป็นเลิศเฉพาะทาง หรือการเพิ่มบริการด้านสุขภาพเชิงป้องกัน', projects: [
-            { name: 'Premium After-Hours Clinic (คลินิกพิเศษนอกเวลา)', desc: 'เปิดบริการตรวจรักษาเฉพาะทางช่วงเย็น/วันหยุด สำหรับคนวัยทำงานที่ยินดีจ่ายส่วนต่างพิเศษ (Premium Fee) แลกกับความสะดวกและไม่ต้องรอคิวนาน' },
-            { name: 'บริการสุขภาพดิจิทัล Tele-Consultation & Medication Delivery', desc: 'ใช้ AI และ EMR เชื่อมต่อระบบให้คำปรึกษาทางไกลแบบมีค่าใช้จ่ายสำหรับกลุ่มโรคเรื้อรังที่อาการคงที่ พร้อมบริการจัดส่งยาถึงบ้าน ช่วยเพิ่มโควตารับผู้ป่วยใหม่' },
-            { name: 'ออกแบบแพ็กเกจการรักษาแบบเหมาจ่าย (Value-Based Bundled Pricing)', desc: 'จัดทำแพ็กเกจราคาเหมาจ่ายครอบคลุมทุกขั้นตอน เช่น แพ็กเกจผ่าตัดพร้อมผู้ช่วยส่วนตัวและติดตามผลถึงบ้าน เพื่อดึงดูดผู้ป่วยชำระเงินเองและแข่งขันกับโรงพยาบาลเอกชน' },
-            { name: 'ศูนย์ให้คำปรึกษาความเห็นที่สองทางการแพทย์ (Second Opinion Expert Center)', desc: 'บริการให้คำปรึกษาความเห็นที่สองทางการแพทย์สำหรับผู้ป่วยจากโรงพยาบาลอื่นที่ต้องการความมั่นใจจากทีมแพทย์ผู้เชี่ยวชาญของ THAMC (ให้บริการออนไลน์ได้)' },
-            { name: 'ขยายฐานลูกค้าผ่านพันธมิตรบริษัทประกันสุขภาพ (Insurance Partnerships)', desc: 'เจรจาจัดทำ Co-Promotion ร่วมกับบริษัทประกันชั้นนำ เพื่อให้ THAMC เป็นโรงพยาบาลคู่สัญญาหลัก (Preferred Provider) สำหรับผู้ป่วยกลุ่มโรคเฉพาะทาง' },
-            { name: 'Corporate Health & Wellness Programs (B2B)', desc: 'จัดทีมรุกทำสัญญาตรวจสุขภาพประจำปีกับบริษัท มหาวิทยาลัย โรงงาน และหน่วยงานรัฐ พร้อมพ่วงบริการฉีดวัคซีนไข้หวัดใหญ่และประเมินความเสี่ยงออฟฟิศซินโดรม',
-              detail: {
-                target: 'Primary Target\n1. บริษัทเอกชนและสถานประกอบการในพื้นที่กรุงเทพมหานคร ปทุมธานี และจังหวัดใกล้เคียง\n2. หน่วยงานภาครัฐ รัฐวิสาหกิจ และสถาบันการศึกษา\n3. องค์กรที่มีพนักงานตั้งแต่ 50 คนขึ้นไป และมีความต้องการตรวจสุขภาพหรือส่งเสริมสุขภาพพนักงาน\n4. กลุ่มองค์กรที่ต้องการบริการสุขภาพแบบเหมาจ่ายหรือสัญญาบริการรายปี',
-                output: 'Output\n- มี Corporate Health Package ที่ตอบโจทย์ความต้องการขององค์กร\n- มีฐานข้อมูลและรายชื่อองค์กรเป้าหมาย\n- มีข้อเสนอการให้บริการสำหรับองค์กร (Corporate Health Proposal)\n- มีองค์กรที่เข้าร่วมโครงการและทำข้อตกลงความร่วมมือ\n- มีจำนวนผู้รับบริการจากกลุ่มองค์กรเพิ่มขึ้น\n\nOutcome\n- เพิ่มรายได้จากกลุ่มลูกค้าองค์กร และรายได้แบบ Recurring จากสัญญารายปี\n- เพิ่มจำนวนผู้รับบริการใหม่ และการใช้บริการต่อเนื่องจากลูกค้าองค์กร\n- ลดความเสี่ยง NCDs และส่งเสริมสุขภาวะของพนักงานองค์กรคู่ค้า\n- สร้างภาพลักษณ์ศูนย์การแพทย์ในฐานะ Strategic Health Partner',
-                kpi: '- จำนวนองค์กรที่เข้าร่วมโครงการ/ทำสัญญาความร่วมมือ\n- จำนวนผู้รับบริการจากกลุ่มองค์กร\n- รายได้จากกลุ่มลูกค้าองค์กร (Revenue per Corporate Client)\n- อัตราการต่อสัญญาในปีถัดไป',
-                budget: '110,000 บาท/ปี',
-                area: 'ศูนย์การแพทย์ธรรมศาสตร์ และสถานประกอบการ/องค์กรคู่ค้าในพื้นที่กรุงเทพมหานคร ปทุมธานี และจังหวัดใกล้เคียง และภาคกลางตอนบน',
-                owner: 'Project Owner ที่ THAMC แต่งตั้ง ร่วมกับ Clinical, Operations, Finance, HR, IT',
-                startMonth: 12, endMonth: 23,
-                steps: [
-                  { name: 'วิเคราะห์ศักยภาพบริการและกำหนด Corporate Health Package / กำหนดกลุ่มองค์กรเป้าหมาย ออกแบบระบบและเตรียมความพร้อม', from: 12, to: 13 },
-                  { name: 'จัดทำฐานข้อมูลองค์กรเป้าหมาย และจัดทำ Proposal, Package และอัตราค่าบริการ', from: 14, to: 15 },
-                  { name: 'ประชาสัมพันธ์ เข้าพบ/นำเสนอแพ็กเกจแก่บริษัทและหน่วยงานเป้าหมาย', from: 16, to: 17 },
-                  { name: 'เจรจาเงื่อนไข จัดทำข้อตกลง/สัญญาความร่วมมือ และเริ่มให้บริการ', from: 18, to: 18 },
-                  { name: 'ดำเนินการให้บริการ ติดตามจำนวนผู้รับบริการ รายได้ และความพึงพอใจ', from: 19, to: 21 },
-                  { name: 'ประเมินผลโครงการ สรุปรายได้ วิเคราะห์ต้นทุน–ผลตอบแทน และจัดทำแผนต่อสัญญา/ขยายฐานองค์กรในปีถัดไป', from: 22, to: 23 }
-                ]
-              }
-            },
-            { name: 'Personalized Health Screening', desc: 'ยกระดับโปรแกรมตรวจสุขภาพจากพื้นฐานสู่เชิงลึก เช่น การตรวจยีนประเมินความเสี่ยงมะเร็ง คลินิกเวชศาสตร์ชะลอวัย และคลินิกจัดการน้ำหนัก' },
-            { name: '"Prehab" ก่อนการผ่าตัด', desc: 'บริการเตรียมความพร้อมร่างกายและโภชนาการก่อนผ่าตัดใหญ่ ช่วยให้ผู้ป่วยฟื้นตัวไวขึ้น เป็นบริการเสริมที่สร้างรายได้และผลลัพธ์การรักษาที่ดีไปพร้อมกัน' },
-            { name: 'Home Health Care & Rehabilitation', desc: 'ส่งนักกายภาพบำบัด พยาบาล หรือผู้ดูแล ลงพื้นที่ให้บริการฟื้นฟูสมรรถภาพผู้ป่วยติดเตียงหรือผู้ป่วยหลังผ่าตัดถึงบ้าน' },
-            { name: 'ศูนย์สุขภาพผู้สูงอายุครบวงจร (Integrated Senior Wellness & Care Center)', desc: 'บริการ Senior Wellness Packages ครอบคลุมตรวจสุขภาพ กายภาพบำบัด โภชนาการ สุขภาพจิต และ tele-follow-up ใช้โมเดล Subscription/Package สร้างรายได้ต่อเนื่อง' },
-            { name: 'Premium Health Membership ("สมาชิกสุขภาพ")', desc: 'โปรแกรมสมาชิกสุขภาพระดับพรีเมียม มอบสิทธิพิเศษ เช่น คิวด่วน แพทย์ประจำตัว และส่วนลดค่าบริการ เพื่อสร้างรายได้ประจำ (Recurring Revenue) และผูกพันลูกค้าในระยะยาว' }
-          ]},
-          { id: '1.1.2', name: 'EBITDA Project - Cost Efficiency (การเพิ่มประสิทธิภาพด้านต้นทุน)', desc: 'มุ่งเน้นการจัดการฝั่ง "รายจ่าย" โดยเน้นความคุ้มค่า (Efficiency) เช่น การลดความสูญเปล่าในกระบวนการทำงาน (Lean) การบริหารจัดการสินค้าคงคลังด้านยาและเวชภัณฑ์ให้รัดกุมขึ้น เพื่อให้องค์กรมีอัตรากำไร (EBITDA) ที่ดีขึ้นโดยไม่กระทบต่อคุณภาพการรักษา', projects: [
-            { name: 'การจัดการยาและเวชภัณฑ์ใกล้หมดอายุ (Near-Expiry Alert & Swap)', desc: 'สร้างระบบเครือข่ายระหว่างหอผู้ป่วยเพื่อแจ้งเตือนและแลกเปลี่ยนเวชภัณฑ์ใกล้หมดอายุนำมาหมุนเวียนใช้ก่อน มุ่งลดมูลค่ายา/เวชภัณฑ์หมดอายุให้เป็นศูนย์ (Zero Waste)' },
-            { name: 'Strategic Cost & Procurement Optimization', desc: 'เจรจาต่อรอง หาแหล่งวัตถุดิบ (Strategic Sourcing) และบริหารสัญญากับซัพพลายเออร์ภายนอก เพื่อลดต้นทุนจัดซื้อโดยไม่กระทบคุณภาพและความปลอดภัย' },
-            { name: 'ปรับมาตรฐานอุปกรณ์สิ้นเปลือง (Standardization of Supplies)', desc: 'ทบทวนรายการอุปกรณ์ทางการแพทย์ เช่น ถุงมือ กระบอกฉีดยา อุปกรณ์ทำแผล ลดความหลากหลายของแบรนด์ เพิ่มอำนาจต่อรองจัดซื้อล็อตใหญ่และลดต้นทุนต่อชิ้น' },
-            { name: 'บริหารสต็อกแบบ Just-in-Time (JIT) ระดับแผนก', desc: 'กำหนดจุดสั่งซื้อซ้ำ (Re-order Point) ที่แม่นยำสำหรับของใช้ราคาสูง เพื่อไม่ให้เงินทุนจมกับการกักตุนสินค้าคงคลังมากเกินไป' },
-            { name: '5S & Motion Waste Reduction', desc: 'จัดระเบียบห้องเก็บอุปกรณ์ทุกแผนกตามหลัก 5ส เพื่อให้บุคลากรค้นหาและหยิบของได้ทันที เปลี่ยน "เวลาที่สูญเปล่า" เป็น "เวลาดูแลผู้ป่วย"' },
-            { name: 'Paperless & Digital Workflow', desc: 'ลดการใช้กระดาษและหมึกพิมพ์ในงาน Back-office เช่น ใช้ E-Signature ในระบบอนุมัติเอกสารภายใน หรือ Digital Forms สำหรับการเบิกจ่าย' },
-            { name: 'ทบทวนขั้นตอนปฏิบัติทางการแพทย์ที่ซ้ำซ้อน (Process Streamlining)', desc: 'วิเคราะห์เส้นทางส่งต่อผู้ป่วยและสิ่งส่งตรวจทางห้องปฏิบัติการ เพื่อตัดขั้นตอนที่มีการบันทึกข้อมูลซ้ำซ้อนระหว่างแผนก' },
-            { name: 'บริหารจัดการและเพิ่มมูลค่าพื้นที่ให้บริการแบบบูรณาการ (Facility Space Value Optimization)', desc: 'เปลี่ยนพื้นที่ที่ไม่ได้ใช้งานเต็มเวลา เช่น ห้องตรวจหรือห้องเรียน ให้สร้างมูลค่าในช่วงนอกเวลาทำการ ลดต้นทุนค่าเสียโอกาสโดยไม่ต้องสร้างใหม่' },
-            { name: 'ศูนย์ยืม-คืนเครื่องมือแพทย์ส่วนกลาง (Centralized Equipment Sharing)', desc: 'สร้างระบบติดตามและใช้ประโยชน์จากเครื่องมือแพทย์เคลื่อนที่ได้ เช่น เครื่องช่วยหายใจ Infusion Pump ร่วมกันระหว่างแผนก แทนที่จะซื้อแยกของแต่ละแผนก' },
-            { name: 'บำรุงรักษาเชิงป้องกัน (Preventive Maintenance Check)', desc: 'ให้ผู้ปฏิบัติงานที่ใช้เครื่องมือหรือโครงสร้างพื้นฐานตรวจเช็กสภาพเบื้องต้นอย่างสม่ำเสมอ เพื่อยืดอายุการใช้งานและลดค่าซ่อมแซมใหญ่' },
-            { name: 'เปลี่ยนแนวคิดหน้างานเป็นผลกำไร (Operational Cost-Saving Yield)', desc: 'เปิดเวทีให้พนักงานระดับปฏิบัติการเสนอแนวคิดลดต้นทุนในแผนกตนเอง สร้าง Psychological Empowerment ให้พนักงานรู้สึกว่าเสียงของตนมีค่าและร่วมแก้ไขปัญหา' },
-            { name: 'Direct-to-Patient (DTP) Distribution Model', desc: 'บริการจัดส่งยาและเวชภัณฑ์จากโรงพยาบาลตรงถึงบ้านผู้ป่วย ลดความจำเป็นในการเดินทางมารับยา ลดความแออัดที่จุดจ่ายยา เพิ่มความสะดวกให้ผู้ป่วยเรื้อรังและผู้สูงอายุ' },
-            { name: 'Vendor Managed Inventory (VMI)', desc: 'ให้ผู้ขาย/ซัพพลายเออร์เข้ามาร่วมบริหารระดับสต็อกยาและเวชภัณฑ์ในคลังของโรงพยาบาลโดยตรง ลดภาระงานจัดซื้อและลดความเสี่ยงสินค้าขาดหรือเกินสต็อก' }
-          ]}
-        ]
-      },
-      {
-        id: '1.2', name: 'การสร้างการรับรู้ในมุมมองของการตลาด (Market Perception)',
-        desc: 'ประเมินและค้นหาจุดแข็งที่แท้จริงของ THAMC ร่วมกับการวิเคราะห์คู่แข่ง เพื่อวางตำแหน่งทางการตลาดและเพิ่มส่วนแบ่งตลาด',
-        groups: [
-          { id: '1.2.1', name: 'Leverage Market Position and Competitor Analysis', desc: 'เน้นการประเมินและค้นหาจุดแข็งที่แท้จริงของ THAMC เช่น ความเชี่ยวชาญเฉพาะทางระดับศูนย์ความเป็นเลิศ นวัตกรรมทางการแพทย์ หรือความคุ้มค่าด้านราคา ร่วมกับการวิเคราะห์จุดแข็งและจุดอ่อนของคู่แข่งรอบข้าง เพื่อหาช่องว่างทางการตลาด', projects: [
-            { name: 'Competitive Intelligence & Healthcare Market Trends Dashboard', desc: 'ปิดจุดอ่อนด้าน Data Analytics ด้วย Dashboard ติดตามความเคลื่อนไหวคู่แข่ง (เปิดศูนย์ใหม่ ปรับราคา แคมเปญ) และแนวโน้มผู้ป่วยแบบเรียลไทม์' },
-            { name: 'Strategic Market & Competitor Intelligence', desc: 'ศึกษาตลาดสุขภาพในพื้นที่และวิเคราะห์คู่แข่งทั้งด้านบริการ ราคา คุณภาพ บุคลากร เทคโนโลยี เพื่อค้นหา Market Opportunity และ Target Market ที่ชัดเจน' },
-            { name: 'Patient Voice & Competitor Tracking', desc: 'ให้พนักงานเวชระเบียน พยาบาล หรือการเงิน บันทึกข้อมูลเชิงลึกเมื่อผู้ป่วยพูดถึงโรงพยาบาลคู่แข่ง เพื่อรวบรวมเป็นฐานข้อมูลวิเคราะห์จุดอ่อนคู่แข่ง' },
-            { name: 'Operational Mystery Shopper', desc: 'มอบหมายตัวแทนแผนกไปสำรวจกระบวนการทำงานของโรงพยาบาลคู่แข่ง เช่น ที่จอดรถ ระบบเรียกคิว ความรวดเร็วรับยา เพื่อเทียบเคียงและหาจุดที่ทำได้เหนือกว่า' },
-            { name: 'Frontline USP Pitching', desc: 'จัดทำคู่มือ/บทพูดสั้น ๆ ให้พนักงานแต่ละแผนกใช้ตอบคำถามผู้ป่วยอย่างมั่นใจ เช่น ชูจุดแข็งด้านเทคโนโลยีหรือแพทย์ผู้เชี่ยวชาญเมื่อผู้ป่วยกังวลเรื่องราคา' },
-            { name: 'Visualizing Competence', desc: 'ปรับปรุงพื้นที่หน้างานให้สะท้อนจุดเด่น เช่น บอร์ดประวัติความเชี่ยวชาญของแพทย์ ใบรับรองมาตรฐาน AACI หรือสถิติผลการรักษา ไว้ในจุดที่ผู้ป่วยนั่งรอ' },
-            { name: 'Fast-Track Scheduling', desc: 'หากคู่แข่งมีคิว MRI หรือผ่าตัดยาวมาก แผนกที่เกี่ยวข้องบริหารตารางเวลา (Smart Scheduling) เพื่อรับโอนเคสมารักษาที่ THAMC ได้รวดเร็วกว่า' },
-            { name: 'Target Market & Competitive Positioning', desc: 'กำหนดกลุ่มตลาดที่ THAMC มีศักยภาพแข่งขันสูงสุด พร้อมตำแหน่งการแข่งขันที่ชัดเจน เชื่อมโยง Target Segment, Competitive Positioning และ Value Proposition' },
-            { name: 'Strategic Marketing Plan', desc: 'แปลงผลวิเคราะห์ตลาด คู่แข่ง และจุดแข็งของ THAMC เป็นแผนการตลาด กำหนดกลุ่มเป้าหมาย จุดขาย ช่องทาง และกิจกรรมที่ตอกย้ำความแตกต่าง' },
-            { name: 'Competitive Early Warning & Market Response', desc: 'จัดตั้งระบบติดตามการเคลื่อนไหวของคู่แข่งและตลาดต่อเนื่อง เช่น บริการใหม่ การลงทุนเทคโนโลยี การปรับราคา พร้อมกำหนดแนวทางตอบสนองอย่างรวดเร็ว' }
-          ]},
-          { id: '1.2.2', name: 'Increase Market Sharing', desc: 'เน้นการวางแผนเพื่อดึงดูดกลุ่มคนไข้ใหม่ ๆ หรือกลุ่มเป้าหมายใหม่ ๆ เพื่อเพิ่มสัดส่วนผู้เข้ารับบริการเมื่อเทียบกับภาพรวมของตลาดเฮลท์แคร์ในพื้นที่', projects: [
-            { name: 'B2B Health Consultants', desc: 'พัฒนาทีมงานเฉพาะกิจเจาะตลาดองค์กรและประกันสุขภาพ นำเสนอแพ็กเกจอาชีวอนามัยและสวัสดิการสุขภาพที่ยืดหยุ่นตามงบประมาณ' },
-            { name: 'Mobile Wellness Ops', desc: 'จัดรถตรวจสุขภาพและคัดกรองโรคออกให้บริการถึงสถานประกอบการและชุมชน เพื่อสร้างการรับรู้และหาฐานผู้ป่วยใหม่' },
-            { name: 'Community Health Connect', desc: 'สร้างเครือข่ายความร่วมมือกับชุมชน ผู้นำชุมชน อปท. โรงเรียน วัด และ อสม. จัดกิจกรรมคัดกรองสุขภาพ ให้ความรู้ พร้อมระบบส่งต่อเข้าสู่บริการของ THAMC' },
-            { name: 'Tiered Membership + Preventive Health Membership', desc: 'ออกแบบแพ็กเกจสมาชิกสุขภาพแบบขั้นบันได (เช่น กลุ่มวัยเก๋า/โรคเรื้อรัง) ผสานกับโปรแกรมสมาชิกด้านการสร้างเสริมสุขภาพและป้องกันโรค เพื่อสร้างความสัมพันธ์ระยะยาวและรายได้สมาชิกต่อเนื่อง' },
-            { name: 'One-Stop Specialty Care', desc: 'ออกแบบบริการเฉพาะทางแบบครบวงจรสำหรับกลุ่มโรคที่มีศักยภาพตลาด เช่น เบาหวาน สุขภาพผู้สูงอายุ สุขภาพสตรี เชื่อมโยงประเมิน วินิจฉัย รักษา และติดตามผลในเส้นทางเดียว' },
-            { name: 'Precision Digital Marketing Strategy', desc: 'ใช้ข้อมูลพฤติกรรมพัฒนากลยุทธ์การตลาดดิจิทัล ทำแคมเปญออนไลน์ผ่านเว็บไซต์ โซเชียลมีเดีย และแพลตฟอร์มสุขภาพ พร้อมระบบนัดหมายออนไลน์ดึงดูดผู้ป่วยใหม่' },
-            { name: 'Market Intelligence Lab', desc: 'จัดตั้งกระบวนการติดตามและวิเคราะห์ตลาดสุขภาพในพื้นที่ต่อเนื่อง รวบรวมข้อมูลผู้รับบริการใหม่ คู่แข่ง และผลตอบรับแคมเปญ เพื่อออกแบบกิจกรรมการตลาดให้แม่นยำ' },
-            { name: 'CX Touchpoint Upgrade', desc: 'ยกระดับประสบการณ์ผู้รับบริการตั้งแต่ก่อน ระหว่าง และหลังใช้บริการ ด้วยระบบ Smart Q และ Cashless ลดเวลารอคอยและเพิ่มความพึงพอใจ' },
-            { name: 'Mobile Wellness & Screening', desc: 'จัดหน่วยบริการสุขภาพเคลื่อนที่ออกให้บริการในชุมชน สถานประกอบการ และสถานศึกษา เน้นตรวจคัดกรองเบื้องต้นและส่งต่อผู้มีความเสี่ยงเข้าสู่ระบบบริการ' },
-            { name: 'Health Innovation Showcase', desc: 'จัดกิจกรรมนำเสนอนวัตกรรม บริการใหม่ และความเชี่ยวชาญของ THAMC ผ่านงานสัมมนา นิทรรศการสุขภาพ เพื่อสร้างการรับรู้แบรนด์และเปลี่ยนผู้สนใจเป็นผู้ใช้บริการจริง' },
-            { name: 'THAMC Premium Market Share Expansion', desc: 'เพิ่มผู้รับบริการกลุ่ม Premium และรายได้จากบริการที่มีศักยภาพ / ขยายฐานลูกค้าใหม่และดึงลูกค้าจากคู่แข่ง / เพิ่มการใช้บริการห้องพัก Premium และบริการเฉพาะทาง / สร้างการรับรู้ภาพลักษณ์บริการคุณภาพและประสบการณ์ระดับ Premium' }
-          ]},
-          { id: '1.2.3', name: 'Perform Digital Marketing', desc: 'การใช้ช่องทางออนไลน์ (เช่น โซเชียลมีเดีย เว็บไซต์ แอปพลิเคชัน) เพื่อสื่อสารแบรนด์ ให้ความรู้ด้านสุขภาพ และเข้าถึงกลุ่มเป้าหมายได้อย่างรวดเร็วและตรงจุด', projects: [
-            { name: 'THAMC Health Answers Hub', desc: 'จัดทำศูนย์รวมเนื้อหาสุขภาพบนเว็บไซต์และช่องทางดิจิทัล ในรูปแบบบทความ วิดีโอสั้น อินโฟกราฟิก และคำถามที่พบบ่อย ผ่านการทบทวนโดยผู้เชี่ยวชาญ' },
-            { name: 'Local Health Search Excellence', desc: 'พัฒนาการปรากฏตัวของ THAMC บนระบบค้นหาและแผนที่ดิจิทัล ปรับปรุงข้อมูลสถานพยาบาล บริการ และช่องทางติดต่อให้ครบถ้วนเป็นปัจจุบัน พร้อมเนื้อหาเฉพาะพื้นที่' },
-            { name: 'Trusted Patient Voice', desc: 'พัฒนาระบบรวบรวมและสื่อสารเสียงสะท้อนจากผู้รับบริการอย่างมีจริยธรรม เปิดช่องทางประเมินประสบการณ์ พร้อมระบบตอบข้อร้องเรียนอย่างรวดเร็วและรักษาความลับ' },
-            { name: 'Clinical Expert Content Studio', desc: 'จัดตั้งกลไกผลิตสื่อร่วมกับแพทย์และผู้เชี่ยวชาญ แปลงองค์ความรู้ทางการแพทย์เป็นเนื้อหาดิจิทัลที่เข้าใจง่าย เช่น วิดีโอ "ถามแพทย์ใน 60 วินาที"' },
-            { name: 'Life-Stage Digital Health Journey', desc: 'ออกแบบชุดการสื่อสารดิจิทัลตามกลุ่มเป้าหมายหลัก เช่น วัยเริ่มทำงาน ผู้สูงอายุ และผู้ดูแล พร้อมเครื่องมือประเมินตนเองและข้อเสนอนัดหมายที่เหมาะสมแต่ละกลุ่ม' },
-            { name: 'LINE Health Companion', desc: 'พัฒนา LINE Official Account ให้เป็นผู้ช่วยสุขภาพดิจิทัลที่ใช้งานง่าย ส่งความรู้แบบสั้น แจ้งเตือนกิจกรรม แบบประเมินความเสี่ยง และเชื่อมต่อระบบนัดหมาย' },
-            { name: 'Digital Health Community', desc: 'สร้างชุมชนออนไลน์ที่มีผู้เชี่ยวชาญให้ความรู้และกระตุ้นการดูแลสุขภาพต่อเนื่อง ผ่านห้องสนทนาสดและกิจกรรมท้าทายพฤติกรรมสุขภาพ พร้อมระบบส่งต่อกรณีมีความเสี่ยง' },
-            { name: 'Smart Appointment Journey', desc: 'พัฒนาระบบนัดหมายดิจิทัลเชื่อมต่อเว็บไซต์ App และโซเชียลมีเดีย ให้เลือกบริการ วัน เวลาได้สะดวก พร้อมข้อความยืนยันและระบบแจ้งเตือนล่วงหน้า' },
-            { name: 'Digital Care Navigator', desc: 'จัดตั้งทีมประสานงานดิจิทัลตอบคำถามเกี่ยวกับบริการ ขั้นตอน ค่าใช้จ่าย และการเตรียมตัว ผ่าน App LINE เว็บไซต์ หรือโทรศัพท์ พร้อมมาตรฐานเวลาตอบกลับ' },
-            { name: 'Hyperlocal Digital Outreach', desc: 'สื่อสารและโฆษณาดิจิทัลแบบกำหนดพื้นที่เป้าหมายรอบเขตบริการ เลือกสื่อและข้อความให้สอดคล้องกับปัญหาสุขภาพของแต่ละพื้นที่ พร้อมหน้าเว็บเฉพาะกิจกรรมเพื่อวัดผล' },
-            { name: 'Health Moment Marketing', desc: 'พัฒนาปฏิทินการสื่อสารเชื่อมโยงประเด็นสุขภาพกับช่วงเวลาที่ประชาชนตัดสินใจดูแลสุขภาพ เช่น ต้นปีตรวจสุขภาพ ฤดูฝุ่นสุขภาพทางเดินหายใจ' },
-            { name: 'Digital Patient Journey Analytics', desc: 'พัฒนาระบบรวบรวมและวิเคราะห์ข้อมูลเส้นทางผู้สนใจตั้งแต่เห็นสื่อจนถึงเข้ารับบริการจริง เพื่อระบุช่องทางและกลุ่มเป้าหมายที่สร้างผู้รับบริการใหม่ได้จริง' },
-            { name: 'Intelligent Health Content Lab', desc: 'จัดตั้งระบบวางแผน ทดลอง และปรับปรุงเนื้อหาดิจิทัลจากข้อมูลความสนใจและคำค้นหา ใช้ AI ช่วยสรุปประเด็นและร่างเนื้อหา โดยมีผู้เชี่ยวชาญตรวจสอบก่อนเผยแพร่' },
-            { name: 'Intelligence Service Finder Assistant', desc: 'พัฒนาผู้ช่วยสนทนาดิจิทัลตอบคำถามทั่วไปเกี่ยวกับบริการและการนัดหมาย ไม่วินิจฉัยโรคหรือให้คำแนะนำฉุกเฉิน ส่งต่อเจ้าหน้าที่เมื่อเกินขอบเขตที่กำหนด' },
-            { name: 'Digital Marketing and Health Data Governance', desc: 'จัดทำมาตรฐานและกระบวนการกำกับดูแลการตลาดดิจิทัล ครอบคลุมการอนุมัติเนื้อหาทางการแพทย์ การขอความยินยอม การจัดเก็บข้อมูลส่วนบุคคล และการตอบสนองต่อเหตุข้อมูลรั่วไหล' }
+          { id: '1.1.1', name: '44 โครงการเรือธง — ยุทธศาสตร์ที่ 1', desc: '', projects: [
+            { name: 'โครงการขยายตลาดองค์กรและพันธมิตรสุขภาพเชิงรุก (B2B & Health Partnership Growth Program)', desc: 'รวมโครงการ B2B Health Consultants, Insurance Partnerships และ Corporate Wellness เดิม เป็นระบบเดียวสำหรับขยายตลาดองค์กรและพันธมิตรประกันสุขภาพ', priority: true },
+            { name: 'โครงการพัฒนาบริการพรีเมียมและสมาชิกสุขภาพ (Premium & Membership Care Program)', desc: 'รวม Premium After-Hours Clinic, Premium Health Membership และ Tiered Membership เดิม เป็นบริการพรีเมียมและสมาชิกสุขภาพครบวงจร', priority: true },
+            { name: 'โครงการบริการสุขภาพทางไกลและการดูแลต่อเนื่องถึงบ้าน (Integrated Home & Tele-Care Program)', desc: 'รวม Tele-Consultation, Home Health Care และ Telemedicine Follow-up เดิม เป็นระบบดูแลผู้ป่วยทางไกลและถึงบ้านเดียวกัน', priority: true },
+            { name: 'โครงการพัฒนาแพ็กเกจบริการเฉพาะทางและการตรวจสุขภาพเชิงลึก (Specialty Packages & Personalized Screening)', desc: 'รวม Value-Based Bundled Pricing, Personalized Health Screening และ Senior Wellness Center เดิม', priority: true },
+            { name: 'โครงการบริหารจัดซื้อและสินค้าคงคลังเชิงกลยุทธ์ (Strategic Procurement & Inventory Optimization)', desc: 'รวม Strategic Cost & Procurement, Standardization of Supplies, JIT และ VMI เดิม', priority: true },
+            { name: 'โครงการจัดทำแผนการตลาดเชิงกลยุทธ์ (Strategic Marketing Plan)', desc: 'จัดทำแผนการตลาดจากผลวิเคราะห์ตลาดและคู่แข่ง กำหนดกลุ่มเป้าหมาย จุดขาย และช่องทางสื่อสาร', priority: false },
+            { name: 'โครงการบริหารการใช้ทรัพยากรและเพิ่มผลิตภาพสินทรัพย์ (Smart Resource & Asset Utilization Program)', desc: 'รวม Facility Space Optimization, Centralized Equipment Sharing และ Preventive Maintenance เดิม', priority: true },
+            { name: 'โครงการข่าวกรองการแข่งขันและติดตามตลาดเชิงกลยุทธ์ (Competitive Intelligence & Market Monitoring)', desc: 'รวม Competitive Intelligence Dashboard, Patient Voice Tracking, Mystery Shopper และ Early Warning เดิม', priority: true },
+            { name: 'โครงการกำหนดจุดยืนเชิงกลยุทธ์และสร้างความแตกต่างของแบรนด์ THAMC (Strategic Positioning & Brand Differentiation)', desc: 'กำหนดตำแหน่งทางการตลาดและจุดขายที่ชัดเจนของ THAMC เทียบกับคู่แข่ง', priority: true },
+            { name: 'โครงการขยายฐานผู้รับบริการผ่านองค์กรและชุมชน (Community Health Outreach & Referral Program)', desc: 'รวม Mobile Wellness Ops และ Community Health Connect เดิม เป็นเครือข่ายส่งต่อผู้รับบริการจากชุมชน', priority: false },
+            { name: 'โครงการแพ็กเกจสมาชิกและบริการเฉพาะทางแบบครบวงจร (Membership & Specialty Care Packages)', desc: 'รวม Tiered Preventive Membership และ One-Stop Specialty Care เดิม', priority: false },
+            { name: 'โครงการยกระดับประสบการณ์และการเข้าถึงบริการแบบรวดเร็ว (Patient Experience & Fast-Track Access)', desc: 'รวม CX Touchpoint Upgrade และ Fast-Track Scheduling เดิม เพื่อลดเวลารอคอยและเพิ่มความพึงพอใจ', priority: true },
+            { name: 'โครงการศูนย์เนื้อหาสุขภาพดิจิทัลและการค้นหาออนไลน์ (Digital Health Content & SEO Hub)', desc: 'รวม Health Answers Hub, Local Health Search Excellence และ Content Studio เดิม', priority: false },
+            { name: 'โครงการเพิ่มประสิทธิภาพระบบบริหารความสัมพันธ์และบริหารเส้นทางผู้รับบริการแบบดิจิทัล (Digital CRM & Patient Journey Platform)', desc: 'รวม Smart Appointment Journey, Digital Care Navigator และ Patient Journey Analytics เดิม', priority: true }
           ]}
         ]
       }
     ]
   },
   {
-    code: '2', name: 'การบริหารทรัพยากรบุคคล (Human Resource Management)',
-    goal: 'มุ่งเน้นไปที่การบรรลุเป้าหมาย (Target achievement) ในการขับเคลื่อนองค์กร โดยเน้นสร้างสมดุลระหว่างการจัดการระบบ คน การพัฒนาทักษะ และการดูแลจิตใจ เพื่อให้องค์กรเติบโตอย่างยั่งยืน',
+    code: '2', name: 'การพัฒนาศักยภาพบุคลากรและองค์กรแห่งความเป็นเลิศ (People & Organizational Excellence)',
+    goal: 'กลไกขับเคลื่อนบุคลากรและขีดความสามารถองค์กร (People & Capability Engine) — สร้างสมดุลระหว่างการจัดการระบบ คน การพัฒนาทักษะ และการดูแลจิตใจ',
     subs: [
       {
-        id: '2.1', name: 'การบริหารทรัพยากรบุคคลอย่างมีประสิทธิผล (Effective Human Resource Management)',
-        desc: 'บริหารจัดการบุคลากรให้เหมาะสม มีประสิทธิภาพและสอดคล้องกับทิศทางองค์กร',
+        id: '2.1', name: 'โครงการเรือธง (Flagship Projects)', desc: '',
         groups: [
-          { id: '2.1.1', name: 'การบริหารจัดการบุคลากรให้เหมาะสม (HRM)', desc: 'วิเคราะห์และจัดอัตรากำลังตามภาระงาน จัดคนให้ตรงกับตำแหน่ง ควบคุมต้นทุนบุคลากร และดูแล Engagement/Well-being ของพนักงาน', projects: [
-            { name: 'Smart Workforce Optimization & Smart Shift Management', desc: 'วิเคราะห์และจัดอัตรากำลังตามภาระงาน พยากรณ์ความต้องการของบุคลากรจากจำนวนผู้ป่วย แนวโน้มบริการ และจัดตารางเวรตามปริมาณผู้รับบริการ' },
-            { name: 'Right Person Right Job', desc: 'จัดบุคลากรให้ตรงกับตำแหน่งและสมรรถนะ' },
-            { name: 'HR Cost & Productivity Management', desc: 'ควบคุมต้นทุนและเพิ่ม Productivity โดยวิเคราะห์ข้อมูลอัตรากำลัง/ผู้รับบริการ/รายได้จากหน่วยงาน' },
-            { name: 'Workforce Flexibility & Multi-Skill', desc: 'พัฒนาคนให้สามารถทำงานทดแทนกันได้ (Multifunction) THAMC มีนโยบายพนักงาน Multi-Function' },
-            { name: 'Critical Workforce & Succession Plan', desc: 'เตรียมบุคลากรทดแทนตำแหน่งสำคัญ เช่น ตำแหน่งที่จะเกษียณ ตำแหน่งที่มีการโยกย้าย/เสี่ยงลาออก' },
-            { name: 'HR Analytics Dashboard', desc: 'ใช้ข้อมูล HR เช่น อัตรากำลัง อัตราการลาออก ในการบริหารจัดการกำลังคน' },
-            { name: 'Employee Voice Program', desc: 'เปิดช่องทางให้บุคลากรเสนอปัญหาและข้อเสนอแนะ ร่วมกับโครงการเสียงบุคลากรสร้างการเปลี่ยนแปลง (THAMC Employee Voice & Action) โดยรวบรวมข้อมูลที่ได้รับไปปรับใช้ดำเนินการจริง' },
-            { name: 'Work Life Balance & Well Balance', desc: 'ปรับรูปแบบตารางเวรและสวัสดิการ เพื่อเพิ่มความสมดุลในชีวิต สำรวจความสุขในการทำงาน' },
-            { name: 'Digital & Data-Driven HR', desc: 'รวมข้อมูลบุคลากร การลา การอบรม Competency อยู่ในโปรแกรม THAMC HR' },
-            { name: 'Stay Interview Program', desc: 'สัมภาษณ์บุคลากรที่ยังอยู่ เพื่อค้นหาสิ่งที่ทำให้อยากอยู่ และปัจจัยที่อาจทำให้ลาออก รวมถึง Engagement ร่วมกับองค์กร' },
-            { name: 'Career Pathway Program', desc: 'สร้างเส้นทางความก้าวหน้าในสายอาชีพอย่างชัดเจน' },
-            { name: 'Employee Referral Program', desc: 'ให้บุคลากรปัจจุบันช่วยแนะนำผู้สมัครที่มีคุณภาพเข้ามาทำงาน' },
-            { name: 'การจ้างงาน Recruitment', desc: 'มีความรวดเร็ว Fast Tracking ในการ Recruitment รับบุคลากรที่ตรงตามสมรรถนะและค่านิยมของ THAMC' },
-            { name: 'ช่องทางให้คำปรึกษากับพนักงาน', desc: 'กรณีที่พนักงานเผชิญกับปัญหา เปิดช่องทางที่ HR รับฟังปัญหาของพนักงาน รับฟังโดยไม่ตัดสิน' }
-          ]},
-          { id: '2.1.2', name: 'HRD / Learning Needs', desc: 'บริหารจัดการบุคลากรให้เหมาะสม มีประสิทธิภาพและสอดคล้องกับทิศทางองค์กร ด้านประสิทธิภาพต้นทุน', projects: [
-            { name: 'New Staff Fast Track: 90 Days', desc: 'พัฒนาพนักงานใหม่ให้สามารถปรับตัวและเรียนรู้งานได้อย่างรวดเร็วภายในช่วง 90 วันแรก พร้อมสร้างความเข้าใจในบทบาท หน้าที่ และวัฒนธรรมองค์กร' },
-            { name: 'Learning Academy / THMC Learning Center', desc: 'จัดตั้งศูนย์กลางการเรียนรู้และพัฒนาศักยภาพบุคลากรอย่างต่อเนื่อง เพื่อสร้างระบบการเรียนรู้ที่ตอบโจทย์ทั้งทักษะในปัจจุบันและการเตรียมความพร้อมสำหรับอนาคต' },
-            { name: 'Knowledge Sharing & Best Practice Award', desc: 'ส่งเสริมการแลกเปลี่ยนความรู้ ประสบการณ์ และ Best Practice ระหว่างบุคลากร พร้อมสร้างแรงจูงใจให้เกิดการแบ่งปันและยกระดับแนวทางการปฏิบัติงานที่เป็นเลิศ' },
-            { name: 'Service Excellence Champion', desc: 'ยกระดับคุณภาพการให้บริการผ่านการพัฒนาบุคลากรให้มีทักษะด้าน Service Excellence จิตบริการ และมาตรฐานการให้บริการที่เป็นเลิศ' },
-            { name: 'Future Skill for Healthcare Workforce', desc: 'เตรียมความพร้อมด้าน Future Skills ให้บุคลากรสามารถรองรับการเปลี่ยนแปลงของอุตสาหกรรมสุขภาพ และพร้อมปรับตัวต่อรูปแบบการทำงานและความต้องการใหม่ ๆ ในอนาคต' },
-            { name: 'Future Leader Development Program', desc: 'พัฒนาผู้นำรุ่นใหม่ให้มีความพร้อมทั้งด้าน Leadership และความสามารถในการขับเคลื่อนองค์กร เพื่อสร้าง Leadership Pipeline และเตรียมผู้นำสำหรับอนาคต' },
-            { name: 'Smart Hospital Digital Skill Upgrade', desc: 'ยกระดับทักษะด้าน Digital ของบุคลากร เพื่อรองรับการพัฒนา Smart Hospital และการนำเทคโนโลยีมาใช้ในการทำงาน' },
-            { name: 'Happy Smart Workplace Design', desc: 'ออกแบบสภาพแวดล้อมและรูปแบบการทำงานให้เอื้อต่อความสุข ประสิทธิภาพ และความร่วมมือของบุคลากร โดยผสานแนวคิด Smart Workplace' }
-          ]},
-          { id: '2.1.3', name: 'Personnel Engagement Project', desc: 'สร้างการยอมรับ พื้นที่รับฟัง และความผูกพันของบุคลากรต่อองค์กร ผ่านกิจกรรมสื่อสารและการดูแลสุขภาวะอย่างต่อเนื่อง', projects: [
-            { name: 'THAMC Recognition & Appreciation Program', desc: 'สร้างระบบการยกย่องบุคลากรที่มีผลงานโดดเด่นและพฤติกรรมที่สะท้อนค่านิยมองค์กร เพื่อให้เกิดความภาคภูมิใจและแรงบันดาลใจในการทำงาน' },
-            { name: 'THAMC Employee Voice & Action', desc: 'เปิดโอกาสให้บุคลากรทุกระดับเสนอความคิดเห็น ปัญหา และแนวทางปรับปรุงการทำงาน พร้อมนำข้อเสนอที่เป็นไปได้ไปดำเนินการจริง' },
-            { name: 'THAMC Town Hall ผู้บริหารพบปะบุคลากร', desc: 'เวทีพบปะสื่อสารโดยตรงระหว่างผู้บริหารและบุคลากร เพื่อรับฟังความคิดเห็น ชี้แจงนโยบาย และสร้างความเข้าใจร่วมกันในการขับเคลื่อนองค์กร' },
-            { name: 'THAMC Proud Team (สร้างทีมแห่งความภาคภูมิใจ)', desc: 'สร้างความภาคภูมิใจในหน่วยงานและองค์กร ผ่านการนำเสนอผลงานที่ทีมทำได้จริง โดยเน้น "ผลงานของเรา – ผลลัพธ์ของเรา – ผู้ป่วยได้รับประโยชน์อย่างไร"' },
-            { name: 'Happy & Smart Workplace Design (ออกแบบงานให้มีความสุขและมีประสิทธิภาพ)', desc: 'ปรับปรุงกระบวนการทำงานที่สร้างภาระโดยไม่จำเป็น เพื่อให้บุคลากรทำงานได้ง่ายขึ้น มีเวลาสำหรับผู้ป่วยมากขึ้น และเกิดประสิทธิภาพสูงสุด' },
-            { name: 'THAMC Growth Path (เส้นทางการเติบโตและพัฒนาศักยภาพบุคลากร)', desc: 'สร้างความชัดเจนเกี่ยวกับโอกาสในการพัฒนาและความก้าวหน้าในสายงาน เพื่อให้บุคลากรมองเห็นอนาคตของตนเองภายในองค์กร' },
-            { name: 'THAMC Well-being Check-in (ระบบดูแลสุขภาวะและความสุขของบุคลากร)', desc: 'สร้างระบบติดตามระดับความสุข ความผูกพัน และปัจจัยที่ทำให้บุคลากรมีความสุข/ไม่มีความสุขอย่างต่อเนื่อง เพื่อให้ HR และผู้บริหารสามารถแก้ปัญหาได้ตรงจุด' }
-          ]},
-          { id: '2.1.4', name: 'การบริหารคนเก่งและแผนสืบทอดตำแหน่ง (Talent Management & Succession Plan)', desc: 'ระบุ ประเมิน และพัฒนา Talent อย่างเป็นระบบ พร้อมวางแผนสืบทอดตำแหน่งสำคัญเพื่อลดความเสี่ยงขององค์กร', projects: [
-            { name: 'THAMC Talent Identification & Pipeline', desc: 'กำหนดเกณฑ์คัดเลือก Talent โดยประเมิน Performance × Potential ด้วย 9-Box Grid จัดทำ Talent Profile และวิเคราะห์ Competency Gap เพื่อระบุ High Performer / High Potential อย่างเป็นระบบ' },
-            { name: 'Critical Position Mapping', desc: 'สำรวจและระบุตำแหน่งสำคัญของสายแพทย์ พยาบาล วิชาชีพทางการแพทย์ และสายบริหาร/สนับสนุน โดยพิจารณาผลกระทบต่อบริการ ความเชี่ยวชาญ และความยากในการทดแทน' },
-            { name: 'THAMC Talent Review', desc: 'ทบทวน Talent อย่างน้อยปีละ 1 ครั้ง โดยผู้บริหารและหัวหน้าหน่วยงานร่วมประเมินผลงาน ศักยภาพ ความพร้อม และแผนพัฒนา เพื่อให้ Talent Pool เป็นปัจจุบัน' },
-            { name: 'THAMC Future Leader & Successor Academy', desc: 'พัฒนาผู้นำรุ่นใหม่ด้าน Leadership, Business Acumen, Financial Management, Digital Health, Quality & Patient Safety และ Service Excellence' },
-            { name: 'Individual Development Plan (IDP)', desc: 'จัดทำแผนพัฒนารายบุคคลจาก Competency Gap ผ่าน Training, Coaching, Mentoring, Job Rotation และ Strategic Project Assignment' },
-            { name: 'Successor Readiness Program', desc: 'กำหนดผู้สืบทอด Critical Position และประเมินความพร้อมเป็น Ready Now / Ready in 1–2 Years / Ready in 3–5 Years เพื่อเห็นความเสี่ยงและเร่งพัฒนาได้ตรงจุด' },
-            { name: 'Talent Recognition & Reward', desc: 'สร้างระบบยกย่องและ Recognition รวมถึงเปิดโอกาสให้ Talent เข้าร่วมโครงการยุทธศาสตร์ เพื่อสร้างแรงจูงใจและความภาคภูมิใจ' }
+          { id: '2.1.1', name: '44 โครงการเรือธง — ยุทธศาสตร์ที่ 2', desc: '', projects: [
+            { name: 'โครงการบริหารกำลังคนเชิงกลยุทธ์และจัดสรรอัตรากำลังอย่างเหมาะสม (Smart Workforce Planning & Deployment)', desc: 'รวม Smart Workforce Optimization, Right Person Right Job และ Critical Workforce Plan เดิม', priority: true },
+            { name: 'โครงการพัฒนาระบบข้อมูลและการวิเคราะห์ทรัพยากรบุคคลดิจิทัล (HR Analytics & Digital HR Platform)', desc: 'รวม HR Analytics Dashboard และ Digital & Data-Driven HR เดิม', priority: false },
+            { name: 'โครงการสรรหาบุคลากรอย่างรวดเร็วและตรงสมรรถนะ (Smart Recruitment Program)', desc: 'รวม Employee Referral Program และการจ้างงาน Recruitment เดิม', priority: false },
+            { name: 'โครงการสร้างเสียงบุคลากร สุขภาวะ และวัฒนธรรมองค์กร (Employee Voice, Well-being & Culture Program)', desc: 'รวม Employee Voice, Work Life Balance, Stay Interview, Town Hall, Well-being Check-in และโครงการ Engagement อื่นๆ เดิม (9 โครงการ)', priority: false },
+            { name: 'โครงการพัฒนาศักยภาพบุคลากรและทักษะแห่งอนาคต THAMC (THAMC Learning Academy & Skill Development)', desc: 'รวม New Staff Fast Track, Learning Academy, Future Skill และ Service Excellence Champion เดิม', priority: false },
+            { name: 'โครงการบริหารคนเก่ง แผนสืบทอดตำแหน่ง และเส้นทางความก้าวหน้า (Talent, Succession & Career Pathway Program)', desc: 'รวม Talent Identification, Succession Plan, Career Pathway และ IDP เดิม (12 โครงการ)', priority: false }
           ]}
         ]
       }
     ]
   },
   {
-    code: '3', name: 'การบริหารงานที่โปร่งใสและมีประสิทธิภาพ',
-    goal: 'ขับเคลื่อนองค์กรด้วยนวัตกรรม กระบวนการที่มีประสิทธิภาพ และการใช้ทรัพยากรอย่างคุ้มค่า เพื่อสร้างความโปร่งใส มาตรฐาน และผลลัพธ์ที่ยั่งยืน',
+    code: '3', name: 'การกำกับดูแลและยกระดับประสิทธิภาพองค์กร (Governance & Operational Excellence)',
+    goal: 'กลไกยกระดับประสิทธิภาพและผลผลิต (Efficiency & Productivity Engine) — ขับเคลื่อนองค์กรด้วยนวัตกรรม กระบวนการที่มีประสิทธิภาพ และการใช้ทรัพยากรอย่างคุ้มค่า',
     subs: [
       {
-        id: '3.1', name: 'Innovative Administrative (นวัตกรรมการบริหารจัดการ)',
-        desc: 'พัฒนาระบบงานและนวัตกรรม เพื่อเพิ่มประสิทธิภาพ ลดความซับซ้อน และยกระดับการให้บริการ',
+        id: '3.1', name: 'โครงการเรือธง (Flagship Projects)', desc: '',
         groups: [
-          { id: '3.1.1', name: 'Smart Administration / Admin. Dashboard', desc: 'พัฒนาระบบบริหารจัดการอัจฉริยะ ด้วยข้อมูลแบบเรียลไทม์ (Dashboard) เพื่อการตัดสินใจที่แม่นยำและรวดเร็ว', projects: [
-            { name: 'THAMC Data & KPI Mapping', desc: 'กำหนด KPI • เจ้าของข้อมูล • แหล่งข้อมูล • นิยามและสูตรคำนวณ' },
-            { name: 'Data Integration', desc: 'เชื่อม HIS / SAP / HR และสร้างฐานข้อมูลกลาง' },
-            { name: 'Data Governance & Quality', desc: 'กำหนดสิทธิ์เข้าถึง • ตรวจคุณภาพข้อมูล • ทบทวนความถูกต้องสม่ำเสมอ' },
-            { name: 'Data Security', desc: 'กำหนดมาตรการรักษาความมั่นคงปลอดภัยของข้อมูล การควบคุมสิทธิ์ การติดตามการเข้าถึง และการป้องกันข้อมูลรั่วไหล' },
-            { name: 'Executive Command Center', desc: 'แสดง Revenue • Patient Volume • Cost • Bed/OR/Clinic Utilization • Waiting Time และเพิ่มการติดตามแพทย์ลงตรวจแบบ Real-time ว่าลงตรวจตามเวลาที่กำหนดหรือไม่' },
-            { name: 'Revenue, Flow & Capacity', desc: 'ติดตามรายได้และผู้ป่วย • วิเคราะห์ Queue/Bottleneck • หา Capacity ที่ยังว่าง' },
-            { name: 'Cost, Supply & Performance', desc: 'ติดตามต้นทุน • Stock/Expiry • Productivity • ผลลัพธ์ราย Service Line' },
-            { name: 'Early Warning & Alert', desc: 'แจ้งเตือน Revenue ต่ำกว่าเป้า • Waiting Time สูง • Utilization ผิดปกติ • Stock ต่ำ' },
-            { name: 'Action & Escalation Workflow', desc: 'กำหนดผู้รับผิดชอบ • Response Time • Escalation (การยกระดับ) • ติดตาม Action จนปิดประเด็น' },
-            { name: 'Adoption & Performance Review', desc: 'อบรมผู้ใช้ • ใช้ Dashboard ใน Daily/Weekly Review • ติดตาม KPI และ PDCA (Plan-Do-Check-Act)' },
-            { name: 'Incident Report Alert', desc: 'พัฒนาระบบแจ้งเตือน Incident Report ที่สำคัญให้หน่วยงานหรือผู้เกี่ยวข้องรับทราบอย่างรวดเร็ว' },
-            { name: 'Information Leakage / Critical News Alert', desc: 'ระบบแจ้งเตือนกรณีข่าวรั่วหรือข้อมูลสำคัญที่อาจกระทบองค์กร เพื่อให้ผู้บริหารรับทราบและตัดสินใจได้ทันเวลา' }
-          ]},
-          { id: '3.1.2', name: 'Lean Project', desc: 'ดำเนินโครงการ Lean เพื่อลดความสูญเปล่า ลดขั้นตอนการทำงาน และเพิ่มคุณค่า ให้กับทุกกระบวนการ', projects: [
-            { name: 'Lean Patient Journey', desc: 'ออกแบบเส้นทางผู้ป่วยใหม่ทั้งระบบ' },
-            { name: 'Revenue Leakage Zero', desc: 'ป้องกันรายได้รั่วไหลตั้งแต่ให้บริการถึงเรียกเก็บเงิน' },
-            { name: 'Smart Insurance Claim', desc: 'Digital Claim + ลดเอกสาร + เร่งการอนุมัติ' },
-            { name: 'One Data One Time', desc: 'กรอกข้อมูลครั้งเดียว เชื่อมต่อทุกหน่วยงาน' },
-            { name: 'Lean Process: ลดขั้นตอน เพิ่มความคล่องตัว', desc: 'สำรวจและปรับลดขั้นตอนงานบริการ (Waiting Time) ทุกหน่วยงาน เพิ่มคุณค่าที่จับต้องได้ (Service Mind) / งานสนับสนุนที่ซ้ำซ้อน' },
-            { name: 'Paperless Hospital: ลดกระดาษ ลดงาน ลดต้นทุน', desc: 'เปลี่ยนแบบฟอร์ม/เอกสารที่ไม่จำเป็นเป็น Digital Workflow' },
-            { name: 'Lean HR: ลดขั้นตอนงานบุคคล', desc: 'ปรับกระบวนการลา OT หนังสือรับรอง การสมัครงาน ฯลฯ เป็น Digital Workflow (ยังไม่ 100%)' },
-            { name: 'Smart Inventory: ลดของค้าง ลดของหมดอายุ', desc: 'ใช้ข้อมูล Stock และวันหมดอายุบริหารยา/เวชภัณฑ์' },
-            { name: 'Lean Meeting: ประชุมอย่างมีคุณค่า', desc: 'ลดประชุมที่ไม่จำเป็น ใช้ Agenda/Time Box/Action Tracking' }
-          ]}
-        ]
-      },
-      {
-        id: '3.2', name: 'Utilization Management (การบริหารทรัพยากร)',
-        desc: 'บริหารการใช้ทรัพยากรอย่างเหมาะสม คุ้มค่า และเกิดประโยชน์สูงสุด',
-        groups: [
-          { id: '3.2.1', name: 'Utilization Management', desc: 'บริหารจัดการการใช้ทรัพยากร (คน เตียง ห้อง เครื่องมือ และอุปกรณ์) ให้เกิดประสิทธิภาพสูงสุด ลดความแออัด และเพิ่มศักยภาพการให้บริการ', projects: [
-            { name: 'UM High Risk Case Monitoring', desc: 'พัฒนาระบบติดตามผู้ป่วยกลุ่มเสี่ยงสูงอย่างเป็นระบบ เพื่อให้ได้รับการดูแลที่เหมาะสม ลดความเสี่ยงและการใช้ทรัพยากรที่ไม่จำเป็น' },
-            { name: 'Interdepartmental Capacity Exchange', desc: 'เชื่อมโยงและบริหาร Capacity ของแต่ละหน่วยงานร่วมกัน เพื่อให้ทรัพยากรที่มีอยู่สามารถนำมาใช้ได้เต็มประสิทธิภาพ' },
-            { name: 'Top 10 Cost Driver Reduction', desc: 'ค้นหาและลดต้นทุนจากปัจจัยที่มีผลกระทบสูง โดยใช้ข้อมูลในการกำหนดมาตรการลดต้นทุนอย่างตรงจุด' },
-            { name: 'Zero Waste Resource Management', desc: 'ลดการสูญเปล่าของวัสดุ อุปกรณ์ และทรัพยากรทางการแพทย์ พร้อมเพิ่มประสิทธิภาพการใช้ทรัพยากร' }
+          { id: '3.1.1', name: '44 โครงการเรือธง — ยุทธศาสตร์ที่ 3', desc: '', projects: [
+            { name: 'โครงการวางรากฐานข้อมูลกลางและธรรมาภิบาลข้อมูลระดับองค์กร (Enterprise Data Foundation & Governance)', desc: 'รวม Data Integration, Data Governance, Data Security และ Data Quality เดิม เป็น Workstream เดียว', priority: true },
+            { name: 'โครงการศูนย์บัญชาการข้อมูลและแดชบอร์ดเพื่อการตัดสินใจของผู้บริหาร (Executive Command Center & Decision Dashboard)', desc: 'รวม Executive Command Center, Revenue Flow & Capacity และ Cost Supply Performance เดิม', priority: true },
+            { name: 'โครงการพัฒนาระบบเฝ้าระวังความเสี่ยงและแจ้งเตือนเหตุการณ์สำคัญ (Risk & Incident Alert System)', desc: 'รวม Early Warning Alert, Incident Report Alert และ Information Leakage Alert เดิม', priority: false },
+            { name: 'โครงการยกระดับองค์กรด้วยการลดความสูญเปล่าและเพิ่มความคล่องตัว (Organization-wide Lean & Agility Program)', desc: 'รวม Lean Project และ Paperless/Digital Workflow เดิมทั้ง 9 โครงการเป็นโครงการเดียว', priority: true },
+            { name: 'โครงการติดตามประสิทธิภาพการใช้พลังงานและทรัพยากรองค์กร (Energy & Resource Utilization Monitoring)', desc: 'รวม Interdepartmental Capacity Exchange และ Energy Saving Project เดิม', priority: false },
+            { name: 'โครงการลดต้นทุนจากปัจจัยสำคัญและการใช้พลังงานและทรัพยากรอย่างคุ้มค่า (Cost Driver & Zero-Waste Resource Program)', desc: 'รวม Top 10 Cost Driver Reduction และ Zero Waste Resource Management เดิม', priority: true }
           ]}
         ]
       }
     ]
   },
   {
-    code: '4', name: 'เพื่อเป็นที่เชื่อมั่นของประชาชนกลุ่มเป้าหมายด้านการรักษาพยาบาล (Medical Professionalism)',
-    goal: 'ยกระดับคุณภาพการรักษา ด้วยความเป็นมืออาชีพ สร้างความเชื่อมั่น และประสบการณ์ที่ดีเยี่ยมให้กับผู้รับบริการ',
+    code: '4', name: 'ความเป็นเลิศทางการแพทย์และประสบการณ์ผู้รับบริการ (Clinical & Patient Experience Excellence)',
+    goal: 'กลไกสร้างการเติบโตและความเชื่อมั่นทางการแพทย์ (Clinical Growth & Trust Engine) — ยกระดับคุณภาพการรักษา ความเป็นมืออาชีพ และประสบการณ์ที่ดีเยี่ยม',
     subs: [
       {
-        id: '4.1', name: 'Differentiate Clinical Program Establishment', desc: '',
+        id: '4.1', name: 'โครงการเรือธง (Flagship Projects)', desc: '',
         groups: [
-          { id: '4.1.1', name: 'Establish Center of Excellence in Cardiology, Urology, Internal Medicine, Surgery, Labour etc.', desc: '', projects: [
-            { name: 'THAMC Complex & Unsolved Diagnosis Center + THAMC Complex Case Integrated Care Center', desc: 'รับผู้ป่วยที่มีปัญหาการวินิจฉัยซับซ้อน รักษาหลายแห่งแล้วยังไม่ได้ข้อสรุป หรือมีหลายโรคร่วมที่ต้องใช้ผู้เชี่ยวชาญหลายสาขา • ใช้ Multidisciplinary Case Conference/Case Review เพื่อร่วมวิเคราะห์และกำหนดแนวทางวินิจฉัยและรักษา • กำหนด Lead Physician เป็นเจ้าภาพหลักของแต่ละ Complex Case • จัดทำ Integrated Diagnostic & Care Plan แบบ One Complex Case • One Lead Physician • One Care Plan • ติดตามผลการรักษาอย่างต่อเนื่อง ลดความกระจัดกระจายของการดูแล และยกระดับประสบการณ์ผู้ป่วย' },
-            { name: 'THAMC Precision Medicine & Genomic Center + THAMC Advanced Minimally Invasive & Intervention Center', desc: 'พัฒนาการรักษาเฉพาะบุคคลโดยเชื่อม Genomics, Biomarker, Pharmacogenomics และ Clinical Data เข้ากับการตัดสินใจรักษา • ดำเนินงานด้าน Precision Medicine/Genomics ร่วมกับโรงพยาบาลธรรมศาสตร์เฉลิมพระเกียรติ (รพธ.) ตามความพร้อมของระบบและทรัพยากร • พัฒนา Advanced Procedure/Minimally Invasive/Intervention ที่ช่วยให้แผลเล็ก ฟื้นตัวเร็ว ลด Length of Stay และลดภาวะแทรกซ้อน • สร้างความแตกต่างไม่ใช่เพียงด้านเทคโนโลยี แต่รวมถึง Patient Journey ตั้งแต่แรกรับ การรอคอย การวินิจฉัย การทำหัตถการ และบริการหลังการรักษา • ออกแบบกระบวนการให้รวดเร็ว ลดขั้นตอน และมุ่งให้ผู้รับบริการได้รับการวินิจฉัยที่ถูกต้องและรวดเร็ว' }
-          ]},
-          { id: '4.1.2', name: 'Establish Comprehensive ICU', desc: '', projects: [
-            { name: 'Smart ICU Digital Transformation', desc: 'การเปลี่ยนผ่าน ICU สู่ระบบดิจิทัล ใช้ Digital Technology และ Innovation เพื่อเพิ่มประสิทธิภาพการดูแลและเชื่อมโยงข้อมูล • Rapid Response & Early Warning System • ICU Patient Safety Excellence Program • Critical Care Pathway Program • ICU Quality Improvement & Accreditation Readiness • Seamless Transfer & Continuity of Care' },
-            { name: 'VIP Critical Care', desc: 'Premium Critical Care Center' },
-            { name: 'PRIME Concierge', desc: 'Personal Health Concierge 24/7' }
-          ]},
-          { id: '4.1.3', name: 'Doctors Capacity & Capability', desc: '', projects: [
-            { name: 'THAMC Master Clinician Development Program + THAMC Complex Case Mastery Program', desc: 'คัดเลือกแพทย์ศักยภาพสูงใน Strategic Specialty และจัดทำ Individual Clinical Development Roadmap • กำหนด Capability Milestone จาก Specialist → Advanced Specialist → Expert/Master Clinician • เพิ่มประสบการณ์ผ่าน Complex Case Conference, Case Review และ Multidisciplinary Decision Making • เชื่อมกิจกรรมกับโปรแกรม Training/HR ที่มีอยู่ เพื่อลดความซ้ำซ้อนและให้การพัฒนามีโครงสร้างชัดเจน • ติดตามผลด้วย Case Complexity, Clinical Outcome และความสามารถที่นำไปใช้พัฒนา Signature Clinical Services' },
-            { name: 'THAMC Advanced Procedure & New Technique Program + THAMC International Clinical Attachment Program', desc: 'วิเคราะห์ Clinical Gap และเลือก Advanced Procedure/New Technique ที่ THAMC ยังไม่มีหรือยังไม่แข็งแรงก่อนส่งแพทย์พัฒนา • สนับสนุน Clinical Attachment/Fellowship กับ Center ชั้นนำตามความจำเป็นของบริการ • ใช้หลัก Train → Return → Implement → Transfer Knowledge → Measure Outcome • เมื่อกลับมา ต้องจัด Credential, Team Readiness, Protocol และความพร้อมของระบบก่อนเปิดบริการจริง • เป้าหมายสุดท้ายต้องนำทักษะกลับมาสร้างบริการใหม่หรือยกระดับบริการเดิม ไม่ใช่จบเพียงการอบรม' },
-            { name: 'THAMC Clinical Innovation & Research-to-Practice Program', desc: 'พัฒนา Clinical Protocol, Research หรือ Innovation ที่ตอบโจทย์ปัญหาการดูแลผู้ป่วยจริง • นำองค์ความรู้หรืองานวิจัยไปใช้กับผู้ป่วยจริงและวัด Clinical Outcome • ต่อยอดผลลัพธ์เป็น Signature Treatment/Clinical Practice ที่เป็นจุดแข็งของ THAMC • สร้างองค์ความรู้ที่ถ่ายทอดต่อได้และสนับสนุนการพัฒนา Center of Excellence ในอนาคต' }
-          ]}
-        ]
-      },
-      {
-        id: '4.2', name: 'Assure Quality Management and Risk Management', desc: '',
-        groups: [
-          { id: '4.2.1', name: 'การรับรองมาตรฐาน AACI (To certify AACI)', desc: '', projects: [
-            { name: 'AACI Readiness & Gap Assessment', desc: 'แนวคิดหลัก: ประเมินความพร้อม ปิดช่องว่าง สู่มาตรฐาน AACI' },
-            { name: 'Internal AACI Survey & Mock Survey', desc: 'แนวคิดหลัก: จำลองการเยี่ยมสำรวจเสมือนจริง' },
-            { name: 'Patient Safety Critical Process', desc: 'แนวคิดหลัก: ยกระดับกระบวนการสำคัญเพื่อความปลอดภัยของผู้ป่วย' },
-            { name: 'AACI Quality Dashboard', desc: 'แนวคิดหลัก: บริหารคุณภาพด้วยข้อมูล ขับเคลื่อนการพัฒนา' },
-            { name: 'Risk Register & High-Risk Process Management', desc: 'แนวคิดหลัก: บริหารความเสี่ยงเชิงรุก ก่อนเกิดเหตุการณ์ไม่พึงประสงค์' },
-            { name: 'AACI Culture: Quality & Safety Champion', desc: 'แนวคิดหลัก: สร้างวัฒนธรรมคุณภาพและความปลอดภัยทั่วทั้งองค์กร' }
-          ]},
-          { id: '4.2.2', name: 'ระบบบริหารความเสี่ยงระดับองค์กร (Establish Enterprise Risk Management System)', desc: '', projects: [
-            { name: 'โครงการ ERM Governance & Risk Appetite', desc: 'แนวคิดหลัก: วางโครงสร้างระบบบริหารความเสี่ยง และกำหนดระดับความเสี่ยงที่องค์กรยอมรับได้' },
-            { name: 'โครงการ Enterprise Risk Register & Top Risk Profile', desc: 'แนวคิดหลัก: รวบรวม วิเคราะห์ และจัดลำดับความเสี่ยงสำคัญขององค์กร' },
-            { name: 'โครงการ Risk Owner & Treatment Action Plan', desc: 'แนวคิดหลัก: กำหนดเจ้าของความเสี่ยงและแผนการควบคุมอย่างเป็นรูปธรรม' },
-            { name: 'โครงการ KRI Early Warning & Risk Escalation', desc: 'แนวคิดหลัก: สร้างระบบเฝ้าระวังและสัญญาณเตือนล่วงหน้าสำหรับความเสี่ยงสำคัญ' },
-            { name: 'โครงการ Digital ERM Dashboard & Executive Risk Report', desc: 'แนวคิดหลัก: ใช้ข้อมูลขับเคลื่อนการตัดสินใจในระดับต่าง ๆ ความเสี่ยงแบบต่อเนื่อง' },
-            { name: 'โครงการ Risk Culture & Quarterly Risk Review', desc: 'แนวคิดหลัก: สร้างวัฒนธรรมความเสี่ยงและการทบทวนอย่างต่อเนื่องทั่วทั้งองค์กร' }
-          ]},
-          { id: '4.2.3', name: 'ทีมผู้นำทางคลินิกข้ามสายงาน', desc: '', projects: [
-            { name: 'Clinical Leadership Development', desc: 'สร้างผู้นำที่เข้าใจทั้งวิชาชีพและองค์กร พัฒนาผู้นำทางคลินิกให้มีความสามารถมากกว่า "เก่งในวิชาชีพของตนเอง" แต่ต้องเข้าใจภาพรวมขององค์กร ทำงานกับคนต่างวิชาชีพ วิเคราะห์ปัญหา และนำการเปลี่ยนแปลงได้' },
-            { name: 'Cross-Functional Problem Solving', desc: 'รวมทีมแก้ปัญหาข้ามสายงาน คัดเลือกปัญหาสำคัญขององค์กรที่ไม่สามารถแก้ได้โดยหน่วยงานเดียว จัดตั้งทีมเฉพาะกิจจากหลายวิชาชีพ เพื่อวิเคราะห์ ตัดสินใจ ทดลองแนวทาง และรับผิดชอบผลลัพธ์อย่างเป็นรูปธรรม' }
-          ]},
-          { id: '4.2.4', name: '3P Safety Project', desc: '', projects: [
-            { name: 'Patient Safety: Safe Journey 360° + The Last 30 Meters', desc: 'มองความปลอดภัยของผู้ป่วยแบบครบวงจร 360 องศา ไม่ใช่ดูเฉพาะช่วงที่ผู้ป่วยอยู่ ICU' },
-            { name: 'Personal Safety: Save the Hands that Save Lives', desc: 'บุคลากรทางการแพทย์ โดยเฉพาะทีม ICU ต้องใช้มือในการทำงานที่ละเอียดและมีความเสี่ยงสูง เน้นความปลอดภัยของบุคลากร' },
-            { name: 'Process Safety: Break the System', desc: 'ท้าทายวิธีการทำงานเดิม (Challenge the System) เพื่อค้นหาจุดเสี่ยงและออกแบบระบบให้ปลอดภัยกว่าเดิม' }
-          ]}
-        ]
-      },
-      {
-        id: '4.3', name: 'Service Excellence', desc: '',
-        groups: [
-          { id: '4.3.1', name: 'Admirable service touch point', desc: '', projects: [
-            { name: 'THAMC WOW JOURNEY 360°: From Appointment to Home', desc: 'โครงการยกระดับประสบการณ์ผู้ป่วยครบวงจร ตั้งแต่การนัดหมายจนกลับบ้าน' },
-            { name: 'Service Blueprint Excellence', desc: 'เชื่อมหน้า–หลังบ้าน สร้างประสบการณ์ไร้รอยต่อ' }
-          ]},
-          { id: '4.3.2', name: 'การบริหารประสบการณ์ลูกค้าและโปรแกรมสร้างความภักดี', desc: '', projects: [
-            { name: 'Service Recovery Excellence', desc: 'วางระบบดูแลผู้รับบริการเมื่อเกิดประสบการณ์ไม่ดี เช่น รอนาน การสื่อสารคลาดเคลื่อน หรือข้อร้องเรียน พร้อมกำหนด Service Recovery Protocol แนวทางมาตรฐานในการแก้ไขประสบการณ์เชิงลบ ลดข้อร้องเรียนซ้ำและเปลี่ยนประสบการณ์เชิงลบให้กลับมาเป็นความเชื่อมั่น' },
-            { name: 'Patient Experience Ambassador', desc: 'คัดเลือกและพัฒนาบุคลากรแต่ละหน่วยงานเป็น Patient Experience Ambassador บุคลากรต้นแบบด้านการสร้างประสบการณ์ที่ดีแก่ผู้รับบริการ ทำหน้าที่ผลักดันมาตรฐานบริการและรับฟังเสียงผู้ป่วย เกิดวัฒนธรรม Patient-Centered Service ที่ยึดผู้ป่วยเป็นศูนย์กลางทุกหน่วยบริการ' }
+          { id: '4.1.1', name: '44 โครงการเรือธง — ยุทธศาสตร์ที่ 4', desc: '', projects: [
+            { name: 'โครงการพัฒนาศูนย์การรักษาโรคซับซ้อนและการแพทย์แม่นยำ (Complex Case & Precision Medicine Centers)', desc: 'รวม Complex Case Diagnosis Center และ Precision Medicine & Genomic Center เดิม', priority: true },
+            { name: 'โครงการยกระดับการดูแลผู้ป่วยวิกฤตแบบครบวงจรระดับพรีเมียม (Comprehensive ICU & Premium Critical Care)', desc: 'รวม Smart ICU Digital Transformation, VIP Critical Care และ PRIME Concierge เดิม', priority: true },
+            { name: 'โครงการพัฒนาศักยภาพแพทย์และต่อยอดความเชี่ยวชาญสู่บริการใหม่ (Clinician Capability & Innovation Pipeline)', desc: 'รวม Master Clinician Development, Advanced Procedure Program และ Clinical Innovation to Practice เดิม', priority: true },
+            { name: 'โครงการเตรียมความพร้อมสู่การรับรองมาตรฐาน AACI (AACI Accreditation Readiness Program)', desc: 'รวม AACI Readiness Assessment, Mock Survey, Patient Safety Critical Process และ Quality Dashboard เดิม', priority: true },
+            { name: 'โครงการบริหารความเสี่ยงระดับองค์กร (Enterprise Risk Management (ERM) System)', desc: 'รวม ERM Governance, Risk Register, KRI Early Warning และ Digital ERM Dashboard เดิม (6 โครงการ)', priority: false },
+            { name: 'โครงการพัฒนาผู้นำทางคลินิกแบบบูรณาการข้ามสายงาน (Cross-Functional Clinical Leadership Program)', desc: 'รวม Clinical Leadership Development และ Cross-Functional Problem Solving เดิม', priority: false },
+            { name: 'โครงการความปลอดภัย 3 มิติ: ผู้ป่วย บุคลากร และระบบงาน (3P Safety Program)', desc: 'รวม Patient Safety Journey, Personal Safety และ Process Safety เดิม', priority: false },
+            { name: 'โครงการยกระดับเส้นทางผู้ป่วยและการออกแบบบริการแบบไร้รอยต่อ (WOW Patient Journey & Service Blueprint)', desc: 'รวม WOW Journey 360° และ Service Blueprint Excellence เดิม', priority: false },
+            { name: 'โครงการฟื้นฟูประสบการณ์ผู้รับบริการและเครือข่ายบุคลากรต้นแบบด้านบริการ (Service Recovery & Patient Experience Ambassador)', desc: 'รวม Service Recovery Excellence และ Patient Experience Ambassador เดิม', priority: false }
           ]}
         ]
       }
     ]
   },
   {
-    code: '5', name: 'องค์กรแห่งการเรียนรู้และนวัตกรรม',
-    goal: 'สร้างสังคมแห่งการเรียนรู้ การนำเทคโนโลยีมาใช้ และการดูแลรักษาสิ่งแวดล้อมและสังคม ควบคู่ไปกับการดำเนินงานทางการแพทย์',
+    code: '5', name: 'ดิจิทัล นวัตกรรม และการเติบโตอย่างยั่งยืน (Digital, Innovation & Sustainable Growth)',
+    goal: 'กลไกสร้างการเปลี่ยนแปลงเพื่ออนาคต (Transformation & Future Growth Engine) — สร้างสังคมแห่งการเรียนรู้ การนำเทคโนโลยีมาใช้ และการดูแลรักษาสิ่งแวดล้อมและสังคม',
     subs: [
       {
-        id: '5.1', name: 'Develop Digital health care hospital', desc: '',
+        id: '5.1', name: 'โครงการเรือธง (Flagship Projects)', desc: '',
         groups: [
-          { id: '5.1.1', name: 'EMR Service', desc: '', projects: [
-            { name: 'Smart EMR ระบบเวชระเบียนอิเล็กทรอนิกส์อัจฉริยะ', desc: 'พัฒนา EMR ให้มากกว่า "ระบบจัดเก็บข้อมูลผู้ป่วย" แต่เป็นแหล่งข้อมูลสำคัญขององค์กร ที่สามารถเชื่อมโยงข้อมูลจากกระบวนการรักษาและการให้บริการ เพื่อนำไปใช้ประโยชน์ต่อได้' },
-            { name: 'Digital Medical Record Learning System (DMRLS)', desc: 'ระบบการเรียนรู้จากข้อมูลเวชระเบียน นำข้อมูลจาก Digital Medical Record มาสนับสนุนการเรียนรู้ของบุคลากรและองค์กร ทุกการดูแลผู้ป่วยสามารถสร้างบทเรียนและองค์ความรู้ใหม่ได้ หากมีระบบที่ช่วยรวบรวม วิเคราะห์ และถอดบทเรียนอย่างเป็นระบบ' },
-            { name: 'Digital Patient Record Access', desc: 'พัฒนาการเข้าถึงข้อมูลผู้ป่วยให้เหมาะสมกับผู้มีสิทธิ์ใช้งาน เพื่อให้บุคลากรสามารถเข้าถึงข้อมูลที่จำเป็นได้ รวดเร็ว ถูกต้อง และต่อเนื่อง' },
-            { name: 'EMR Clinical Decision Support System (CDSS)', desc: 'นำข้อมูลจาก EMR มาช่วยสนับสนุนบุคลากรทางการแพทย์ในการตัดสินใจ โดยระบบสามารถนำข้อมูลผู้ป่วยมาวิเคราะห์และนำเสนอ Clinical Information / Alert / Recommendation ที่เกี่ยวข้อง' }
-          ]},
-          { id: '5.1.2', name: 'Perform IOT facilities service', desc: '', projects: [
-            { name: 'Smart Medical Device Connect', desc: 'เชื่อม Monitor, Infusion Pump, Ventilator และอุปกรณ์สำคัญเข้าสู่ระบบกลาง' },
-            { name: 'Smart Asset Tracking', desc: 'ติด RFID/BLE Tag กับ Wheelchair, Infusion Pump, Portable Monitor และอุปกรณ์เคลื่อนที่' },
-            { name: 'IOT Maintenance', desc: 'ติด Sensor ตรวจอุณหภูมิ/ความชื้นในตู้เย็นยา คลังยา Lab Server Room และพื้นที่สำคัญ วิเคราะห์ข้อมูลการทำงาน ชั่วโมงใช้งาน Error และ Sensor ของเครื่องมือ' },
-            { name: 'THAMC IoT Data & Innovation Lab', desc: 'รวมข้อมูลจากอุปกรณ์ IoT ทั้งหมดเข้า Dashboard/Data Platform และนำ AI/Data Analytics มาวิเคราะห์' }
-          ]},
-          { id: '5.1.3', name: 'Telemedicine project', desc: '', projects: [
-            { name: 'Telemedicine Follow-up', desc: 'คัดเลือกผู้ป่วยที่เหมาะสมสำหรับการติดตามผ่านระบบออนไลน์ เช่น ติดตามอาการหลังการรักษา ติดตามผลการตรวจ ติดตามการตอบสนองต่อการรักษา ให้คำแนะนำในการดูแลตนเอง และนัดหมายครั้งถัดไป' },
-            { name: 'Chronic Care Telemedicine', desc: 'จัดระบบติดตามผู้ป่วยโรคเรื้อรังเป็นระยะ' },
-            { name: 'Digital Patient Follow-up', desc: 'ให้ผู้ป่วยส่งข้อมูลที่จำเป็นก่อนพบแพทย์ เช่น อาการ ผลตรวจ หรือข้อมูลสุขภาพที่เกี่ยวข้อง เพื่อให้แพทย์ใช้ประกอบการติดตาม' },
-            { name: 'Missed Appointment Follow-up', desc: 'นำระบบแจ้งเตือนและติดตามผู้ป่วยที่ขาดนัด (No-show) มาใช้ เพื่อเพิ่มความต่อเนื่องในการรักษา' },
-            { name: 'Escalation / Refer Back', desc: 'หากระหว่าง Telemedicine พบข้อมูลหรืออาการที่จำเป็นต้องประเมินแบบพบหน้า ให้มีระบบนัดหมายกลับมารับบริการที่ศูนย์การแพทย์' }
-          ]},
-          { id: '5.1.4', name: 'Pharmacy Online Project', desc: '', projects: [
-            { name: 'THAMC Pharmacy Anywhere – Online Pharmacy & Smart Medication Access', desc: 'พัฒนาช่องทางบริการเภสัชกรรมออนไลน์แบบครบวงจร ให้ผู้ป่วยสามารถดำเนินการเรื่องยา เลือกวิธีรับยา และติดตามสถานะได้สะดวก ลดการเดินทางและระยะเวลารอรับยา' },
-            { name: 'THAMC Virtual Pharmacist & Digital Medication Care', desc: 'ให้ผู้ป่วยสามารถเข้าถึงเภสัชกรจากระยะไกล และได้รับการติดตามด้านยาอย่างต่อเนื่อง ทั้งการให้คำปรึกษา การเฝ้าระวัง ADR และปัญหาจากการใช้ยา' },
-            { name: 'THAMC Intelligent Medication Adherence & Personalized Pharmacy Care', desc: 'ใช้ข้อมูลและ AI วิเคราะห์ผู้ป่วยที่มีความเสี่ยงต่อการใช้ยาไม่ต่อเนื่อง และสนับสนุนให้เภสัชกรสามารถดูแลผู้ป่วยเชิงรุกและเฉพาะบุคคล' },
-            { name: 'THAMC Smart Pharmacy Automation & Robotic Dispensing', desc: 'ยกระดับกระบวนการจัดยาและจ่ายยาด้วย Automation/Robotic Technology ลดขั้นตอน ลดความคลาดเคลื่อน เพิ่มความรวดเร็ว และสนับสนุนบริการ Pharmacy Online' }
-          ]}
-        ]
-      },
-      {
-        id: '5.2', name: 'ESG Contribution', desc: '',
-        groups: [
-          { id: '5.2.1', name: 'Energy Saving Project', desc: '', projects: [] },
-          { id: '5.2.2', name: 'CSR project (CPR training, Stroke detection training, etc.)', desc: '', projects: [
-            { name: 'THAMC Health for All', desc: 'โครงการสุขภาพดี เพื่อทุกคน ทุกชุมชน นำองค์ความรู้ ความเชี่ยวชาญ และศักยภาพของโรงพยาบาลไปสร้างเสริมสุขภาพเชิงรุกให้แก่ประชาชน โรงเรียน และกลุ่มเปราะบาง เพื่อส่งเสริมการป้องกันโรค เพิ่ม Health Literacy ลดความเหลื่อมล้ำ และสร้างโอกาสให้ทุกคนเข้าถึงการดูแลสุขภาพอย่างเหมาะสม' },
-            { name: 'THAMC Healthy Hospital', desc: 'บุคลากรสุขภาพดี องค์กรสุขภาพดี เริ่มสร้าง Social Impact จากบุคลากรและผู้ป่วยภายในโรงพยาบาลเอง' }
-          ]},
-          { id: '5.2.4', name: 'G – Governance', desc: '', projects: [
-            { name: 'Good Governance Healthcare Framework', desc: '"โครงการวางรากฐานธรรมาภิบาลองค์กรสุขภาพ" องค์กรมีระบบธรรมาภิบาลอย่างเป็นทางการเป็นครั้งแรก และสามารถนำ Governance ไปเชื่อมกับงาน HR การเงิน พัสดุ การรักษาพยาบาล และการบริหารความเสี่ยง' },
-            { name: 'Transparent Healthcare', desc: '"โครงการองค์กรสุขภาพโปร่งใส ตรวจสอบได้" ผู้บริหาร บุคลากร และผู้รับบริการสามารถเข้าถึงข้อมูลที่ควรเปิดเผยได้ง่ายขึ้น' },
-            { name: 'Ethical Healthcare & Conflict of Interest', desc: '"โครงการองค์กรแพทย์โปร่งใส ไร้ผลประโยชน์ทับซ้อน" จัดทำนโยบาย แนวทางการปฏิบัติ เพื่อตัดวงจร "การเอื้อประโยชน์ – การล็อกสเปก – การรับผลประโยชน์ – การตัดสินใจที่ไม่เป็นกลาง"' },
-            { name: 'Speak Up & Whistleblowing', desc: '"โครงการ Speak Up แจ้งได้ ปลอดภัย ไม่ถูกตอบโต้" สร้างระบบ Anonymous Reporting System: QR Code → Online Form → Governance Unit → ตรวจสอบ → รายงานผล → ปิด Case' }
-          ]}
-        ]
-      },
-      {
-        id: '5.3', name: 'Knowledge Management and Best Practice Sharing', desc: '',
-        groups: [
-          { id: '5.3.1', name: 'KM data lake', desc: '', projects: [
-            { name: 'THAMC Integrated Knowledge, Research & Analytics Hub', desc: 'ศูนย์กลางองค์ความรู้ วิจัย นวัตกรรม และการวิเคราะห์ข้อมูล รวมองค์ความรู้ทางคลินิก คุณภาพ งานวิจัย นวัตกรรม และข้อมูลวิเคราะห์ไว้ในระบบเดียว เพื่อค้นหา ใช้ และต่อยอดได้จริง' },
-            { name: 'Patient Education Knowledge Center', desc: 'ศูนย์ความรู้สำหรับผู้ป่วยและประชาชน พัฒนาสื่อความรู้ที่ถูกต้อง เข้าใจง่าย และเข้าถึงได้ เพื่อสนับสนุนการดูแลตนเองและการตัดสินใจของผู้ป่วยและครอบครัว' },
-            { name: 'Internal Communication & KM Culture', desc: 'การสื่อสารและสร้างวัฒนธรรมการแบ่งปันความรู้ ทำให้บุคลากร THAMC รับรู้ เข้าถึง ใช้ และแบ่งปันองค์ความรู้ร่วมกันอย่างต่อเนื่อง จนเกิดวัฒนธรรมการเรียนรู้ขององค์กร' }
-          ]},
-          { id: '5.3.2', name: 'CQI project', desc: '', projects: [
-            { name: 'CQI for Better Care & CQI Innovation & Best Practice Sharing', desc: 'ส่งเสริมการทำ CQI และต่อยอดผลงานสู่ Best Practice และนวัตกรรม' },
-            { name: 'CQI from Real Problem & CQI–Patient Safety Integration', desc: 'เปลี่ยนปัญหาหน้างานเป็นโอกาสพัฒนา และบูรณาการ CQI กับความปลอดภัยของผู้ป่วย' },
-            { name: 'Internal Communication for CQI & Quality Culture', desc: 'สื่อสารและสร้างการรับรู้เรื่อง CQI เพื่อสนับสนุนวัฒนธรรมคุณภาพในองค์กร' }
-          ]},
-          { id: '5.3.3', name: 'Research and Innovation', desc: '', projects: [
-            { name: 'THAMC Research Incentive & Innovation Fund', desc: 'กองทุนสนับสนุนงานวิจัยและนวัตกรรมเชิงผลตอบแทน' },
-            { name: 'Clinical & Service Innovation Challenge', desc: 'ประกวดนวัตกรรมและงานวิจัยเพื่อพัฒนางานบริการ' }
+          { id: '5.1.1', name: '44 โครงการเรือธง — ยุทธศาสตร์ที่ 5', desc: '', projects: [
+            { name: 'โครงการพัฒนาเวชระเบียนอิเล็กทรอนิกส์อัจฉริยะและแพลตฟอร์มข้อมูลทางคลินิก (Smart EMR & Clinical Data Platform)', desc: 'รวม Smart EMR, DMRLS, Patient Record Access และ CDSS เดิม', priority: false },
+            { name: 'โครงการพัฒนาโครงสร้างพื้นฐานโรงพยาบาลอัจฉริยะด้วย IoT (IoT-Connected Hospital Infrastructure)', desc: 'รวม Smart Medical Device Connect, Asset Tracking, IoT Maintenance และ IoT Data Lab เดิม', priority: false },
+            { name: 'โครงการติดตามผู้ป่วยทางไกลและระบบโทรเวชกรรม (Telemedicine & Remote Patient Follow-up)', desc: 'รวม Telemedicine Follow-up, Chronic Care Telemedicine, Missed Appointment Follow-up และ Escalation/Refer Back เดิม', priority: true },
+            { name: 'โครงการบริการเภสัชกรรมดิจิทัลและระบบบริหารยาอัจฉริยะ (Digital Pharmacy & Smart Medication Platform)', desc: 'รวมโครงการ Pharmacy Online 4 โครงการเดิมเป็นระบบเดียว', priority: false },
+            { name: 'โครงการสร้างคุณค่าด้านสุขภาพแก่ชุมชนและสังคม (CSR & Community Health Impact)', desc: 'รวม THAMC Health for All และ THAMC Healthy Hospital เดิม', priority: false },
+            { name: 'โครงการยกระดับระบบธรรมาภิบาลและความโปร่งใสขององค์กร (Governance & Transparency Program)', desc: 'รวม Good Governance Framework, Transparent Healthcare, Ethical Healthcare และ Speak Up/Whistleblowing เดิม', priority: false },
+            { name: 'โครงการคลังองค์ความรู้และข้อมูลแบบบูรณาการ THAMC (THAMC Knowledge & Data Lake Platform)', desc: 'รวม Knowledge Research Hub, Patient Education Center และ Internal Communication for KM เดิม', priority: false },
+            { name: 'โครงการพัฒนาคุณภาพอย่างต่อเนื่องและแลกเปลี่ยนแนวปฏิบัติที่เป็นเลิศ (CQI & Best Practice Sharing Program)', desc: 'รวมโครงการ CQI 3 โครงการเดิมเป็นระบบเดียว', priority: false },
+            { name: 'โครงการจัดตั้งกองทุน การส่งเสริมวิจัย และพัฒนานวัตกรรมทางการแพทย์ (Research & Innovation Development & Fund)', desc: 'รวม Research Incentive Fund และ Clinical Service Innovation Challenge เดิม', priority: false }
           ]}
         ]
       }
     ]
   }
-];
+]
 
 var THAI_MONTHS = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 var STATUS_LIST = ['ยังไม่เริ่ม','กำลังดำเนินการ','สำเร็จ','ล่าช้า'];
@@ -474,7 +233,8 @@ function fyQuarters(fys){
 
 /* ---------- state ---------- */
 var STORE_KEY = 'thamc_strategy_os_v1';
-var SEED_VERSION = 7; // bump whenever SEED_STRATEGIES gains/changes content, to merge into existing saved data
+var SEED_VERSION = 8; // bump whenever SEED_STRATEGIES gains/changes content, to merge into existing saved data
+var HARD_RESET_VERSIONS = [8]; // versions where the data model changed shape — replace strategies wholesale instead of merging
 
 // pulls any project.detail baked into the seed into data.details (only if that project has no detail yet), then strips it off the project object
 function syncSeedDetails(data){
@@ -483,7 +243,7 @@ function syncSeedDetails(data){
   }); }); }); });
 }
 var D; // persisted data
-var UI = { tab: 'dashboard', editMode: false, entryView: 'table', entryQuarter: null, openStrat: {}, openGroup: {}, entryOpenGroup: {}, modalProjectId: null, modalSaved: '', importMsg: '', connMsg: '', printFilter: null, printDialogOpen: false, printSelection: {}, isAdmin: false, adminPromptOpen: false, adminInput: '', adminError: '', printProjectId: null, previewProjectId: null };
+var UI = { tab: 'dashboard', editMode: false, entryView: 'table', entryQuarter: null, openStrat: {}, openGroup: {}, entryOpenGroup: {}, modalProjectId: null, modalSaved: '', importMsg: '', connMsg: '', printFilter: null, printDialogOpen: false, printSelection: {}, isAdmin: false, adminPromptOpen: false, adminInput: '', adminError: '', printProjectId: null, previewProjectId: null, stratPreviewCode: null };
 var ADMIN_CODE = 'THAMC2569';
 try { UI.isAdmin = sessionStorage.getItem('thamc_admin') === '1'; } catch(e){}
 
@@ -520,7 +280,14 @@ function loadData(){
     if (raw) data = JSON.parse(raw);
   } catch(e){}
   if (!data) { var fresh = { strategies: seedStrategies(), fiscalYears: ['2568','2569'], currentQuarter: '2569 Q4', entries: {}, details: {}, sheetUrl: '', seedVersion: SEED_VERSION }; syncSeedDetails(fresh); return fresh; }
-  if (data.seedVersion !== SEED_VERSION) data = mergeSeedUpdates(data);
+  if (data.seedVersion !== SEED_VERSION) {
+    if (HARD_RESET_VERSIONS.indexOf(SEED_VERSION) !== -1 && data.seedVersion < SEED_VERSION) {
+      data.strategies = seedStrategies();
+      data.seedVersion = SEED_VERSION;
+    } else {
+      data = mergeSeedUpdates(data);
+    }
+  }
   return data;
 }
 function saveData(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(D)); } catch(e){} }
@@ -561,6 +328,7 @@ function render(){
       '<main class="main">' + renderTab() + '</main>' +
       renderMobileTabbar() +
       (UI.modalProjectId ? renderModal() : '') +
+      (UI.stratPreviewCode ? renderStratPreview() : '') +
       (UI.printDialogOpen ? renderPrintDialog() : '') +
       (UI.adminPromptOpen ? renderAdminPrompt() : '') +
     '</div>' + (UI.printProjectId ? renderProjectPrintSheet(UI.printProjectId) : '') + (UI.previewProjectId ? renderPreviewOverlay(UI.previewProjectId) : '');
@@ -688,7 +456,7 @@ function renderDashboard(){
     var count=0, done=0, subCount=s.subs.length;
     s.subs.forEach(function(u){ u.groups.forEach(function(g){ g.projects.forEach(function(p){ count++; if (getEntry(p.id, D.currentQuarter).status==='สำเร็จ') done++; }); }); });
     var pct = count ? Math.round(done/count*100) : 0;
-    return '<div class="card" style="padding:22px 24px;cursor:pointer" onclick="UI.tab=\'strategy\';UI.openStrat={};UI.openStrat[\''+s.code+'\']=true;render()">' +
+    return '<div class="card" style="padding:22px 24px;cursor:pointer" data-act="open-strat-preview" data-code="'+esc(s.code)+'">' +
       '<div class="row" style="gap:11px"><div style="width:40px;height:40px;border-radius:11px;background:#fdf1f2;color:#8f2436;display:flex;align-items:center;justify-content:center;font:600 17px \'IBM Plex Mono\'">'+esc(s.code)+'</div><div style="font-size:11.5px;color:#9b8f8e">ยุทธศาสตร์ที่ '+esc(s.code)+'</div></div>' +
       '<div style="font-size:18px;font-weight:600;margin:14px 0 7px">'+esc(s.name)+'</div>' +
       '<div style="font-size:12px;color:#7a6f6e;line-height:1.7">'+esc(s.goal)+'</div>' +
@@ -837,6 +605,10 @@ function renderStrategy(){
   '</div>';
 }
 
+function priorityBadge(p, style){
+  if (!p.priority) return '';
+  return '<span class="mono" style="display:inline-block;padding:2px 7px;border-radius:10px;font-size:9.5px;font-weight:600;background:#f2b526;color:#4a3708;'+(style||'')+'">เร่งด่วน 2569</span>';
+}
 function renderProjectsList(g, si, ui, gi){
   if (UI.editMode) {
     var rows = g.projects.map(function(p, pi){
@@ -848,7 +620,7 @@ function renderProjectsList(g, si, ui, gi){
     return rows + '<button class="btn btn-ghost" style="margin-top:8px" data-act="proj-add" data-si="'+si+'" data-ui="'+ui+'" data-gi="'+gi+'">+ เพิ่มโครงการ</button>';
   }
   var trs = g.projects.map(function(p,idx){
-    return '<tr style="border-top:1px solid #f2eceb"><td style="padding:12px;vertical-align:top" class="mono">'+(idx+1)+'</td><td style="padding:12px"><div style="font-weight:500">'+esc(p.name)+'</div><div style="font-size:11.5px;color:#7a6f6e;margin-top:4px">'+esc(p.desc||'')+'</div></td></tr>';
+    return '<tr style="border-top:1px solid #f2eceb"><td style="padding:12px;vertical-align:top" class="mono">'+(idx+1)+'</td><td style="padding:12px"><div style="font-weight:500">'+esc(p.name)+' '+priorityBadge(p)+'</div><div style="font-size:11.5px;color:#7a6f6e;margin-top:4px">'+esc(p.desc||'')+'</div></td></tr>';
   }).join('');
   return '<div class="card" style="overflow:hidden"><table class="table"><thead><tr><th style="width:38px">#</th><th>โครงการ / กิจกรรม</th></tr></thead><tbody>'+trs+'</tbody></table></div>';
 }
@@ -865,14 +637,14 @@ function renderEntry(){
       var meta = (det.steps||[]).length ? (det.steps.length+' ขั้นตอน · '+(months[det.startMonth]||'')+'–'+(months[det.endMonth]||'') ) : 'ยังไม่ระบุขั้นตอน/ช่วงเวลา';
       if (UI.entryView==='grid') {
         return '<div class="card" style="padding:16px 18px;cursor:pointer" data-act="open-modal" data-pid="'+p.id+'">' +
-          '<div style="font-size:12.5px;font-weight:500;margin-bottom:6px">'+esc(p.name)+'</div>' +
+          '<div style="font-size:12.5px;font-weight:500;margin-bottom:6px">'+esc(p.name)+' '+priorityBadge(p,'margin-left:4px')+'</div>' +
           '<span style="display:inline-block;padding:4px 11px;border-radius:20px;font-size:11px;background:'+STATUS_COLORS[entry.status]+';color:'+STATUS_TEXT[entry.status]+'">'+entry.status+'</span>' +
           '<div class="mono" style="font-size:20px;font-weight:600;margin:10px 0 4px">'+entry.percent+'%</div>' +
           '<div style="font-size:11px;color:#9b8f8e">'+meta+'</div>' +
         '</div>';
       }
       return '<div class="row" style="display:grid;grid-template-columns:minmax(180px,1fr) 132px 62px minmax(120px,220px) 20px;gap:12px;padding:13px 6px;border-top:1px solid #f2eceb;cursor:pointer" data-act="open-modal" data-pid="'+p.id+'">' +
-        '<div><div style="font-size:12.5px;font-weight:500">'+esc(p.name)+'</div><div style="font-size:11px;color:#9b8f8e;margin-top:4px">'+meta+'</div></div>' +
+        '<div><div style="font-size:12.5px;font-weight:500">'+esc(p.name)+' '+priorityBadge(p,'margin-left:4px')+'</div><div style="font-size:11px;color:#9b8f8e;margin-top:4px">'+meta+'</div></div>' +
         '<div><span style="display:inline-block;padding:5px 12px;border-radius:20px;font-size:11.5px;background:'+STATUS_COLORS[entry.status]+';color:'+STATUS_TEXT[entry.status]+'">'+entry.status+'</span></div>' +
         '<div class="mono" style="font-weight:600;text-align:right">'+entry.percent+'%</div>' +
         '<div style="font-size:11.5px;color:#7a6f6e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(entry.note||'—')+'</div>' +
@@ -914,6 +686,20 @@ function renderTimeline(){
 }
 
 /* ---------- settings ---------- */
+function renderPriorityOwnerTable(){
+  var rows = '';
+  eachProject(function(p, ctx){
+    var det = getDetail(p.id);
+    rows += '<tr style="border-top:1px solid #f2eceb">' +
+      '<td style="padding:9px 6px;text-align:center"><input type="checkbox" data-act="admin-toggle-priority" data-pid="'+esc(p.id)+'" '+(p.priority?'checked':'')+'></td>' +
+      '<td style="padding:9px 6px"><div style="font-size:12.5px;font-weight:500">'+esc(p.name)+'</div><div style="font-size:10.5px;color:#9b8f8e;margin-top:2px">'+esc(ctx.s.code)+' · '+esc(ctx.g.id)+'</div></td>' +
+      '<td style="padding:9px 6px"><input type="text" style="width:100%" placeholder="ชื่อผู้รับผิดชอบ" value="'+esc(det.owner)+'" data-act="admin-set-owner" data-pid="'+esc(p.id)+'"></td>' +
+    '</tr>';
+  }, D.strategies);
+  return '<div style="overflow-x:auto"><table class="table" style="min-width:560px">' +
+    '<thead><tr><th style="width:70px;text-align:center">เร่งด่วน</th><th>โครงการ</th><th style="width:220px">ผู้รับผิดชอบ</th></tr></thead>' +
+    '<tbody>'+rows+'</tbody></table></div>';
+}
 function renderSettings(){
   var yearsChips = D.fiscalYears.map(function(fy){ return '<span class="pill" style="display:inline-flex;align-items:center;gap:6px">'+fy+' <span style="cursor:pointer;color:#a5321f" data-act="remove-year" data-fy="'+fy+'">×</span></span>'; }).join(' ');
   var quarters = fyQuarters(D.fiscalYears);
@@ -964,6 +750,12 @@ function renderSettings(){
       '<div style="font-size:12px;color:#8f2436;margin-top:10px">'+esc(UI.importMsg)+'</div>' +
     '</div>' +
 
+    '<div class="card" style="padding:20px 22px;margin-bottom:14px">' +
+      '<div style="font-size:14.5px;font-weight:600;margin-bottom:6px">โครงการเร่งด่วน 2569 &amp; ผู้รับผิดชอบ</div>' +
+      '<div class="muted" style="font-size:12px;line-height:1.7;margin-bottom:14px">ติ๊กเพื่อกำหนด/ยกเลิกโครงการเร่งด่วน และกำหนดผู้รับผิดชอบแต่ละโครงการ</div>' +
+      renderPriorityOwnerTable() +
+    '</div>' +
+
     '<div class="card" style="padding:20px 22px">' +
       '<div style="font-size:14.5px;font-weight:600;margin-bottom:14px">รอบการทำงาน OKR</div>' +
       '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px">' +
@@ -974,6 +766,27 @@ function renderSettings(){
       '</div>' +
     '</div>' +
   '</div>';
+}
+
+/* ---------- strategy preview (dashboard) ---------- */
+function renderStratPreview(){
+  var s = D.strategies.filter(function(x){ return x.code===UI.stratPreviewCode; })[0];
+  if (!s) return '';
+  var rows = '';
+  s.subs.forEach(function(u){ u.groups.forEach(function(g){ g.projects.forEach(function(p){
+    var entry = getEntry(p.id, D.currentQuarter);
+    rows += '<div class="row" style="justify-content:space-between;gap:12px;padding:12px 6px;border-top:1px solid #f2eceb;cursor:pointer" data-act="strat-preview-open-project" data-pid="'+esc(p.id)+'">' +
+      '<div style="min-width:0"><div style="font-size:13px;font-weight:500">'+esc(p.name)+' '+priorityBadge(p,'margin-left:4px')+'</div><div style="font-size:11px;color:#9b8f8e;margin-top:3px">'+esc(g.id)+' · '+esc(g.name)+'</div></div>' +
+      '<span style="display:inline-block;flex:none;padding:4px 11px;border-radius:20px;font-size:11px;background:'+STATUS_COLORS[entry.status]+';color:'+STATUS_TEXT[entry.status]+'">'+entry.status+'</span>' +
+    '</div>';
+  }); }); });
+  return '<div class="modal-backdrop" data-act="close-strat-preview-bg"><div class="modal" style="max-width:640px;max-height:86vh;overflow:auto" onclick="event.stopPropagation()">' +
+    '<div class="modal-sec row" style="justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:1">' +
+      '<div><span class="pill" style="background:#fdf1f2;color:#8f2436">ยุทธศาสตร์ที่ '+esc(s.code)+'</span><div style="font-size:16px;font-weight:600;margin-top:8px">'+esc(s.name)+'</div></div>' +
+      '<button class="btn btn-outline" style="padding:6px 12px" data-act="close-strat-preview">×</button>' +
+    '</div>' +
+    '<div class="modal-sec" style="border-bottom:none">'+rows+'</div>' +
+  '</div></div>';
 }
 
 /* ---------- modal ---------- */
@@ -1009,7 +822,7 @@ function renderModal(){
   return '<div class="modal-backdrop" data-act="close-modal-bg"><div class="modal" onclick="event.stopPropagation()">' +
     '<div class="modal-sec row" style="align-items:flex-start;justify-content:space-between">' +
       '<div class="grow"><div class="row" style="gap:9px"><span class="pill" style="background:#fdf1f2;color:#8f2436" class="mono">'+esc(ctx.g.id)+' · '+esc(ctx.g.name)+'</span></div>' +
-      '<div style="font-size:18px;font-weight:600;margin:10px 0 6px">'+esc(p.name)+'</div>' +
+      '<div style="font-size:18px;font-weight:600;margin:10px 0 6px">'+esc(p.name)+' '+priorityBadge(p,'margin-left:6px;vertical-align:middle')+'</div>' +
       '<div style="font-size:12px;color:#7a6f6e;line-height:1.7">'+esc(p.desc||'')+'</div></div>' +
       '<button class="btn btn-outline" style="padding:6px 12px" data-act="close-modal">×</button>' +
     '</div>' +
@@ -1170,10 +983,15 @@ function handleAction(act, el, e){
   if (act==='proj-desc'){ D.strategies[si].subs[ui].groups[gi].projects[pi].desc = el.value; saveData(); return; }
   if (act==='proj-remove'){ if (confirm('ลบโครงการนี้?')){ D.strategies[si].subs[ui].groups[gi].projects.splice(pi,1); saveData(); render(); } return; }
   if (act==='proj-add'){ D.strategies[si].subs[ui].groups[gi].projects.push({ id: uid(), name:'โครงการใหม่', desc:'' }); saveData(); render(); return; }
+  if (act==='admin-toggle-priority'){ var found2 = findProject(ds.pid); if (found2) { found2.p.priority = el.checked; saveData(); render(); } return; }
+  if (act==='admin-set-owner'){ setDetail(ds.pid, { owner: el.value }); return; }
 
   if (act==='set-entry-quarter'){ UI.entryQuarter = el.value; render(); return; }
   if (act==='set-entry-view'){ UI.entryView = ds.v; render(); return; }
   if (act==='open-modal'){ UI.modalProjectId = ds.pid; UI.modalSaved=''; render(); return; }
+  if (act==='open-strat-preview'){ UI.stratPreviewCode = ds.code; render(); return; }
+  if (act==='close-strat-preview' || act==='close-strat-preview-bg'){ if (act==='close-strat-preview-bg' && e.target!==el) return; UI.stratPreviewCode = null; render(); return; }
+  if (act==='strat-preview-open-project'){ UI.stratPreviewCode = null; UI.modalProjectId = ds.pid; UI.modalSaved=''; render(); return; }
   if (act==='close-modal' || act==='close-modal-bg'){ if (act==='close-modal-bg' && e.target!==el) return; UI.modalProjectId = null; render(); return; }
 
   if (act==='modal-status'){ setEntry(UI.modalProjectId, UI.entryQuarter, { status: ds.status }); render(); return; }

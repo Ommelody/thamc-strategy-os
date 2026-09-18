@@ -475,43 +475,48 @@ function cloudPush(immediate){
   if (immediate) run(); else CLOUD.pushTimer = setTimeout(run, 1200);
 }
 
+function saveLocalOnly(){
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(D)); } catch(e){}
+}
 function cloudPull(opts){
   opts = opts || {};
   if (!D.sheetUrl) { if (opts.report) { CLOUD.state='error'; CLOUD.msg='กรุณากรอก URL ก่อน'; render(); } return; }
   CLOUD.pulling = true; CLOUD.state='pulling'; renderCloudBadge();
+  // CLOUD.pulling must stay true until every write below is done, otherwise saveData()
+  // queues a push and the app echoes the sheet's own data straight back at it.
+  var done = function(){ CLOUD.pulling = false; render(); };
   fetch(D.sheetUrl + (D.sheetUrl.indexOf('?')>-1?'&':'?') + 'type=snapshot&t=' + Date.now())
     .then(function(r){ return r.json(); })
     .then(function(res){
-      CLOUD.pulling = false;
       var remote = res && (res.payload || res.data);
       if (typeof remote === 'string') { try { remote = JSON.parse(remote); } catch(e){ remote = null; } }
       if (!remote || !remote.strategies) {
         // sheet is empty — seed it from this device so there is a baseline to share
         CLOUD.state='ok'; CLOUD.msg=''; stampSync();
+        if (opts.report) CLOUD.msg='ชีตยังว่าง — ส่งข้อมูลจากเครื่องนี้ขึ้นเป็นชุดเริ่มต้นแล้ว';
+        CLOUD.pulling = false;
         cloudPush(true);
-        if (opts.report) { CLOUD.msg='ชีตยังว่าง — ส่งข้อมูลจากเครื่องนี้ขึ้นเป็นชุดเริ่มต้นแล้ว'; }
         render(); return;
       }
       var remoteRev = Number(res.rev||remote.rev||0), localRev = Number(D.rev||0);
       if (!opts.force && remoteRev && localRev && remoteRev < localRev) {
         CLOUD.state='ok'; stampSync();
         CLOUD.msg='ข้อมูลในเครื่องใหม่กว่าชีต — กด “ส่งขึ้นชีต” เพื่ออัปเดตให้ทุกคน';
-        render(); return;
+        done(); return;
       }
       SYNC_KEYS.forEach(function(k){ if (remote[k] !== undefined) D[k] = remote[k]; });
       D.rev = remoteRev || Date.now();
       ensureAuthData(D);
-      saveData();
+      saveLocalOnly();
       CLOUD.state='ok'; CLOUD.msg=''; stampSync();
-      render();
+      done();
     })
     .catch(function(){
-      CLOUD.pulling = false; CLOUD.state='error';
+      CLOUD.state='error';
       CLOUD.msg='ดึงข้อมูลจากชีตไม่สำเร็จ — ใช้ข้อมูลในเครื่องชั่วคราว';
-      render();
+      done();
     });
 }
-
 // Repaints just the status chip, so background syncs never disturb what the user is typing.
 function renderCloudBadge(){
   document.querySelectorAll('[data-cloud-badge]').forEach(function(el){

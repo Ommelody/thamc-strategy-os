@@ -731,7 +731,7 @@ function renderSidebar(){
 
 function renderTab(){
   if (UI.tab==='dashboard') return renderDashboard();
-  if (UI.tab==='plan' || UI.tab==='strategy' || UI.tab==='entry') return renderPlan();
+  if (UI.tab==='plan' || UI.tab==='strategy' || UI.tab==='entry') return (UI.editMode && isAdmin()) ? renderStrategy() : renderPlan();
   if (UI.tab==='registry') return isAdmin() ? renderRegistry() : renderDashboard();
   if (UI.tab==='timeline') return renderTimeline();
   if (UI.tab==='forms') return renderForms();
@@ -848,6 +848,7 @@ function renderPlan(){
       '<div class="row" style="gap:8px;flex-wrap:wrap">' +
         '<label class="field" style="margin:0"><span style="font-size:10.5px">ไตรมาสที่บันทึก</span><select data-act="set-entry-quarter">'+quarters.map(function(x){return '<option'+(x===q?' selected':'')+'>'+x+'</option>';}).join('')+'</select></label>' +
         '<button class="btn '+(UI.urgentOnly?'':'btn-outline')+'" data-act="toggle-urgent-filter" style="align-self:flex-end">'+(UI.urgentOnly?'✓ ':'')+'เฉพาะเร่งด่วน</button>' +
+        (isAdmin() ? '<button class="btn btn-outline" data-act="toggle-edit" style="align-self:flex-end">แก้ไขชื่อยุทธศาสตร์/กลยุทธ์</button>' : '') +
         '<button class="btn btn-outline" data-act="open-print-dialog" style="align-self:flex-end">พิมพ์รายงาน</button>' +
       '</div>' +
     '</div>' +
@@ -1289,6 +1290,37 @@ function renderDashboard(){
         '<button class="btn '+(UI.urgentOnly?'':'btn-outline')+'" data-act="toggle-urgent-filter">'+(UI.urgentOnly?'✓ ':'')+'เฉพาะโครงการเร่งด่วน</button>' +
         '<button class="btn btn-outline" data-act="open-print-dialog">พิมพ์รายงาน</button>' +
         '<button class="btn" data-act="set-tab" data-tab="entry">เปิดรอบบันทึกผล</button>' +
+      '</div>' +
+    '</div>' +
+    '<div style="border-radius:16px;padding:22px 24px;margin-bottom:26px;background:#faf7f7;border:1px solid #f0eae9">' +
+      '<div class="row" style="gap:10px;margin-bottom:16px"><span style="width:8px;height:8px;border-radius:50%;background:#f2b526"></span>' +
+        '<span style="font-size:14.5px;font-weight:600;color:#5e1523">ค่านิยมองค์กร THAMC</span></div>' +
+      '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px">' +
+        '<div class="card" style="padding:18px 14px;text-align:center">' +
+          '<div style="font-size:34px;font-weight:700;color:#8f2436;line-height:1">T</div>' +
+          '<div style="font-size:11px;color:#9b8f8e;margin-top:10px">Trust</div>' +
+          '<div style="font-size:12.5px;font-weight:500;margin-top:5px">ความไว้วางใจ เชื่อมั่น</div>' +
+        '</div>' +
+        '<div class="card" style="padding:18px 14px;text-align:center">' +
+          '<div style="font-size:34px;font-weight:700;color:#8f2436;line-height:1">H</div>' +
+          '<div style="font-size:11px;color:#9b8f8e;margin-top:10px">Harmony</div>' +
+          '<div style="font-size:12.5px;font-weight:500;margin-top:5px">เป็นอันหนึ่งอันเดียวกัน</div>' +
+        '</div>' +
+        '<div class="card" style="padding:18px 14px;text-align:center">' +
+          '<div style="font-size:34px;font-weight:700;color:#8f2436;line-height:1">A</div>' +
+          '<div style="font-size:11px;color:#9b8f8e;margin-top:10px">Agility</div>' +
+          '<div style="font-size:12.5px;font-weight:500;margin-top:5px">รับการเปลี่ยนแปลง</div>' +
+        '</div>' +
+        '<div class="card" style="padding:18px 14px;text-align:center">' +
+          '<div style="font-size:34px;font-weight:700;color:#8f2436;line-height:1">M</div>' +
+          '<div style="font-size:11px;color:#9b8f8e;margin-top:10px">Mind of Care</div>' +
+          '<div style="font-size:12.5px;font-weight:500;margin-top:5px">จิตใจบริการ</div>' +
+        '</div>' +
+        '<div class="card" style="padding:18px 14px;text-align:center">' +
+          '<div style="font-size:34px;font-weight:700;color:#8f2436;line-height:1">C</div>' +
+          '<div style="font-size:11px;color:#9b8f8e;margin-top:10px">Creation</div>' +
+          '<div style="font-size:12.5px;font-weight:500;margin-top:5px">ความคิดสร้างสรรค์</div>' +
+        '</div>' +
       '</div>' +
     '</div>' +
     '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:22px 0 26px">' +

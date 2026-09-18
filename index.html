@@ -107,7 +107,33 @@ body.printing-project .project-print-sheet{display:block}
 </style>
 </head>
 <body>
-<div id="root"></div>
+<div id="root"><div id="boot-fallback" style="max-width:560px;margin:60px auto;padding:26px 28px;border:1px solid #ece5e4;border-radius:14px;font-family:'IBM Plex Sans Thai',sans-serif;color:#241b1c">
+  <div style="font-size:16px;font-weight:600;margin-bottom:8px">กำลังโหลดระบบ…</div>
+  <div id="boot-error" style="display:none">
+    <div style="font-size:15px;font-weight:600;color:#a5321f;margin-bottom:10px">ระบบโหลดไม่สำเร็จ</div>
+    <div style="font-size:13px;line-height:1.8;color:#4c4241">ไฟล์ที่เปิดอยู่อาจเป็นเวอร์ชันเก่าที่ค้างในแคชของเบราว์เซอร์ ลองทำตามนี้:
+      <ol style="padding-left:18px;margin:10px 0 0">
+        <li>กด Ctrl+Shift+R (หรือ Cmd+Shift+R) เพื่อโหลดใหม่ข้ามแคช</li>
+        <li>ถ้ายังไม่หาย กดปุ่มด้านล่างเพื่อล้างแคชของแอป แล้วโหลดใหม่</li>
+        <li>ตรวจว่าอัปโหลด index.html เวอร์ชันล่าสุดขึ้น GitHub แล้ว</li>
+      </ol>
+    </div>
+    <button onclick="(async function(){ try { if (navigator.serviceWorker) { var rs = await navigator.serviceWorker.getRegistrations(); for (var i=0;i&lt;rs.length;i++) await rs[i].unregister(); } if (window.caches) { var ks = await caches.keys(); for (var j=0;j&lt;ks.length;j++) await caches.delete(ks[j]); } } catch(e){} location.reload(true); })()" style="margin-top:16px;padding:10px 16px;border-radius:10px;background:#8f2436;color:#fff;font-size:13px;font-weight:500;border:none;cursor:pointer;font-family:inherit">ล้างแคชแอป &amp; โหลดใหม่</button>
+    <div style="font-size:11px;color:#9b8f8e;margin-top:14px">รายละเอียดข้อผิดพลาด: <span id="boot-error-msg" style="font-family:'IBM Plex Mono',monospace"></span></div>
+  </div>
+</div></div>
+<script>
+// Surfaces a parse/runtime failure in the main script instead of leaving a white page.
+window.addEventListener('error', function(ev){
+  var box = document.getElementById('boot-error');
+  if (!box) return;
+  box.style.display = 'block';
+  var m = document.getElementById('boot-error-msg');
+  if (m) m.textContent = (ev.message||'') + ' @ line ' + (ev.lineno||'?');
+  var t = document.querySelector('#boot-fallback > div');
+  if (t) t.style.display = 'none';
+});
+</script>
 
 <script>
 /* ---------- seed data ---------- */
@@ -316,7 +342,7 @@ function loadData(){
 }
 function saveData(){
   try { localStorage.setItem(STORE_KEY, JSON.stringify(D)); } catch(e){}
-  if (typeof cloudPush === 'function' && !(typeof CLOUD !== 'undefined' && CLOUD.pulling)) cloudPush();
+  if (typeof CLOUD !== 'undefined' && CLOUD && !CLOUD.pulling && typeof cloudPush === 'function') cloudPush();
 }
 
 /* ---------- auth / roles / departments ---------- */
@@ -469,7 +495,11 @@ function cloudPush(immediate){
       headers: { 'Content-Type':'text/plain;charset=utf-8' },
       body: JSON.stringify({ type:'snapshot', rev: D.rev, by: (currentUser()||{}).username||'', payload: snapshotOut() })
     }).then(function(r){ return r.json().catch(function(){ return {}; }); })
-      .then(function(){ CLOUD.state='ok'; CLOUD.msg=''; stampSync(); saveData(); renderCloudBadge(); })
+      .then(function(){
+        CLOUD.state='ok';
+        if (CLOUD.msg && CLOUD.msg.indexOf('ส่งขึ้นชีต')===0) CLOUD.msg='';
+        stampSync(); saveLocalOnly(); renderCloudBadge();
+      })
       .catch(function(){ CLOUD.state='error'; CLOUD.msg='ส่งขึ้นชีตไม่สำเร็จ — บันทึกไว้ในเครื่องแล้ว'; renderCloudBadge(); });
   };
   if (immediate) run(); else CLOUD.pushTimer = setTimeout(run, 1200);

@@ -357,7 +357,7 @@ function loadData(){
     var raw = localStorage.getItem(STORE_KEY);
     if (raw) data = JSON.parse(raw);
   } catch(e){}
-  if (!data) { var fresh = { strategies: seedStrategies(), fiscalYears: ['2568','2569'], currentQuarter: '2569 Q4', entries: {}, details: {}, sheetUrl: DEFAULT_SHEET_URL, seedVersion: SEED_VERSION }; syncSeedDetails(fresh); return fresh; }
+  if (!data) { var fresh = { strategies: seedStrategies(), fiscalYears: ['2568','2569'], currentQuarter: '2569 Q4', entries: {}, details: {}, sheetUrl: DEFAULT_SHEET_URL, pinnedSheetUrl: DEFAULT_SHEET_URL, seedVersion: SEED_VERSION }; syncSeedDetails(fresh); return fresh; }
   if (data.seedVersion !== SEED_VERSION) {
     if (HARD_RESET_VERSIONS.indexOf(SEED_VERSION) !== -1 && data.seedVersion < SEED_VERSION) {
       data.strategies = seedStrategies();
@@ -406,6 +406,24 @@ function ensureAuthData(data){
   return data;
 }
 
+function logAudit(action, detail){
+  if (!D) return;
+  if (!Array.isArray(D.audit)) D.audit = [];
+  var u = null; try { u = currentUser(); } catch(e){}
+  D.audit.unshift({
+    t: Date.now(),
+    who: u ? (u.name || u.username) : 'ไม่ระบุ',
+    role: u ? (ROLES[u.role] || u.role) : '',
+    action: action,
+    detail: detail || ''
+  });
+  if (D.audit.length > 800) D.audit.length = 800;
+}
+function auditStamp(ts){
+  var d = new Date(ts);
+  var p = function(n){ return n<10 ? '0'+n : ''+n; };
+  return p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+(d.getFullYear()+543).toString().slice(-2)+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
 function currentUser(){
   var id = null; try { id = sessionStorage.getItem(SESSION_KEY); } catch(e){}
   if (!id || !D.users) return null;
@@ -437,14 +455,18 @@ function deptChips(pid, act){
   }).join('') + '</div>';
 }
 
-// admin edits anything; head edits its own department's projects; user edits only what it owns; exec is read-only
+// admin edits anything; head edits its own department's projects; user edits what it owns; exec is read-only.
+// projects the admin has not assigned yet stay editable by heads and by users in the matching department,
+// so nobody is locked out before the assignment work is finished.
 function canEditProject(p){
   var u = currentUser(); if (!u) return false;
   if (u.role==='admin') return true;
   if (u.role==='exec') return false;
   var det = getDetail(p.id);
-  if (u.role==='head') return detailDeptIds(det).indexOf(u.deptId)!==-1;
-  return det.ownerUserId===u.id;
+  var dids = detailDeptIds(det);
+  if (u.role==='head') return !dids.length || dids.indexOf(u.deptId)!==-1;
+  if (det.ownerUserId) return det.ownerUserId===u.id;
+  return !dids.length || (!!u.deptId && dids.indexOf(u.deptId)!==-1);
 }
 function canSeeProject(p){
   var u = currentUser(); if (!u) return false;
@@ -509,6 +531,8 @@ function applyKpiPercent(pid, q){
   setEntry(pid, q, patch);
 }
 function pushDetail(pid){
+  var fpd = findProject(pid);
+  logAudit('บันทึกผลการดำเนินงาน', (fpd ? fpd.p.name : '') + ' · ไตรมาส ' + (UI.entryQuarter||D.currentQuarter));
   UI.modalSaved = D.sheetUrl ? 'บันทึกแล้ว — กำลังส่งขึ้น Google Sheet' : 'บันทึกในเครื่องแล้ว (ยังไม่ได้เชื่อม Google Sheet)';
   cloudPush();
 }
@@ -747,6 +771,9 @@ function renderUserChip(){
   return '<div style="margin-top:22px;padding:13px 15px;border-radius:12px;background:rgba(255,255,255,.07)">' +
     '<div class="sb-label" style="font-size:12.5px;font-weight:600;color:#fff">'+esc(u.name||u.username)+'</div>' +
     '<div class="sb-label" style="font-size:10.5px;color:#f2b526;margin-top:3px">'+esc(ROLES[u.role]||u.role)+(u.deptId?' · '+esc(deptName(u.deptId)):'')+'</div>' +
+    '<button type="button" class="btn-logout" style="background:rgba(255,255,255,.10);color:#fff;border-color:rgba(255,255,255,.18);margin-bottom:7px" data-act="set-tab" data-tab="profile" title="ตั้งค่าบัญชีของฉัน">' +
+      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+      '<span class="sb-label">บัญชีของฉัน</span></button>' +
     '<button type="button" class="btn-logout" data-act="logout" title="ออกจากระบบ">' +
       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
       '<span class="sb-label">ออกจากระบบ</span></button>' +
@@ -785,7 +812,39 @@ function renderSidebar(){
   '</div>';
 }
 
+function renderProfile(){
+  var u = currentUser(); if (!u) return '';
+  var deptOpts = '<option value="">— ไม่ระบุ —</option>' + (D.departments||[]).map(function(d){
+    return '<option value="'+esc(d.id)+'"'+(d.id===u.deptId?' selected':'')+'>'+esc(d.code?d.code+' ':'')+esc(d.name)+'</option>';
+  }).join('');
+  return '<div style="max-width:620px">' +
+    '<div class="eyebrow">PROFILE</div><h1>ตั้งค่าบัญชีของฉัน</h1>' +
+    '<div class="muted" style="font-size:13px;line-height:1.7;margin-bottom:22px">แก้ชื่อ หน่วยงาน อีเมล เบอร์ติดต่อ และเปลี่ยนรหัสผ่านของตัวเองได้ที่นี่</div>' +
+    '<div class="card" style="padding:22px 24px;margin-bottom:14px">' +
+      '<div class="row" style="gap:10px;margin-bottom:18px">' +
+        '<span class="pill" style="background:#fdf1f2;color:#8f2436">'+esc(ROLES[u.role]||u.role)+'</span>' +
+        '<span class="pill mono">'+esc(u.username)+'</span>' +
+      '</div>' +
+      '<label class="field" style="margin-bottom:13px"><span>ชื่อ-นามสกุล</span><input type="text" id="pf-name" style="width:100%" value="'+esc(u.name||'')+'"></label>' +
+      '<label class="field" style="margin-bottom:13px"><span>หน่วยงาน</span><select id="pf-dept" style="width:100%">'+deptOpts+'</select></label>' +
+      '<label class="field" style="margin-bottom:13px"><span>อีเมล</span><input type="email" id="pf-email" style="width:100%" value="'+esc(u.email||'')+'"></label>' +
+      '<label class="field" style="margin-bottom:16px"><span>เบอร์ติดต่อ</span><input type="text" id="pf-phone" style="width:100%" value="'+esc(u.phone||'')+'"></label>' +
+      '<button class="btn" data-act="save-profile">บันทึกข้อมูลส่วนตัว</button>' +
+      '<div style="font-size:12px;color:#2f5f45;min-height:18px;margin-top:10px">'+esc(UI.profileMsg||'')+'</div>' +
+    '</div>' +
+    '<div class="card" style="padding:22px 24px">' +
+      '<div style="font-size:14.5px;font-weight:600;margin-bottom:4px">เปลี่ยนรหัสผ่าน</div>' +
+      '<div class="muted" style="font-size:12px;line-height:1.7;margin-bottom:16px">ต้องกรอกรหัสผ่านเดิมเพื่อยืนยันตัวตน</div>' +
+      '<label class="field" style="margin-bottom:13px"><span>รหัสผ่านเดิม</span><input type="password" id="pf-old" style="width:100%"></label>' +
+      '<label class="field" style="margin-bottom:13px"><span>รหัสผ่านใหม่</span><input type="password" id="pf-new" style="width:100%"></label>' +
+      '<label class="field" style="margin-bottom:16px"><span>ยืนยันรหัสผ่านใหม่</span><input type="password" id="pf-new2" style="width:100%"></label>' +
+      '<button class="btn" data-act="change-pw">เปลี่ยนรหัสผ่าน</button>' +
+      '<div style="font-size:12px;color:'+(UI.pwErr?'#a5321f':'#2f5f45')+';min-height:18px;margin-top:10px">'+esc(UI.pwErr || UI.pwMsg || '')+'</div>' +
+    '</div>' +
+  '</div>';
+}
 function renderTab(){
+  if (UI.tab==='profile') return renderProfile();
   if (UI.tab==='dashboard') return renderDashboard();
   if (UI.tab==='plan' || UI.tab==='strategy' || UI.tab==='entry') return (UI.editMode && isAdmin()) ? renderStrategy() : renderPlan();
   if (UI.tab==='registry') return isAdmin() ? renderRegistry() : renderDashboard();
@@ -1032,6 +1091,37 @@ function renderDeptTab(){
     '</table></div>' +
   '</div>';
 }
+function renderAuditTab(){
+  var rows = (D.audit||[]);
+  var q = (UI.auditFilter||'').trim().toLowerCase();
+  if (q) rows = rows.filter(function(r){
+    return (r.who+' '+r.action+' '+r.detail).toLowerCase().indexOf(q) > -1;
+  });
+  var shown = rows.slice(0, UI.auditLimit || 120);
+  var body = shown.map(function(r){
+    return '<tr style="border-top:1px solid #f2eceb">' +
+      '<td style="padding:9px 10px;white-space:nowrap;font-size:11px;color:#7a6f6e" class="mono">'+auditStamp(r.t)+'</td>' +
+      '<td style="padding:9px 10px"><div style="font-size:12.5px;font-weight:500">'+esc(r.who)+'</div>'+(r.role?'<div style="font-size:10.5px;color:#9b8f8e">'+esc(r.role)+'</div>':'')+'</td>' +
+      '<td style="padding:9px 10px;font-size:12.5px;font-weight:500;color:#8f2436;white-space:nowrap">'+esc(r.action)+'</td>' +
+      '<td style="padding:9px 10px;font-size:12px;color:#5b5150;line-height:1.55">'+esc(r.detail)+'</td>' +
+    '</tr>';
+  }).join('');
+  return '<div class="muted" style="font-size:13px;line-height:1.7;margin-bottom:14px">บันทึกทุกรายการที่เกิดขึ้นในระบบ — ใครทำอะไร เมื่อไหร่ เก็บล่าสุด 800 รายการ และซิงก์ขึ้นชีตพร้อมข้อมูลอื่น</div>' +
+    '<div class="row" style="gap:9px;margin-bottom:14px;flex-wrap:wrap">' +
+      '<input type="text" placeholder="ค้นหา ชื่อผู้ใช้ / การกระทำ / รายละเอียด" value="'+esc(UI.auditFilter||'')+'" data-act="audit-filter" style="flex:1;min-width:230px">' +
+      '<button class="btn btn-outline" data-act="audit-export">↓ ส่งออก CSV</button>' +
+      (isAdmin() ? '<button class="btn btn-danger" data-act="audit-clear">ล้างประวัติ</button>' : '') +
+    '</div>' +
+    '<div class="row" style="gap:12px;margin-bottom:12px;font-size:11.5px;color:#9b8f8e">' +
+      '<span>ทั้งหมด '+(D.audit||[]).length+' รายการ</span>' +
+      (q ? '<span>· ตรงเงื่อนไข '+rows.length+'</span>' : '') +
+      '<span>· แสดง '+shown.length+'</span>' +
+    '</div>' +
+    (shown.length
+      ? '<div style="overflow-x:auto"><table class="table" style="min-width:720px"><thead><tr><th>เวลา</th><th>ผู้ใช้</th><th>การกระทำ</th><th>รายละเอียด</th></tr></thead><tbody>'+body+'</tbody></table></div>' +
+        (rows.length > shown.length ? '<div style="margin-top:14px"><button class="btn btn-outline" data-act="audit-more">แสดงเพิ่ม 120 รายการ</button></div>' : '')
+      : '<div class="card" style="padding:26px;text-align:center;font-size:12.5px;color:#9b8f8e">'+(q?'ไม่พบรายการที่ตรงกับคำค้น':'ยังไม่มีประวัติการใช้งาน')+'</div>');
+}
 function renderUsersTab(){
   var pending = (D.users||[]).filter(function(u){ return u.status==='pending'; });
   var pendingHtml = pending.length ? '<div class="card" style="padding:18px 20px;margin-bottom:14px;border:1.5px solid #f2b526">' +
@@ -1081,7 +1171,7 @@ function renderUsersTab(){
   '</div>';
 }
 function settingsTabBar(){
-  var tabs = [['general','ทั่วไป / เชื่อมต่อ'],['depts','หน่วยงาน'],['users','ผู้ใช้งาน']];
+  var tabs = [['general','ทั่วไป / เชื่อมต่อ'],['depts','หน่วยงาน'],['users','ผู้ใช้งาน'],['audit','ประวัติการใช้งาน']];
   return '<div class="row no-print" style="gap:6px;margin:18px 0 20px;flex-wrap:wrap;border-bottom:1px solid #f0eae9;padding-bottom:0">' +
     tabs.map(function(t){
       var active = (UI.settingsTab||'general')===t[0];
@@ -1677,7 +1767,7 @@ function renderSettings(){
   if (t==='general') return renderSettingsGeneral();
   return '<div style="max-width:1150px">' +
     '<div class="eyebrow">SETUP</div><h1>ตั้งค่าระบบ</h1>' + settingsTabBar() +
-    (t==='depts' ? renderDeptTab() : renderUsersTab()) +
+    (t==='depts' ? renderDeptTab() : t==='audit' ? renderAuditTab() : renderUsersTab()) +
   '</div>';
 }
 function renderSettingsGeneral(){
@@ -2046,6 +2136,7 @@ function handleAction(act, el, e){
     if (found.status==='pending') { UI.authError='บัญชีนี้รอผู้ดูแลระบบอนุมัติ'; render(); return; }
     if (found.pw !== hashPw(pw)) { UI.authError='รหัสผ่านไม่ถูกต้อง'; render(); return; }
     try { sessionStorage.setItem(SESSION_KEY, found.id); } catch(e2){}
+    logAudit('เข้าสู่ระบบ', found.username); saveData();
     UI.authError=''; UI.authMsg=''; UI.tab='dashboard'; render(); return;
   }
   if (act==='do-register'){
@@ -2054,13 +2145,60 @@ function handleAction(act, el, e){
     if (!rn || !ru || !rp) { UI.authError='กรอกชื่อ-นามสกุล, username และรหัสผ่านให้ครบ'; render(); return; }
     if ((D.users||[]).some(function(x){ return x.username===ru; })) { UI.authError='username นี้ถูกใช้แล้ว'; render(); return; }
     D.users.push({ id: uid(), username: ru, name: rn, role: g('reg-role')||'user', deptId: g('reg-dept'), email: g('reg-email'), phone:'', status:'pending', pw: hashPw(rp), createdAt: new Date().toISOString() });
+    logAudit('ลงทะเบียนขอใช้งาน', ru + ' (' + rn + ')');
     saveData();
     UI.authView='login'; UI.authError=''; UI.authMsg='ส่งคำขอเรียบร้อย — รอผู้ดูแลระบบอนุมัติก่อนเข้าใช้งาน';
     render(); return;
   }
-  if (act==='logout'){ try { sessionStorage.removeItem(SESSION_KEY); } catch(e2){} UI.authView='login'; UI.authError=''; UI.authMsg=''; render(); return; }
+  if (act==='logout'){ logAudit('ออกจากระบบ',''); saveData(); try { sessionStorage.removeItem(SESSION_KEY); } catch(e2){} UI.authView='login'; UI.authError=''; UI.authMsg=''; render(); return; }
   if (act==='toggle-sidebar'){ UI.sidebarCollapsed = !UI.sidebarCollapsed; try { localStorage.setItem('thamc_sb', UI.sidebarCollapsed?'1':'0'); } catch(e2){} render(); return; }
-  if (act==='set-settings-tab'){ UI.settingsTab = ds.stab; render(); return; }
+  if (act==='set-settings-tab'){ UI.settingsTab = ds.stab; UI.auditLimit = 120; render(); return; }
+  if (act==='audit-filter'){ UI.auditFilter = el.value; UI.auditLimit = 120; render(); return; }
+  if (act==='audit-more'){ UI.auditLimit = (UI.auditLimit||120) + 120; render(); return; }
+  if (act==='audit-clear'){
+    if (!confirm('ล้างประวัติการใช้งานทั้งหมด? การกระทำนี้ย้อนกลับไม่ได้')) return;
+    D.audit = []; logAudit('ล้างประวัติการใช้งาน',''); saveData(); render(); return;
+  }
+  if (act==='audit-export'){
+    var esc2 = function(v){ return '"' + String(v==null?'':v).replace(/"/g,'""') + '"'; };
+    var lines = [['เวลา','ผู้ใช้','บทบาท','การกระทำ','รายละเอียด'].map(esc2).join(',')];
+    (D.audit||[]).forEach(function(r){ lines.push([auditStamp(r.t), r.who, r.role, r.action, r.detail].map(esc2).join(',')); });
+    var blobA = new Blob(['\uFEFF' + lines.join('\r\n')], { type:'text/csv;charset=utf-8' });
+    var aA = document.createElement('a');
+    aA.href = URL.createObjectURL(blobA); aA.download = 'audit-log.csv';
+    document.body.appendChild(aA); aA.click(); document.body.removeChild(aA);
+    logAudit('ส่งออกประวัติการใช้งาน', (D.audit||[]).length + ' รายการ');
+    saveData(); return;
+  }
+  if (act==='save-profile'){
+    var me = currentUser(); if (!me) return;
+    var gp = function(id){ return ((document.getElementById(id)||{}).value||'').trim(); };
+    var newName = gp('pf-name');
+    if (!newName) { UI.profileMsg = 'กรอกชื่อ-นามสกุลก่อน'; render(); return; }
+    me.name = newName;
+    me.deptId = gp('pf-dept');
+    me.email = gp('pf-email');
+    me.phone = gp('pf-phone');
+    logAudit('แก้ไขข้อมูลส่วนตัว', me.username);
+    saveData();
+    UI.profileMsg = 'บันทึกแล้ว';
+    render(); return;
+  }
+  if (act==='change-pw'){
+    var me2 = currentUser(); if (!me2) return;
+    var gq = function(id){ return (document.getElementById(id)||{}).value||''; };
+    var oldPw = gq('pf-old'), newPw = gq('pf-new'), newPw2 = gq('pf-new2');
+    UI.pwMsg=''; UI.pwErr='';
+    if (!oldPw || !newPw) { UI.pwErr='กรอกรหัสผ่านเดิมและรหัสผ่านใหม่'; render(); return; }
+    if (me2.pw !== hashPw(oldPw)) { UI.pwErr='รหัสผ่านเดิมไม่ถูกต้อง'; render(); return; }
+    if (newPw.length < 4) { UI.pwErr='รหัสผ่านใหม่ต้องยาวอย่างน้อย 4 ตัวอักษร'; render(); return; }
+    if (newPw !== newPw2) { UI.pwErr='รหัสผ่านใหม่ทั้งสองช่องไม่ตรงกัน'; render(); return; }
+    me2.pw = hashPw(newPw);
+    logAudit('เปลี่ยนรหัสผ่าน', me2.username);
+    saveData();
+    UI.pwMsg='เปลี่ยนรหัสผ่านเรียบร้อย';
+    render(); return;
+  }
   if (act==='set-forms-tab'){ UI.formsTab = ds.ftab; render(); return; }
   if (act==='open-sample-form'){
     UI.previewProjectId = 'sample-corporate-health'; render(); return;
@@ -2092,8 +2230,8 @@ function handleAction(act, el, e){
 
   if (act==='reg-search'){ UI.registryQuery = el.value; render(); return; }
   if (act==='reg-filter'){ UI.registryShow = el.value; render(); return; }
-  if (act==='reg-toggle-active'){ var fa = findProject(ds.pid); if (fa) { fa.p.active = !isActiveProject(fa.p); saveData(); } render(); return; }
-  if (act==='reg-toggle-priority'){ var fp = findProject(ds.pid); if (fp) { fp.p.priority = !fp.p.priority; saveData(); } render(); return; }
+  if (act==='reg-toggle-active'){ var fa = findProject(ds.pid); if (fa) { fa.p.active = !isActiveProject(fa.p); logAudit(fa.p.active?'เปิดใช้โครงการ':'พักโครงการ', fa.p.name); saveData(); } render(); return; }
+  if (act==='reg-toggle-priority'){ var fp = findProject(ds.pid); if (fp) { fp.p.priority = !fp.p.priority; logAudit(fp.p.priority?'ตั้งเป็นโครงการเร่งด่วน':'ยกเลิกโครงการเร่งด่วน', fp.p.name); saveData(); } render(); return; }
   if (act==='reg-set-name'){ var fn2 = findProject(ds.pid); if (fn2) { fn2.p.name = el.value; saveData(); } return; }
   if (act==='reg-set-desc'){ var fd = findProject(ds.pid); if (fd) { fd.p.desc = el.value; saveData(); } return; }
   if (act==='reg-toggle-dept'){ toggleProjectDept(ds.pid, ds.did); render(); return; }
@@ -2120,13 +2258,14 @@ function handleAction(act, el, e){
     var dc = ((document.getElementById('new-dept-code')||{}).value||'').trim();
     var dn = ((document.getElementById('new-dept-name')||{}).value||'').trim();
     if (!dn) { alert('กรอกชื่อหน่วยงานก่อน'); return; }
-    D.departments.push({ id: uid(), code: dc, name: dn, head:'' }); saveData(); render(); return;
+    D.departments.push({ id: uid(), code: dc, name: dn, head:'' }); logAudit('เพิ่มหน่วยงาน', (dc?dc+' ':'')+dn); saveData(); render(); return;
   }
   if (act==='dept-set-code'){ var d1 = D.departments.filter(function(x){return x.id===ds.did;})[0]; if (d1) { d1.code = el.value; saveData(); } return; }
   if (act==='dept-set-name'){ var d2 = D.departments.filter(function(x){return x.id===ds.did;})[0]; if (d2) { d2.name = el.value; saveData(); } return; }
   if (act==='dept-set-head'){ var d3 = D.departments.filter(function(x){return x.id===ds.did;})[0]; if (d3) { d3.head = el.value; saveData(); } return; }
   if (act==='dept-delete'){
     if (!confirm('ลบหน่วยงานนี้? ผู้ใช้และโครงการที่ผูกอยู่จะกลายเป็นไม่ระบุหน่วยงาน')) return;
+    logAudit('ลบหน่วยงาน', deptName(ds.did));
     D.departments = D.departments.filter(function(x){ return x.id!==ds.did; });
     (D.users||[]).forEach(function(x){ if (x.deptId===ds.did) x.deptId=''; });
     saveData(); render(); return;
@@ -2141,13 +2280,13 @@ function handleAction(act, el, e){
     saveData(); render(); return;
   }
   var findUser = function(id){ return (D.users||[]).filter(function(x){ return x.id===id; })[0]; };
-  if (act==='user-approve'){ var ua = findUser(ds.uid2); if (ua) { ua.status='active'; saveData(); } render(); return; }
+  if (act==='user-approve'){ var ua = findUser(ds.uid2); if (ua) { ua.status='active'; logAudit('อนุมัติผู้ใช้', ua.username+' ('+(ua.name||'')+')'); saveData(); } render(); return; }
   if (act==='user-set-name'){ var un3 = findUser(ds.uid2); if (un3) { un3.name = el.value; saveData(); } return; }
-  if (act==='user-set-role'){ var ur = findUser(ds.uid2); if (ur) { ur.role = el.value; saveData(); } render(); return; }
+  if (act==='user-set-role'){ var ur = findUser(ds.uid2); if (ur) { ur.role = el.value; logAudit('เปลี่ยนสิทธิ์ผู้ใช้', ur.username+' → '+(ROLES[el.value]||el.value)); saveData(); } render(); return; }
   if (act==='user-set-dept'){ var ud = findUser(ds.uid2); if (ud) { ud.deptId = el.value; saveData(); } return; }
   if (act==='user-set-email'){ var ue = findUser(ds.uid2); if (ue) { ue.email = el.value; saveData(); } return; }
   if (act==='user-set-phone'){ var up = findUser(ds.uid2); if (up) { up.phone = el.value; saveData(); } return; }
-  if (act==='user-reset-pw'){ var urp = findUser(ds.uid2); if (urp) { urp.pw = hashPw('thamc1234'); saveData(); alert('รีเซ็ตรหัสเป็น thamc1234 แล้ว'); } return; }
+  if (act==='user-reset-pw'){ var urp = findUser(ds.uid2); if (urp) { urp.pw = hashPw('thamc1234'); logAudit('รีเซ็ตรหัสผ่านผู้ใช้', urp.username); saveData(); alert('รีเซ็ตรหัสเป็น thamc1234 แล้ว'); } return; }
   if (act==='user-delete'){
     var udel = findUser(ds.uid2);
     if (udel && udel.role==='admin' && (D.users||[]).filter(function(x){ return x.role==='admin' && x.status==='active'; }).length<=1) { alert('ต้องเหลือผู้ดูแลระบบอย่างน้อย 1 คน'); return; }

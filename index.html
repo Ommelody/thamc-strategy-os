@@ -32,6 +32,8 @@ button{cursor:pointer}
 .sidebar.collapsed{width:78px;padding-left:14px;padding-right:14px}
 .sidebar.collapsed .sb-label{display:none}
 .sidebar.collapsed .navbtn{justify-content:center;padding:11px 0}
+.sidebar.collapsed .btn-logout{padding:10px 0}
+.sidebar.collapsed .btn-logout svg{width:18px;height:18px;flex:none}
 .sb-collapse{position:absolute;top:22px;right:8px;width:26px;height:26px;border-radius:50%;border:none;background:#f2b526;color:#5e1523;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(20,8,12,.3);z-index:5}
 .sb-collapse:hover{background:#ffc94a}
 .sb-collapse:focus-visible{outline:2px solid #fff;outline-offset:2px}
@@ -449,10 +451,27 @@ function toggleProjectDept(pid, did){
 function deptChips(pid, act){
   var ids = projectDeptIds(pid);
   if (!(D.departments||[]).length) return '<span style="font-size:11px;color:#9b8f8e">ยังไม่มีหน่วยงาน — เพิ่มที่แท็บหน่วยงาน</span>';
-  return '<div style="display:flex;flex-wrap:wrap;gap:6px">' + D.departments.map(function(dp){
-    var on = ids.indexOf(dp.id)!==-1;
-    return '<button type="button" class="dept-chip'+(on?' on':'')+'" data-act="'+act+'" data-pid="'+esc(pid)+'" data-did="'+esc(dp.id)+'">'+esc(dp.name)+'</button>';
-  }).join('') + '</div>';
+  var open = UI.deptPickerPid === pid;
+  var selectedChips = ids.map(function(id){
+    var dp = (D.departments||[]).filter(function(x){ return x.id===id; })[0];
+    if (!dp) return '';
+    return '<span class="pill" style="font-size:10.5px;padding:3px 8px 3px 10px;background:#fdf1f2;color:#8f2436;display:inline-flex;align-items:center;gap:5px">'+esc(dp.name)+
+      '<span data-act="'+act+'" data-pid="'+esc(pid)+'" data-did="'+esc(dp.id)+'" style="cursor:pointer;font-weight:700;line-height:1">×</span></span>';
+  }).join('');
+  var toggleBtn = '<button type="button" class="btn btn-outline" style="padding:3px 10px;font-size:11px;flex:none" data-act="dept-picker-toggle" data-pid="'+esc(pid)+'">'+(open?'ปิด':(ids.length?'+ แก้ไข':'+ ระบุหน่วยงาน'))+'</button>';
+  var panel = '';
+  if (open) {
+    panel = '<div style="margin-top:8px;padding:10px;border:1px solid #e6dedd;border-radius:10px;background:#fff;max-height:160px;overflow-y:auto;min-width:240px">' +
+      '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px">' +
+      D.departments.map(function(dp){
+        var on = ids.indexOf(dp.id)!==-1;
+        return '<label style="display:flex;align-items:center;gap:6px;font-size:11.5px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' +
+          '<input type="checkbox" style="flex:none" '+(on?'checked':'')+' data-act="'+act+'" data-pid="'+esc(pid)+'" data-did="'+esc(dp.id)+'">' + '<span style="overflow:hidden;text-overflow:ellipsis">'+esc(dp.name)+'</span>' +
+        '</label>';
+      }).join('') +
+      '</div></div>';
+  }
+  return '<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;max-width:260px">'+selectedChips+toggleBtn+'</div>' + panel;
 }
 
 // admin edits anything; head edits its own department's projects; user edits what it owns; exec is read-only.
@@ -484,9 +503,50 @@ function visibleProjects(list){
   });
 }
 
+/* ---------- AACI action plan detail (from THAMC_AACI_ActionPlan_Strategy4_FY2570_Updated.docx) ---------- */
+function seedAaciDetail(data){
+  if (data.aaciDetailVersion === 1) return;
+  data.aaciDetailVersion = 1;
+  if (data.fiscalYears.indexOf('2570') === -1) { data.fiscalYears.push('2570'); data.fiscalYears.sort(); }
+  var target = null;
+  data.strategies.forEach(function(s){ s.subs.forEach(function(u){ u.groups.forEach(function(g){ g.projects.forEach(function(p){
+    if (/เตรียมความพร้อมสู่การรับรองมาตรฐาน AACI/.test(p.name)) target = p;
+  }); }); }); });
+  if (!target) return;
+  if (data.details[target.id] && data.details[target.id].aaciImported) return;
+  var months = fyMonths(data.fiscalYears);
+  var base = data.fiscalYears.indexOf('2570') * 12; // FY2570 block: ต.ค.69 (pos0) … ก.ย.70 (pos11)
+  var pos = { 'ต.ค.':0,'พ.ย.':1,'ธ.ค.':2,'ม.ค.':3,'ก.พ.':4,'มี.ค.':5,'เม.ย.':6,'พ.ค.':7,'มิ.ย.':8,'ก.ค.':9,'ส.ค.':10,'ก.ย.':11 };
+  var m = function(name){ return base + pos[name]; };
+  data.details[target.id] = {
+    target: 'ผู้บริหารและทุกหน่วยงานในขอบเขตการรับรอง AACI (Accreditation Association for Ambulatory Health Care International) — ศูนย์คุณภาพเป็นผู้ประสาน/ติดตามหลัก',
+    output: 'Output: เตรียมระบบงาน บุคลากร และหลักฐานการปฏิบัติให้พร้อมต่อการตรวจประเมิน — ประเมินความพร้อมภายในหลัง 14 เม.ย. 70, ทำ Mock Survey พ.ค. 70, เข้ารับ Initial Survey ก.ค. 70\nOutcome ที่มุ่งหวัง: โรงพยาบาลมีความพร้อมและเข้ารับ Initial Survey เพื่อขอรับรอง AACI ในเดือนกรกฎาคม 2570 ตามกำหนดการที่ยืนยันกับหน่วยรับรอง',
+    kpi: 'วัตถุประสงค์: (1) ประเมินและแก้ไข Gap ทุกหมวดที่เกี่ยวข้อง (2) นำระบบคุณภาพไปปฏิบัติและมีหลักฐานผลลัพธ์ (3) ตรวจติดตามภายในและทบทวนความพร้อม (4) เตรียมรับ Initial Survey ภายในเดือนกรกฎาคม 2570\n\nกำหนดการสำคัญ: Pre-assessment 19–23 เม.ย. 70 (ทีมที่ปรึกษาจาก รพ.ธรรมศาสตร์เฉลิมพระเกียรติ) · Mock Survey 24–28 พ.ค. 70 (เลื่อนจาก 10–14 พ.ค. เดิม) · Initial Survey โดย AACI 12–16 ก.ค. 70 (รอยืนยัน)',
+    budget: 'อยู่ระหว่างจัดทำประมาณการ/เสนออนุมัติ (การอบรม การเตรียมระบบและหลักฐาน การประเมินภายใน/Mock Survey และค่าตรวจ Initial Survey ตามจริง)',
+    area: 'ระยะเวลาดำเนินโครงการ: ตุลาคม 2569 – กันยายน 2570 · เป้าหมาย Initial Survey: 12–16 กรกฎาคม 2570 (รอยืนยันกับ AACI)',
+    owner: 'ศูนย์คุณภาพ (ประสาน/ติดตามหลัก) ร่วมกับผู้จัดการหน่วยงานและเจ้าของระบบทุกหมวดที่เกี่ยวข้อง',
+    adminNote: 'นำเข้าจาก THAMC_AACI_ActionPlan_Strategy4_FY2570_Updated.docx — Mock Survey และ Initial Survey เป็นกำหนดการเสนอ ต้องประสานยืนยันอีกครั้ง; ค่า KPI ระหว่างทางเป็นเป้าหมายภายในที่เสนอ ไม่ใช่เกณฑ์บังคับจาก AACI',
+    aaciImported: true,
+    startMonth: m('ต.ค.'), endMonth: m('ก.ย.'),
+    steps: [
+      { name: '1. จัดระบบโครงการและประเมิน Gap — ผู้รับผิดชอบรายหมวดและ Full Gap Assessment พร้อมแผนปิด Gap (เป้า: ประเมินครบ 100%, ทุกประเด็นมีเจ้าของงาน/กำหนดเวลา)', from: m('ต.ค.'), to: m('พ.ย.') },
+      { name: '2. ปรับปรุงระบบงานและหลักฐานการปฏิบัติ — นโยบาย/แนวปฏิบัติที่ปรับปรุงพร้อมหลักฐานใช้งานจริงและข้อมูล KPI (เป้า: มีแผนแก้ไขครบ 100%, ติดตามรายเดือน)', from: m('พ.ย.'), to: m('มิ.ย.') },
+      { name: '3. สื่อสารและเตรียมความพร้อมบุคลากร — บันทึกการสื่อสาร อบรม และทวนสอบความเข้าใจ/สมรรถนะ (เป้า: กลุ่มเป้าหมายได้รับการสื่อสาร/อบรมตามแผน ≥90%)', from: m('พ.ย.'), to: m('มิ.ย.') },
+      { name: '4. ตรวจประเมินภายในและติดตามแก้ไข — Internal Survey รอบ 1 (ธ.ค.–ม.ค.), รอบ 2 (มี.ค.), Focused Survey (มิ.ย.) พร้อมข้อค้นพบ/สถานะแก้ไข (เป้า: มีแผนแก้ไขและผู้รับผิดชอบครบ 100%)', from: m('ธ.ค.'), to: m('มิ.ย.') },
+      { name: '5. ประเมินความพร้อมภายใน (Pre-assessment) — รายงานประเมินและข้อค้นพบเรียงตามความเร่งด่วน (เป้า: ดำเนินการ 1 ครั้งตามแผน) · 19–23 เม.ย. 70', from: m('เม.ย.'), to: m('เม.ย.') },
+      { name: '6. แก้ไขข้อค้นพบจาก Pre-assessment — Corrective Action Plan และผลตรวจยืนยันก่อน Mock Survey (เป้า: ข้อค้นพบสำคัญมีแผนแก้ไข/มาตรการควบคุมครบ 100%)', from: m('เม.ย.'), to: m('พ.ค.') },
+      { name: '7. ดำเนิน Mock Survey — รายงาน Mock Survey และข้อค้นพบจากการตรวจระบบ/ปฏิบัติจริง (เป้า: ดำเนินการ 1 ครั้งตามแผน) · 24–28 พ.ค. 70', from: m('พ.ค.'), to: m('พ.ค.') },
+      { name: '8. ปิดข้อค้นพบและทบทวนความพร้อมขั้นสุดท้าย — หลักฐานติดตามประสิทธิผล, Focused Survey และรายงาน Final Readiness (เป้า: ข้อค้นพบสำคัญแก้ไข/มีมาตรการควบคุมครบ 100%)', from: m('มิ.ย.'), to: m('ก.ค.') },
+      { name: '9. เตรียมเอกสารและรับ Initial Survey — เอกสารและหลักฐานพร้อมรับตรวจ (เป้า: ดำเนินการ Initial Survey 1 ครั้งใน ก.ค. 70) · เสนอ 12–16 ก.ค. 70 (รอยืนยัน)', from: m('ก.ค.'), to: m('ก.ค.') },
+      { name: '10. ติดตามผลหลังการตรวจและสรุปโครงการ — รายงานผล Initial Survey, แผนแก้ไขตามข้อค้นพบ (ถ้ามี) และรายงานสรุปโครงการ (เป้า: ข้อค้นพบที่ต้องแก้ไขมีผู้รับผิดชอบและกำหนดเวลาครบ 100%)', from: m('ส.ค.'), to: m('ก.ย.') }
+    ]
+  };
+}
+
 D = loadData();
 ensureAuthData(D);
 seedSampleDetail(D);
+seedAaciDetail(D);
 saveData();
 (function(){
   var validQuarters = fyQuarters(D.fiscalYears);
@@ -2235,6 +2295,7 @@ function handleAction(act, el, e){
   if (act==='reg-set-name'){ var fn2 = findProject(ds.pid); if (fn2) { fn2.p.name = el.value; saveData(); } return; }
   if (act==='reg-set-desc'){ var fd = findProject(ds.pid); if (fd) { fd.p.desc = el.value; saveData(); } return; }
   if (act==='reg-toggle-dept'){ toggleProjectDept(ds.pid, ds.did); render(); return; }
+  if (act==='dept-picker-toggle'){ UI.deptPickerPid = (UI.deptPickerPid === ds.pid) ? null : ds.pid; render(); return; }
   if (act==='reg-set-note'){ setDetail(ds.pid, { adminNote: el.value }); return; }
   if (act==='reg-delete'){
     if (!confirm('ลบโครงการนี้ออกจากทะเบียน? (หากต้องเก็บไว้ทบทวน ให้เอาเครื่องหมายหน้า “ใช้” ออกแทน)')) return;

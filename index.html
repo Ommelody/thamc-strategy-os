@@ -555,11 +555,8 @@ function canEditProject(p){
   return !dids.length || (!!u.deptId && dids.indexOf(u.deptId)!==-1);
 }
 function canSeeProject(p){
-  var u = currentUser(); if (!u) return false;
-  if (u.role==='admin' || u.role==='exec') return true;
-  var det = getDetail(p.id);
-  if (u.role==='head'){ var ds2 = detailDeptIds(det); return !ds2.length || ds2.indexOf(u.deptId)!==-1; }
-  return true;
+  // every logged-in user can VIEW all projects (dashboard, timeline, plan list) — editing rights are gated separately by canEditProject
+  return !!currentUser();
 }
 function isActiveProject(p){ return p.active !== false; }
 function visibleProjects(list){

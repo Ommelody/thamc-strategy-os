@@ -722,6 +722,7 @@ if (!UI.entryQuarter) UI.entryQuarter = D.currentQuarter;
 function visibleStrategies(){ return UI.printFilter ? D.strategies.filter(function(s){ return UI.printFilter.indexOf(s.code)!==-1; }) : D.strategies; }
 function eachProject(cb, strategies){ (strategies||visibleStrategies()).forEach(function(s,si){ s.subs.forEach(function(u,ui){ u.groups.forEach(function(g,gi){ g.projects.forEach(function(p,pi){ cb(p,{s:s,u:u,g:g,si:si,ui:ui,gi:gi,pi:pi}); }); }); }); }); }
 function findProject(pid){ var found=null; D.strategies.forEach(function(s,si){ s.subs.forEach(function(u,ui){ u.groups.forEach(function(g,gi){ g.projects.forEach(function(p,pi){ if (p.id===pid) found={p:p,ctx:{s:s,u:u,g:g,si:si,ui:ui,gi:gi,pi:pi}}; }); }); }); }); return found; }
+function groupKey(s,u,g){ return s.code+'|'+u.id+'|'+g.id; }
 function getEntry(pid, q){ return (D.entries[pid+'__'+q]) || { status:'ยังไม่เริ่ม', percent:0, note:'' }; }
 function setEntry(pid, q, patch){
   var key = pid+'__'+q;
@@ -1302,7 +1303,7 @@ function renderRegistry(){
 
   var groupOpts = '';
   D.strategies.forEach(function(s){ s.subs.forEach(function(sub){ sub.groups.forEach(function(g){
-    groupOpts += '<option value="'+esc(g.id)+'">'+esc(g.id)+' — '+esc(g.name)+'</option>';
+    groupOpts += '<option value="'+esc(groupKey(s,sub,g))+'">'+esc(g.id)+' — '+esc(g.name)+'</option>';
   }); }); });
 
   return '<div>' +
@@ -1813,13 +1814,13 @@ function renderTimelineTable(strategies){
       var lightFill = color===STATUS_COLORS['ยังไม่เริ่ม'] || color===STATUS_COLORS['กำลังดำเนินการ'];
       var ink = lightFill ? '#4c4241' : '#fff';
       return '<td style="padding:8px 6px;background:'+(isCur?'#fdf1f2':'transparent')+'">' +
-        '<div class="tl-cell" data-act="tl-drill" data-gid="'+esc(g.id)+'" data-q="'+esc(q)+'" title="'+esc(g.name)+' · '+q+' — สำเร็จ '+c.done+'/'+c.total+' · เฉลี่ย '+avg+'% (คลิกเพื่อดูโครงการ)" style="position:relative;width:100%;height:24px;border-radius:7px;background:'+color+';cursor:pointer;overflow:hidden">' +
+        '<div class="tl-cell" data-act="tl-drill" data-gid="'+esc(groupKey(s,u,g))+'" data-q="'+esc(q)+'" title="'+esc(g.name)+' · '+q+' — สำเร็จ '+c.done+'/'+c.total+' · เฉลี่ย '+avg+'% (คลิกเพื่อดูโครงการ)" style="position:relative;width:100%;height:24px;border-radius:7px;background:'+color+';cursor:pointer;overflow:hidden">' +
           (avg>0 ? '<div style="position:absolute;inset:0 auto 0 0;width:'+Math.min(100,avg)+'%;background:rgba(255,255,255,.18)"></div>' : '') +
           '<span class="mono" style="position:relative;display:flex;align-items:center;justify-content:center;height:100%;font-size:10.5px;font-weight:700;color:'+ink+'">'+c.done+'/'+c.total+'</span>' +
         '</div></td>';
     }).join('');
     rows += '<tr style="border-top:1px solid #f2eceb"><td style="padding:12px 14px">' +
-      '<div class="tl-group" data-act="tl-drill" data-gid="'+esc(g.id)+'" data-q="'+esc(D.currentQuarter)+'" style="cursor:pointer">' +
+      '<div class="tl-group" data-act="tl-drill" data-gid="'+esc(groupKey(s,u,g))+'" data-q="'+esc(D.currentQuarter)+'" style="cursor:pointer">' +
         '<div style="font-size:12.5px;font-weight:500">'+esc(g.name)+'</div>' +
         '<div class="mono" style="font-size:10.5px;color:#9b8f8e;margin-top:3px">'+esc(g.id)+' · ยุทธศาสตร์ '+esc(s.code)+' <span style="color:#8f2436">›</span></div>' +
       '</div></td>'+cells+'</tr>';
@@ -1976,7 +1977,7 @@ function renderEntry(){
 function renderTimelineDrill(){
   var gid = UI.tlDrill.gid, q = UI.tlDrill.q;
   var found = null;
-  eachGroup(function(g,s,u){ if (g.id===gid) found = { g:g, s:s, u:u }; }, D.strategies);
+  eachGroup(function(g,s,u){ if (groupKey(s,u,g)===gid) found = { g:g, s:s, u:u }; }, D.strategies);
   if (!found) return '';
   var projs = visibleProjects(found.g.projects);
   var c = computeStatusCounts(projs, q);
@@ -2384,53 +2385,73 @@ function renderPreviewMobile(pid){
   var months = fyMonths(D.fiscalYears);
   var tab = UI.previewTab || 'overview';
   var tabs = [['overview','ภาพรวม'],['detail','รายละเอียด'],['kpi','KPI'],['steps','ขั้นตอน']];
-  var block = function(label, val){
-    return '<div class="pv-block"><div class="pv-label">'+label+'</div><div class="pv-val">'+(val && String(val).trim() ? esc(val) : '<span style="color:#b3a8a7">— ยังไม่ระบุ —</span>')+'</div></div>';
+  var q = UI.entryQuarter||D.currentQuarter;
+  var field = function(label, f, val, multiline, placeholder){
+    return '<label class="field" style="display:block;margin-bottom:12px"><span style="font-size:11.5px;font-weight:600;color:#9b8f8e">'+label+'</span>' +
+      (multiline ? '<textarea rows="3" style="width:100%;resize:vertical;min-height:60px;margin-top:5px" placeholder="'+esc(placeholder||'')+'" data-act="modal-field" data-f="'+f+'">'+esc(val)+'</textarea>' :
+      '<input type="text" style="width:100%;margin-top:5px" value="'+esc(val)+'" data-act="modal-field" data-f="'+f+'">') +
+    '</label>';
   };
   var body = '';
   if (tab==='overview'){
-    var e = getEntry(pid, UI.entryQuarter||D.currentQuarter) || {};
-    var pct = Number(e.percent)||0;
+    var e = getEntry(pid, q);
+    var kpiPctO = calcKpiPercentCumulative(pid, det.kpis, q);
+    var pct = kpiPctO!==null ? kpiPctO : (Number(e.percent)||0);
+    var statusBtns = STATUS_LIST.map(function(opt){
+      var on = e.status===opt;
+      return '<button style="padding:8px 12px;border-radius:10px;font-size:12px;font-weight:500;border:1px solid '+(on?STATUS_COLORS[opt]:'#e6dedd')+';background:'+(on?STATUS_COLORS[opt]:'#fdfbfb')+';color:'+(on?STATUS_TEXT[opt]:'#7a6f6e')+'" data-act="modal-status" data-status="'+opt+'">'+opt+'</button>';
+    }).join('');
     body =
       '<div class="pv-block" style="background:#fdf1f2;border-color:#f3d9dd">' +
         '<div class="pv-label">ยุทธศาสตร์ที่ '+esc(ctx.s.code)+'</div><div class="pv-val" style="font-weight:600">'+esc(ctx.s.name)+'</div>' +
         '<div class="pv-label" style="margin-top:10px">กลยุทธ์ '+esc(ctx.u.id)+'</div><div class="pv-val">'+esc(ctx.u.name)+'</div>' +
         '<div class="pv-label" style="margin-top:10px">กลุ่มโครงการ '+esc(ctx.g.id)+'</div><div class="pv-val">'+esc(ctx.g.name)+'</div>' +
       '</div>' +
-      '<div class="pv-block"><div class="pv-label">ความคืบหน้า · '+esc(UI.entryQuarter||D.currentQuarter)+'</div>' +
-        '<div style="display:flex;align-items:center;gap:12px;margin-top:6px"><div style="flex:1;height:9px;border-radius:9px;background:#efe7e6;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,#8f2436,#f2b526)"></div></div><span class="mono" style="font-size:15px;font-weight:600;color:#8f2436">'+pct+'%</span></div>' +
-        '<div style="font-size:12.5px;color:#7a6f6e;margin-top:6px">สถานะ: '+esc(e.status||'ยังไม่เริ่ม')+'</div></div>' +
-      block('รายละเอียดโครงการ', p.desc) +
-      block('เป้าหมายโครงการ', det.goal) +
-      block('วัตถุประสงค์', det.objective) +
-      block('หน่วยงานรับผิดชอบ', deptNamesText(pid)) +
-      block('ผู้รับผิดชอบ', det.owner) +
-      block('ระยะเวลา', (months[det.startMonth]||'')+(months[det.endMonth]?' – '+months[det.endMonth]:''));
+      '<div class="pv-block"><div class="pv-label">ผลดำเนินงาน · '+esc(q)+'</div>' +
+        '<div class="row" style="gap:7px;flex-wrap:wrap;margin:9px 0 12px">'+statusBtns+'</div>' +
+        '<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px"><div style="flex:1;height:9px;border-radius:9px;background:#efe7e6;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,#8f2436,#f2b526)"></div></div><span class="mono" style="font-size:15px;font-weight:600;color:#8f2436">'+pct+'%</span></div>' +
+        (kpiPctO!==null ? '<div style="font-size:11px;color:#9b8f8e;margin-bottom:8px">% คำนวณอัตโนมัติจากค่า KPI — ดูที่แท็บ KPI</div>' : '<label class="field" style="display:block;margin-bottom:10px"><span style="font-size:11.5px;font-weight:600;color:#9b8f8e">% ความสำเร็จ</span><input type="number" min="0" max="100" style="width:100%;margin-top:5px" value="'+e.percent+'" data-act="modal-percent"></label>') +
+        '<label class="field" style="display:block"><span style="font-size:11.5px;font-weight:600;color:#9b8f8e">หมายเหตุรอบนี้</span><input type="text" style="width:100%;margin-top:5px" value="'+esc(e.note)+'" data-act="modal-note"></label>' +
+      '</div>' +
+      '<div class="pv-block"><div class="pv-label">รายละเอียดโครงการ</div><div class="pv-val">'+esc(p.desc||'—')+'</div></div>' +
+      '<div class="pv-block">' + field('เป้าหมายโครงการ', 'goal', det.goal, true, 'โครงการนี้ต้องการบรรลุอะไร') + field('วัตถุประสงค์', 'objective', det.objective, true, '1. ...') +
+        '<label class="field" style="display:block;margin-bottom:0"><span style="font-size:11.5px;font-weight:600;color:#9b8f8e">ผู้รับผิดชอบ</span><input type="text" style="width:100%;margin-top:5px" value="'+esc(det.owner)+'" data-act="modal-field" data-f="owner"></label>' +
+        '<div style="margin-top:12px"><span style="font-size:11.5px;font-weight:600;color:#9b8f8e">หน่วยงานผู้รับผิดชอบ</span><div style="margin-top:6px">'+deptChips(pid, 'modal-toggle-dept')+'</div></div>' +
+      '</div>' +
+      '<div class="pv-block"><div class="pv-label">ระยะเวลา</div><div class="row" style="gap:10px;margin-top:6px">' +
+        '<select style="flex:1" data-act="modal-start">'+months.map(function(m,i){return '<option value="'+i+'"'+(i===det.startMonth?' selected':'')+'>'+m+'</option>';}).join('')+'</select>' +
+        '<select style="flex:1" data-act="modal-end">'+months.map(function(m,i){return '<option value="'+i+'"'+(i===det.endMonth?' selected':'')+'>'+m+'</option>';}).join('')+'</select>' +
+      '</div></div>';
   } else if (tab==='detail'){
-    body = block('กลุ่มเป้าหมาย', det.target) + block('Output / Outcome', det.output) + block('งบประมาณ', det.budget) + block('พื้นที่ดำเนินการ', det.area) + block('ตัวชี้วัด / หมายเหตุ', det.kpi);
+    body = '<div class="pv-block">' +
+      field('กลุ่มเป้าหมาย', 'target', det.target, true) +
+      field('Output / Outcome', 'output', det.output, true) +
+      field('งบประมาณ', 'budget', det.budget, false) +
+      field('พื้นที่ดำเนินการ', 'area', det.area, true) +
+      field('ตัวชี้วัด / หมายเหตุ', 'kpi', det.kpi, true) +
+    '</div>';
   } else if (tab==='kpi'){
-    var ks = det.kpis||[];
-    body = ks.length ? ks.map(function(k){
-      var v = getKpiValue(pid, UI.entryQuarter, k.id);
-      var kp = Number(k.target)>0 ? Math.round(Math.min(100,Math.max(0,(Number(v.current)||0)/Number(k.target)*100))) : 0;
-      return '<div class="pv-block"><div class="pv-val" style="font-weight:600">'+esc(k.name||'—')+'</div>' +
-        '<div style="display:flex;justify-content:space-between;font-size:12.5px;color:#7a6f6e;margin:8px 0 6px"><span>'+(v.current===''||v.current==null?0:v.current)+' / '+(k.target==null?0:k.target)+' '+esc(k.unit||'')+'</span><span class="mono" style="color:#8f2436;font-weight:600">'+kp+'%</span></div>' +
-        '<div style="height:7px;border-radius:7px;background:#efe7e6;overflow:hidden"><div style="height:100%;width:'+kp+'%;background:#8f2436"></div></div>' +
-        (v.fileName?'<div style="font-size:11.5px;color:#7a6f6e;margin-top:8px">แนบ: '+esc(v.fileName)+'</div>':'') + '</div>';
-    }).join('') : '<div class="pv-empty">ยังไม่มี KPI</div>';
+    body = '<div class="pv-block"><div class="row" style="justify-content:space-between;margin-bottom:8px"><div class="pv-label" style="margin:0">ตัวชี้วัด (KPI)</div><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" data-act="kpi-add">+ เพิ่ม KPI</button></div>' +
+      renderKpiTable(pid, det.kpis, q) + '</div>';
   } else {
     var st = det.steps||[];
-    body = st.length ? st.map(function(s,i){
-      return '<div class="pv-block" style="display:flex;gap:12px;align-items:flex-start">' +
-        '<span class="mono" style="flex:none;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:600;background:'+(s.done?'#8f2436':'#f3ecea')+';color:'+(s.done?'#fff':'#7a6f6e')+'">'+(s.done?'✓':(i+1))+'</span>' +
-        '<div style="min-width:0"><div class="pv-val">'+esc(s.name||'—')+'</div><div class="mono" style="font-size:11.5px;color:#9b8f8e;margin-top:5px">'+esc(months[s.from]||'')+(s.to!==s.from&&months[s.to]?' – '+esc(months[s.to]):'')+'</div></div></div>';
-    }).join('') : '<div class="pv-empty">ยังไม่ระบุขั้นตอนดำเนินการ</div>';
-    (det.phases||[]).forEach(function(ph){ body += block('เฟสปีงบ '+esc(ph.fy||''), (ph.name||'')+' · '+(Number(ph.percent)||0)+'%'+(ph.done?' · ปิดเฟสแล้ว':'')); });
+    body = '<div class="pv-block"><div class="row" style="justify-content:space-between;margin-bottom:10px"><div class="pv-label" style="margin:0">ขั้นตอนดำเนินการ</div><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" data-act="step-add">+ เพิ่มขั้นตอน</button></div>' +
+      (st.length ? st.map(function(s,i){
+        return '<div style="border-top:1px solid #f0eae9;padding:12px 0;display:flex;flex-direction:column;gap:8px">' +
+          '<input style="width:100%" placeholder="ชื่อขั้นตอนดำเนินการ" value="'+esc(s.name)+'" data-act="step-name" data-si="'+i+'">' +
+          '<div class="row" style="gap:8px;flex-wrap:wrap">' +
+            '<select style="flex:1 1 120px" data-act="step-from" data-si="'+i+'">'+months.map(function(m,mi){return '<option value="'+mi+'"'+(mi===s.from?' selected':'')+'>'+m+'</option>';}).join('')+'</select>' +
+            '<select style="flex:1 1 120px" data-act="step-to" data-si="'+i+'">'+months.map(function(m,mi){return '<option value="'+mi+'"'+(mi===s.to?' selected':'')+'>'+m+'</option>';}).join('')+'</select>' +
+            '<button type="button" class="chip-toggle'+(s.done?' on':'')+'" data-act="step-done" data-si="'+i+'"><span class="chip-mark">✓</span>'+(s.done?'ทำแล้ว':'ยังไม่ทำ')+'</button>' +
+            '<button class="btn btn-danger" style="padding:6px 10px" data-act="step-remove" data-si="'+i+'">×</button>' +
+          '</div></div>';
+      }).join('') : '<div class="pv-empty">ยังไม่ระบุขั้นตอนดำเนินการ</div>') +
+    '</div>' + renderPhasesSection(pid, det);
   }
   return '<div class="modal-backdrop no-print" data-act="close-preview-bg"><div class="modal pv-sheet" style="max-width:720px" onclick="event.stopPropagation()">' +
     '<div class="pv-head">' +
       '<div style="display:flex;align-items:flex-start;gap:10px">' +
-        '<div style="flex:1;min-width:0"><div class="eyebrow">พรีวิวโครงการ</div><div style="font-size:15.5px;font-weight:600;line-height:1.45;margin-top:3px">'+esc(p.name)+'</div></div>' +
+        '<div style="flex:1;min-width:0"><div class="eyebrow">แก้ไข/พรีวิวโครงการ</div><div style="font-size:15.5px;font-weight:600;line-height:1.45;margin-top:3px">'+esc(p.name)+'</div></div>' +
         '<button class="btn btn-outline" style="flex:none;min-height:38px;padding:6px 14px" data-act="close-preview">ปิด</button>' +
       '</div>' +
       '<div class="pv-tabs">'+tabs.map(function(t){ return '<button class="'+(tab===t[0]?'on':'')+'" data-act="pv-tab" data-t="'+t[0]+'">'+t[1]+'</button>'; }).join('')+'</div>' +
@@ -2595,7 +2616,7 @@ function handleAction(act, el, e){
     if (!nm) { alert('กรอกชื่อโครงการก่อน'); return; }
     var placed = false;
     D.strategies.forEach(function(s){ s.subs.forEach(function(sub){ sub.groups.forEach(function(gg){
-      if (!placed && gg.id===gid) { gg.projects.push({ id: uid(), name: nm, desc:'', active:true, priority:false }); placed = true; }
+      if (!placed && groupKey(s,sub,gg)===gid) { gg.projects.push({ id: uid(), name: nm, desc:'', active:true, priority:false }); placed = true; }
     }); }); });
     if (placed) saveData();
     render(); return;
@@ -2706,7 +2727,7 @@ function handleAction(act, el, e){
   if (act==='open-modal'){ UI.modalProjectId = ds.pid; UI.modalSaved=''; render(); return; }
   if (act==='open-strat-preview'){ UI.stratPreviewCode = ds.code; render(); return; }
   if (act==='close-strat-preview' || act==='close-strat-preview-bg'){ if (act==='close-strat-preview-bg' && e.target!==el) return; UI.stratPreviewCode = null; render(); return; }
-  if (act==='strat-preview-open-project'){ UI.previewProjectId = ds.pid; UI.previewTab='overview'; UI.previewFullTable=false; render(); return; }
+  if (act==='strat-preview-open-project'){ UI.previewProjectId = ds.pid; UI.modalProjectId = ds.pid; UI.previewTab='overview'; UI.previewFullTable=false; render(); return; }
   if (act==='close-modal' || act==='close-modal-bg'){ if (act==='close-modal-bg' && e.target!==el) return; UI.modalProjectId = null; render(); return; }
 
   if (act==='modal-status'){ setEntry(UI.modalProjectId, UI.entryQuarter, { status: ds.status }); render(); return; }
@@ -2784,10 +2805,10 @@ function handleAction(act, el, e){
   if (act==='tl-drill'){ UI.tlDrill = { gid: ds.gid, q: ds.q }; render(); return; }
   if (act==='tl-drill-quarter'){ UI.tlDrill = { gid: UI.tlDrill.gid, q: ds.q }; render(); return; }
   if (act==='tl-drill-close' || act==='tl-drill-close-bg'){ if (act==='tl-drill-close-bg' && e.target!==el) return; UI.tlDrill = null; render(); return; }
-  if (act==='tl-open-project'){ UI.previewProjectId = ds.pid; UI.previewTab='overview'; UI.previewFullTable=false; render(); return; }
+  if (act==='tl-open-project'){ UI.previewProjectId = ds.pid; UI.modalProjectId = ds.pid; UI.previewTab='overview'; UI.previewFullTable=false; render(); return; }
   if (act==='tl-set-quarter'){ D.currentQuarter = ds.q; UI.entryQuarter = ds.q; saveData(); render(); return; }
   if (act==='pv-tab'){ UI.previewTab = ds.t; render(); var pb=document.querySelector('.pv-body'); if(pb) pb.scrollTop=0; return; }
-  if (act==='open-preview'){ UI.previewProjectId = ds.pid; UI.previewTab='overview'; UI.previewFullTable=false; render(); return; }
+  if (act==='open-preview'){ UI.previewProjectId = ds.pid; UI.modalProjectId = ds.pid; UI.previewTab='overview'; UI.previewFullTable=false; render(); return; }
   if (act==='preview-full-form'){ UI.previewFullTable = true; render(); return; }
   if (act==='preview-tabbed'){ UI.previewFullTable = false; render(); return; }
   if (act==='preview-project-form'){ UI.previewProjectId = UI.modalProjectId; render(); return; }

@@ -1,5 +1,5 @@
-const CACHE = 'thamc-strategy-v2';
-const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './favicon.png', './favicon-32.png'];
+const CACHE = 'thamc-strategy-v7';
+const ASSETS = ['./', './index.html', './manifest.json', './favicon.svg', './icon-192.png', './icon-512.png', './icon-192-maskable.png', './icon-512-maskable.png', './favicon.png', './favicon-32.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).catch(() => {}));

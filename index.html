@@ -9,10 +9,10 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214.08%22%20ry%3D%2214.08%22%20fill%3D%22%23fdf3dc%22%2F%3E%3Cpolygon%20points%3D%2229.12%2C11.84%2034.75%2C24.25%2048.29%2C25.77%2038.23%2C34.96%2040.97%2C48.31%2029.12%2C41.58%2017.27%2C48.31%2020.01%2C34.96%209.95%2C25.77%2023.49%2C24.25%22%20fill%3D%22%23f5c518%22%20stroke%3D%22%23e0a800%22%20stroke-width%3D%221.15%22%2F%3E%3Cg%20stroke%3D%22%23f5c518%22%20stroke-width%3D%223.20%22%20stroke-linecap%3D%22round%22%3E%3Cline%20x1%3D%2251.2%22%20y1%3D%2214.72%22%20x2%3D%2255.552%22%20y2%3D%2210.24%22%2F%3E%3Cline%20x1%3D%2254.528%22%20y1%3D%2220.352%22%20x2%3D%2259.904%22%20y2%3D%2218.56%22%2F%3E%3Cline%20x1%3D%2247.488%22%20y1%3D%2210.368%22%20x2%3D%2248.768%22%20y2%3D%225.76%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2245.76%22%20cy%3D%2244.032%22%20r%3D%2211.75%22%20fill%3D%22%23fdf3dc%22%2F%3E%3Ccircle%20cx%3D%2245.76%22%20cy%3D%2244.032%22%20r%3D%2210.88%22%20fill%3D%22%230f7b52%22%2F%3E%3Cpath%20d%3D%22M%2045.76%2048.888831999999994%20C%2037.327999999999996%2043.02016%2C%2041.847552%2037.62367999999999%2C%2045.76%2042.143232%20C%2049.672447999999996%2037.62367999999999%2C%2054.192%2043.02016%2C%2045.76%2048.888831999999994%20Z%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=6">
 <link rel="icon" type="image/png" sizes="64x64" href="favicon.png?v=6">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=7">
-<link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152.png?v=7">
-<link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167.png?v=7">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=7">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=8">
+<link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152.png?v=8">
+<link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167.png?v=8">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -100,9 +100,8 @@ label.field span{font-size:12px;font-weight:500;color:#4c4241}
   body{background:#fff}
 }
 .mobile-tabbar{display:none}
-/* leave room for notches, status bars and home indicators on phones and tablets */
-body{padding-top:env(safe-area-inset-top)}
-.app{min-height:calc(100vh - env(safe-area-inset-top))}
+/* notch / home-indicator room is added per element (sidebar, topbar, main, sheets) — never on body too */
+.m-topbar{display:none}
 .sidebar{padding-top:calc(22px + env(safe-area-inset-top))}
 .modal-backdrop{padding:calc(20px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left))}
 @media (max-width:1100px) and (min-width:861px){
@@ -117,17 +116,65 @@ body.printing-project .project-print-sheet{display:block}
 .project-print-sheet td,.project-print-sheet th{border:1px solid #ccc;padding:8px 10px;vertical-align:top;font-size:12px}
 .project-print-sheet{-webkit-print-color-adjust:exact;print-color-adjust:exact;color-adjust:exact}
 @media (max-width:860px){
+  html,body{overflow-x:hidden}
   .sidebar{display:none}
-  .main{padding:calc(18px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) 104px calc(16px + env(safe-area-inset-left)) !important}
-  .app{display:block}
+  .app{display:block;min-height:100vh}
+  .m-topbar{display:flex;align-items:center;gap:11px;position:sticky;top:0;z-index:70;
+    padding:calc(10px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) 10px calc(14px + env(safe-area-inset-left));
+    background:linear-gradient(120deg,#6b1730 0%,#5e1523 55%,#3f0c17 100%);box-shadow:0 2px 12px rgba(36,27,28,.18)}
+  .m-avatar{width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(242,181,38,.7);background:rgba(242,181,38,.16);color:#f2b526;font-weight:700;font-size:14px;padding:0;flex:none}
+  .m-menu-backdrop{position:fixed;inset:0;z-index:71;background:transparent}
+  .m-menu{position:absolute;right:calc(12px + env(safe-area-inset-right));top:calc(100% + 6px);z-index:72;width:230px;background:#fff;border-radius:14px;box-shadow:0 16px 40px rgba(36,27,28,.25);overflow:hidden;color:#241b1c}
+  .m-menu-item{display:block;width:100%;text-align:left;border:none;border-radius:0;background:#fff;padding:13px 16px;font-size:13.5px}
+  .m-menu-item:active{background:#fdf1f2}
+  .main{padding:16px calc(14px + env(safe-area-inset-right)) calc(96px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left)) !important;background:#f3f0ef}
+  h1{font-size:20px;line-height:1.35}
+  h2{font-size:15px}
+  .eyebrow{font-size:10.5px}
+  /* page headers: title block and its button row stack, buttons share the row */
+  .main > div > .row:first-child{flex-direction:column;align-items:stretch !important;gap:12px}
+  .main > div > .row:first-child > .row{width:100%}
+  .main > div > .row:first-child > .row > .btn,.main > div > .row:first-child > .row > button{flex:1 1 auto}
+  .main input[style*="width:200px"],.main input[style*="width:130px"],.main input[style*="width:140px"]{width:100% !important;flex:1 1 100% !important}
+  .main select{max-width:100%}
+  /* touch targets */
+  .btn,.btn-outline,.btn-ghost,.btn-danger{min-height:42px}
+  input,select,textarea{font-size:16px !important;min-height:42px}
+  textarea{min-height:64px}
+  .seg{display:flex;width:100%}
+  .seg button{flex:1;padding:10px 6px}
+  .card{border-radius:14px}
+  /* multi-column grids collapse */
+  .main [style*="grid-template-columns:1fr 1fr"],.modal [style*="grid-template-columns:1fr 1fr"],
+  .main [style*="grid-template-columns:repeat(2"],.modal [style*="grid-template-columns:repeat(2"],
+  .main [style*="grid-template-columns:repeat(3"],.modal [style*="grid-template-columns:repeat(3"]{grid-template-columns:minmax(0,1fr) !important}
+  .main [style*="grid-template-columns:repeat(4"]{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+  .main [style*="minmax(280px"],.main [style*="minmax(250px"],.main [style*="minmax(260px"],.main [style*="minmax(300px"]{grid-template-columns:minmax(0,1fr) !important}
+  .main [style*="minmax(160px"],.main [style*="minmax(170px"],.main [style*="minmax(180px"],.main [style*="minmax(190px"]{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+  .main [style*="grid-column:1/-1"]{grid-column:1/-1}
+  /* wide tables scroll inside their own box with a visible edge */
+  .main [style*="overflow-x:auto"],.modal [style*="overflow-x:auto"]{margin:0 -14px;padding:0 14px;-webkit-overflow-scrolling:touch}
+  .table{font-size:12px}
+  .table th,.table td{padding:9px 8px}
+  /* dialogs become bottom sheets */
+  .modal-backdrop{padding:calc(8px + env(safe-area-inset-top)) 0 0 0 !important;align-items:flex-end}
+  .modal{max-width:100% !important;border-radius:20px 20px 0 0;min-height:60vh;padding-bottom:env(safe-area-inset-bottom)}
+  .modal-sec{padding:16px 16px}
+  .modal-sec.row,.modal-sec > .row{gap:8px}
+  .modal-sec > .row > .btn{flex:1 1 auto}
   .mobile-tabbar{
-    display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));
-    background:#fff;border-radius:22px;box-shadow:0 10px 30px rgba(36,27,28,.22),0 2px 8px rgba(36,27,28,.1);
-    padding:8px 6px;z-index:80;justify-content:space-between;gap:2px
+    display:flex;position:fixed;left:calc(10px + env(safe-area-inset-left));right:calc(10px + env(safe-area-inset-right));bottom:calc(10px + env(safe-area-inset-bottom));
+    background:rgba(255,255,255,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:20px;
+    box-shadow:0 10px 30px rgba(36,27,28,.2),0 2px 8px rgba(36,27,28,.08);
+    padding:6px;z-index:80;justify-content:space-between;gap:2px
   }
-  .mtab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .mtab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;min-height:52px;justify-content:center;border-radius:14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .mtab svg{width:22px;height:22px}
-  .mtab span{font-size:10.5px;font-weight:600}
+  .mtab span{font-size:10.5px;font-weight:600;white-space:nowrap}
+}
+@media (max-width:380px){
+  .main [style*="grid-template-columns:repeat(4"],.main [style*="minmax(160px"],.main [style*="minmax(170px"],.main [style*="minmax(180px"],.main [style*="minmax(190px"]{grid-template-columns:minmax(0,1fr) !important}
+  .mtab span{font-size:9.5px}
 }
 </style>
 </head>
@@ -836,6 +883,7 @@ function render(){
   root.innerHTML =
     '<div class="app">' +
       renderSidebar() +
+      renderMobileTopbar() +
       '<main class="main">' + renderTab() + '</main>' +
       renderMobileTabbar() +
       (UI.modalProjectId ? renderModal() : '') +
@@ -872,9 +920,33 @@ const MTAB_ICONS = {
 function mtabSvg(key, active){
   return '<svg viewBox="0 0 24 24" fill="none" stroke="'+(active?'#8f2436':'#9b8f8e')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+MTAB_ICONS[key]+'</svg>';
 }
+function renderMobileTopbar(){
+  var u = currentUser(); if (!u) return '';
+  var initials = String(u.name||u.username||'?').trim().charAt(0);
+  var menu = UI.mobileMenuOpen ? (
+    '<div class="m-menu-backdrop" data-act="m-menu-close"></div>' +
+    '<div class="m-menu">' +
+      '<div style="padding:14px 16px 12px;border-bottom:1px solid #f0eae9">' +
+        '<div style="font-size:14px;font-weight:600">'+esc(u.name||u.username)+'</div>' +
+        '<div style="font-size:11.5px;color:#9b8f8e;margin-top:2px">'+esc(ROLES[u.role]||u.role)+(u.deptId?' · '+esc(deptName(u.deptId)):'')+'</div>' +
+      '</div>' +
+      '<button class="m-menu-item" data-act="set-tab" data-tab="registry">ทะเบียนโครงการ</button>' +
+      '<button class="m-menu-item" data-act="set-tab" data-tab="profile">บัญชีของฉัน</button>' +
+      (isAdmin() ? '<button class="m-menu-item" data-act="set-tab" data-tab="settings">ตั้งค่าระบบ</button>' : '') +
+      '<button class="m-menu-item" data-act="logout" style="color:#a5321f;border-top:1px solid #f0eae9">ออกจากระบบ</button>' +
+    '</div>') : '';
+  return '<header class="m-topbar no-print">' +
+    '<img src="'+THAMC_MARK+'" alt="THAMC" style="width:34px;height:34px;border-radius:9px;flex:none">' +
+    '<div style="flex:1;min-width:0">' +
+      '<div style="font-size:13.5px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">ระบบบริหารกลยุทธ์ THAMC</div>' +
+      '<div class="mono" style="font-size:10.5px;color:#f2b526">รอบ '+esc(D.currentQuarter)+'</div>' +
+    '</div>' +
+    '<button class="m-avatar" data-act="m-menu-toggle" aria-label="เมนูบัญชี">'+esc(initials)+'</button>' +
+    menu +
+  '</header>';
+}
 function renderMobileTabbar(){
   var tabs = [['dashboard','หน้าหลัก','dashboard'],['plan','แผนงาน','strategy'],['forms','รายงาน','entry'],['timeline','Timeline','timeline']];
-  if (isAdmin()) { tabs.push(['settings','ตั้งค่า','settings']); }
   var html = tabs.map(function(t){
     var active = UI.tab===t[0] || (t[0]==='plan' && (UI.tab==='strategy'||UI.tab==='entry'));
     return '<div class="mtab" data-act="set-tab" data-tab="'+t[0]+'" style="'+(active?'background:#fdf1f2':'')+'">' + mtabSvg(t[2], active) + '<span style="color:'+(active?'#8f2436':'#9b8f8e')+'">'+t[1]+'</span></div>';
@@ -2383,6 +2455,8 @@ function handleAction(act, el, e){
   if (act==='reg-set-name'){ var fn2 = findProject(ds.pid); if (fn2) { fn2.p.name = el.value; saveData(); } return; }
   if (act==='reg-set-desc'){ var fd = findProject(ds.pid); if (fd) { fd.p.desc = el.value; saveData(); } return; }
   if (act==='reg-toggle-dept'){ toggleProjectDept(ds.pid, ds.did); render(); return; }
+  if (act==='m-menu-toggle'){ UI.mobileMenuOpen = !UI.mobileMenuOpen; render(); return; }
+  if (act==='m-menu-close'){ UI.mobileMenuOpen = false; render(); return; }
   if (act==='dept-picker-toggle'){ UI.deptPickerPid = (UI.deptPickerPid === ds.pid) ? null : ds.pid; render(); return; }
   if (act==='reg-set-note'){ setDetail(ds.pid, { adminNote: el.value }); return; }
   if (act==='reg-delete'){
@@ -2443,6 +2517,7 @@ function handleAction(act, el, e){
     D.users = D.users.filter(function(x){ return x.id!==ds.uid2; }); saveData(); render(); return;
   }
 
+  if (act==='set-tab'){ UI.mobileMenuOpen = false; }
   if (act==='set-tab'){ UI.tab = ds.tab; render(); return; }
   if (act==='toggle-edit'){ UI.editMode = !UI.editMode; render(); return; }
   if (act==='toggle-urgent-filter'){ UI.urgentOnly = !UI.urgentOnly; render(); return; }

@@ -823,11 +823,26 @@ function mergeRecordMap(localMap, remoteMap){
     var mine = localMap[key], theirs = out[key];
     if (!theirs) { out[key] = mine; return; }
     var mt = Number((mine && mine._t) || 0), tt = Number((theirs && theirs._t) || 0);
-    out[key] = mt >= tt ? mine : theirs;
+    out[key] = mt > tt ? mine : theirs;
   });
   return out;
 }
 // merges a remote snapshot into D instead of overwriting it wholesale
+function livePidSet(){
+  var set = {};
+  (D.strategies||[]).forEach(function(s){ (s.subs||[]).forEach(function(u){ (u.groups||[]).forEach(function(g){ (g.projects||[]).forEach(function(p){ set[p.id] = true; }); }); }); });
+  return set;
+}
+function pruneOrphanRecords(){
+  var live = livePidSet();
+  RECORD_KEYS.forEach(function(k){
+    var map = D[k]; if (!map) return;
+    Object.keys(map).forEach(function(key){
+      var pid = String(key).split('__')[0];
+      if (pid && !live[pid]) delete map[key];
+    });
+  });
+}
 function applyRemote(remote, remoteRev){
   RECORD_KEYS.forEach(function(k){
     if (remote[k] !== undefined) D[k] = mergeRecordMap(D[k] || {}, remote[k] || {});
@@ -838,6 +853,7 @@ function applyRemote(remote, remoteRev){
     D[k] = remote[k];
   });
   D.rev = Math.max(Number(remoteRev||0), Number(D.rev||0)) || Date.now();
+  pruneOrphanRecords();
   ensureAuthData(D);
   rememberBase();
 }
@@ -861,9 +877,16 @@ function stampSync(){
 }
 
 // Debounced so typing a field doesn't fire one request per keystroke.
+var AUTH_HINT = 'ชีตตอบกลับเป็นหน้าล็อกอิน Google — ต้อง Deploy Apps Script ใหม่แบบ “Anyone” (ทุกเครื่องจึงจะซิงก์ได้)';
 function fetchRemote(){
   return fetch(D.sheetUrl + (D.sheetUrl.indexOf('?')>-1?'&':'?') + 'type=snapshot&t=' + Date.now())
-    .then(function(r){ return r.json(); })
+    .then(function(r){ return r.text(); })
+    .then(function(txt){
+      // A Web App deployed without "Anyone" access answers with Google's own sign-in HTML
+      // instead of JSON; surface that instead of silently falling back to local data.
+      if (/^\s*</.test(txt)) { var e = new Error('auth'); e.authWall = true; throw e; }
+      try { return JSON.parse(txt); } catch(e2){ var e3 = new Error('bad-json'); e3.badJson = true; throw e3; }
+    })
     .then(function(res){
       var remote = res && (res.payload || res.data);
       if (typeof remote === 'string') { try { remote = JSON.parse(remote); } catch(e){ remote = null; } }
@@ -905,8 +928,9 @@ function cloudPush(immediate){
         CLOUD.busy = false;
         render();
       })
-      .catch(function(){
-        CLOUD.state='error'; CLOUD.msg='ส่งขึ้นชีตไม่สำเร็จ — บันทึกไว้ในเครื่องแล้ว';
+      .catch(function(err){
+        CLOUD.state='error';
+        CLOUD.msg = (err && err.authWall) ? AUTH_HINT : 'ส่งขึ้นชีตไม่สำเร็จ — บันทึกไว้ในเครื่องแล้ว';
         renderCloudBadge(); CLOUD.busy = false;
       });
   };
@@ -945,7 +969,10 @@ function autoSyncTick(){
       if (isTypingNow()) { renderCloudBadge(); return; }
       render();
     })
-    .catch(function(){ CLOUD.busy = false; });
+    .catch(function(err){
+      CLOUD.busy = false;
+      if (err && err.authWall) { CLOUD.state='error'; CLOUD.msg=AUTH_HINT; renderCloudBadge(); }
+    });
 }
 function startAutoSync(){
   if (CLOUD.pollTimer) clearInterval(CLOUD.pollTimer);
@@ -991,9 +1018,9 @@ function cloudPull(opts){
       CLOUD.state='ok'; CLOUD.msg=''; stampSync();
       done();
     })
-    .catch(function(){
+    .catch(function(err){
       CLOUD.state='error';
-      CLOUD.msg='ดึงข้อมูลจากชีตไม่สำเร็จ — ใช้ข้อมูลในเครื่องชั่วคราว';
+      CLOUD.msg = (err && err.authWall) ? AUTH_HINT : 'ดึงข้อมูลจากชีตไม่สำเร็จ — ใช้ข้อมูลในเครื่องชั่วคราว';
       done();
     });
 }
@@ -1194,7 +1221,7 @@ function renderSidebar(){
     '</div>' +
     '<div class="sb-label" style="margin-top:12px;display:flex;align-items:center;gap:7px;font-size:10.5px;color:rgba(243,230,232,.62)">' +
       '<span style="width:7px;height:7px;border-radius:50%;flex:none;background:'+(CLOUD.state==='error'?'#e88070':(D.sheetUrl?'#7ed3a4':'#9b8f8e'))+'"></span>' +
-      '<span>'+(D.sheetUrl ? (CLOUD.state==='error' ? 'ชีตไม่ตอบสนอง — ใช้ข้อมูลในเครื่อง' : (CLOUD.lastSync ? 'ซิงก์ชีต '+CLOUD.lastSync : 'เชื่อมชีตแล้ว')) : 'เก็บในเครื่องนี้เท่านั้น')+'</span>' +
+      '<span>'+(D.sheetUrl ? (CLOUD.state==='error' ? (CLOUD.msg || 'ชีตไม่ตอบสนอง — ใช้ข้อมูลในเครื่อง') : (CLOUD.lastSync ? 'ซิงก์ชีต '+CLOUD.lastSync : 'เชื่อมชีตแล้ว')) : 'เก็บในเครื่องนี้เท่านั้น')+'</span>' +
     '</div>' +
     '<div class="sb-label" style="margin-top:22px;padding:14px 16px;border-radius:12px;background:rgba(255,255,255,.07);font-size:11.5px;line-height:1.9;color:rgba(243,230,232,.85)">' +
       'ยุทธศาสตร์ <b class="mono" style="color:#fff">'+stratCount+'</b> · กลยุทธ์ <b class="mono" style="color:#fff">'+subCount+'</b><br>กลุ่มโครงการ <b class="mono" style="color:#fff">'+groupCount+'</b> · โครงการ <b class="mono" style="color:#f2b526">'+projCount+'</b>' +

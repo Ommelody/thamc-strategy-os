@@ -116,7 +116,9 @@ body.printing-project .project-print-sheet{display:block}
 .project-print-sheet td,.project-print-sheet th{border:1px solid #ccc;padding:8px 10px;vertical-align:top;font-size:12px}
 .project-print-sheet{-webkit-print-color-adjust:exact;print-color-adjust:exact;color-adjust:exact}
 @media (max-width:860px){
-  html,body{overflow-x:hidden}
+  body{overflow-x:hidden;overflow-x:clip}
+  body.has-overlay{overflow:hidden}
+  body.has-overlay .mobile-tabbar{display:none}
   .sidebar{display:none}
   .app{display:block;min-height:100vh}
   .m-topbar{display:flex;align-items:center;gap:11px;position:sticky;top:0;z-index:70;
@@ -157,8 +159,22 @@ body.printing-project .project-print-sheet{display:block}
   .table{font-size:12px}
   .table th,.table td{padding:9px 8px}
   /* dialogs become bottom sheets */
-  .modal-backdrop{padding:calc(8px + env(safe-area-inset-top)) 0 0 0 !important;align-items:flex-end}
-  .modal{max-width:100% !important;border-radius:20px 20px 0 0;min-height:60vh;padding-bottom:env(safe-area-inset-bottom)}
+  .modal-backdrop{padding:calc(8px + env(safe-area-inset-top)) 0 0 0 !important;align-items:flex-end;z-index:90;overflow:hidden;overscroll-behavior:contain}
+  .modal{max-width:100% !important;border-radius:20px 20px 0 0;min-height:0;padding-bottom:env(safe-area-inset-bottom);
+    max-height:calc(100dvh - 8px - env(safe-area-inset-top)) !important;max-height:calc(100vh - 8px - env(safe-area-inset-top));
+    overflow-y:auto !important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+  @supports (height:100dvh){ .modal{max-height:calc(100dvh - 8px - env(safe-area-inset-top)) !important} }
+  .pv-sheet{display:flex;flex-direction:column;overflow:hidden !important;height:calc(100dvh - 8px - env(safe-area-inset-top))}
+  .pv-head{flex:none;padding:16px 16px 0;border-bottom:1px solid #f0eae9}
+  .pv-tabs{display:flex;gap:4px;margin-top:14px;overflow-x:auto;scrollbar-width:none}
+  .pv-tabs button{flex:1 0 auto;border:none;background:none;border-radius:0;min-height:42px;padding:8px 10px;font-size:13.5px;font-weight:600;color:#9b8f8e;border-bottom:2.5px solid transparent}
+  .pv-tabs button.on{color:#8f2436;border-bottom-color:#8f2436}
+  .pv-body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:14px 14px 18px;background:#f7f4f3}
+  .pv-block{background:#fff;border:1px solid #efe7e6;border-radius:14px;padding:13px 15px;margin-bottom:10px}
+  .pv-label{font-size:11.5px;font-weight:600;color:#9b8f8e;margin-bottom:4px}
+  .pv-val{font-size:14.5px;line-height:1.65;color:#241b1c;white-space:pre-line;overflow-wrap:anywhere}
+  .pv-empty{text-align:center;color:#9b8f8e;font-size:13px;padding:30px 0}
+  .pv-foot{flex:none;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid #f0eae9;background:#fff}
   .modal-sec{padding:16px 16px}
   .modal-sec.row,.modal-sec > .row{gap:8px}
   .modal-sec > .row > .btn{flex:1 1 auto}
@@ -893,6 +909,7 @@ function render(){
       (UI.tlDrill ? renderTimelineDrill() : '') +
     '</div>' + (UI.printProjectId ? renderProjectPrintSheet(UI.printProjectId) : '') + (UI.previewProjectId ? renderPreviewOverlay(UI.previewProjectId) : '');
   attachActions(root);
+  document.body.classList.toggle('has-overlay', !!root.parentNode && !!document.querySelector('.modal-backdrop'));
   restoreUiPosition(snap);
 }
 
@@ -2318,7 +2335,68 @@ function renderProjectPrintSheet(pid){
   var body = renderProjectPrintBody(pid);
   return body ? '<div class="project-print-sheet">'+body+'</div>' : '';
 }
+function isMobileView(){ return window.matchMedia && window.matchMedia('(max-width:860px)').matches; }
+function renderPreviewMobile(pid){
+  var found = findProject(pid); if (!found) return '';
+  var p = found.p, ctx = found.ctx, det = getDetail(pid);
+  var months = fyMonths(D.fiscalYears);
+  var tab = UI.previewTab || 'overview';
+  var tabs = [['overview','ภาพรวม'],['detail','รายละเอียด'],['kpi','KPI'],['steps','ขั้นตอน']];
+  var block = function(label, val){
+    return '<div class="pv-block"><div class="pv-label">'+label+'</div><div class="pv-val">'+(val && String(val).trim() ? esc(val) : '<span style="color:#b3a8a7">— ยังไม่ระบุ —</span>')+'</div></div>';
+  };
+  var body = '';
+  if (tab==='overview'){
+    var e = getEntry(pid, UI.entryQuarter||D.currentQuarter) || {};
+    var pct = Number(e.percent)||0;
+    body =
+      '<div class="pv-block" style="background:#fdf1f2;border-color:#f3d9dd">' +
+        '<div class="pv-label">ยุทธศาสตร์ที่ '+esc(ctx.s.code)+'</div><div class="pv-val" style="font-weight:600">'+esc(ctx.s.name)+'</div>' +
+        '<div class="pv-label" style="margin-top:10px">กลยุทธ์ '+esc(ctx.u.id)+'</div><div class="pv-val">'+esc(ctx.u.name)+'</div>' +
+        '<div class="pv-label" style="margin-top:10px">กลุ่มโครงการ '+esc(ctx.g.id)+'</div><div class="pv-val">'+esc(ctx.g.name)+'</div>' +
+      '</div>' +
+      '<div class="pv-block"><div class="pv-label">ความคืบหน้า · '+esc(UI.entryQuarter||D.currentQuarter)+'</div>' +
+        '<div style="display:flex;align-items:center;gap:12px;margin-top:6px"><div style="flex:1;height:9px;border-radius:9px;background:#efe7e6;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,#8f2436,#f2b526)"></div></div><span class="mono" style="font-size:15px;font-weight:600;color:#8f2436">'+pct+'%</span></div>' +
+        '<div style="font-size:12.5px;color:#7a6f6e;margin-top:6px">สถานะ: '+esc(e.status||'ยังไม่เริ่ม')+'</div></div>' +
+      block('รายละเอียดโครงการ', p.desc) +
+      block('หน่วยงานรับผิดชอบ', deptNamesText(pid)) +
+      block('ผู้รับผิดชอบ', det.owner) +
+      block('ระยะเวลา', (months[det.startMonth]||'')+(months[det.endMonth]?' – '+months[det.endMonth]:''));
+  } else if (tab==='detail'){
+    body = block('กลุ่มเป้าหมาย', det.target) + block('Output / Outcome', det.output) + block('งบประมาณ', det.budget) + block('พื้นที่ดำเนินการ', det.area) + block('ตัวชี้วัด / หมายเหตุ', det.kpi);
+  } else if (tab==='kpi'){
+    var ks = det.kpis||[];
+    body = ks.length ? ks.map(function(k){
+      var v = getKpiValue(pid, UI.entryQuarter, k.id);
+      var kp = Number(k.target)>0 ? Math.round(Math.min(100,Math.max(0,(Number(v.current)||0)/Number(k.target)*100))) : 0;
+      return '<div class="pv-block"><div class="pv-val" style="font-weight:600">'+esc(k.name||'—')+'</div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:12.5px;color:#7a6f6e;margin:8px 0 6px"><span>'+(v.current===''||v.current==null?0:v.current)+' / '+(k.target==null?0:k.target)+' '+esc(k.unit||'')+'</span><span class="mono" style="color:#8f2436;font-weight:600">'+kp+'%</span></div>' +
+        '<div style="height:7px;border-radius:7px;background:#efe7e6;overflow:hidden"><div style="height:100%;width:'+kp+'%;background:#8f2436"></div></div>' +
+        (v.fileName?'<div style="font-size:11.5px;color:#7a6f6e;margin-top:8px">แนบ: '+esc(v.fileName)+'</div>':'') + '</div>';
+    }).join('') : '<div class="pv-empty">ยังไม่มี KPI</div>';
+  } else {
+    var st = det.steps||[];
+    body = st.length ? st.map(function(s,i){
+      return '<div class="pv-block" style="display:flex;gap:12px;align-items:flex-start">' +
+        '<span class="mono" style="flex:none;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:600;background:'+(s.done?'#8f2436':'#f3ecea')+';color:'+(s.done?'#fff':'#7a6f6e')+'">'+(s.done?'✓':(i+1))+'</span>' +
+        '<div style="min-width:0"><div class="pv-val">'+esc(s.name||'—')+'</div><div class="mono" style="font-size:11.5px;color:#9b8f8e;margin-top:5px">'+esc(months[s.from]||'')+(s.to!==s.from&&months[s.to]?' – '+esc(months[s.to]):'')+'</div></div></div>';
+    }).join('') : '<div class="pv-empty">ยังไม่ระบุขั้นตอนดำเนินการ</div>';
+    (det.phases||[]).forEach(function(ph){ body += block('เฟสปีงบ '+esc(ph.fy||''), (ph.name||'')+' · '+(Number(ph.percent)||0)+'%'+(ph.done?' · ปิดเฟสแล้ว':'')); });
+  }
+  return '<div class="modal-backdrop no-print" data-act="close-preview-bg"><div class="modal pv-sheet" onclick="event.stopPropagation()">' +
+    '<div class="pv-head">' +
+      '<div style="display:flex;align-items:flex-start;gap:10px">' +
+        '<div style="flex:1;min-width:0"><div class="eyebrow">พรีวิวโครงการ</div><div style="font-size:15.5px;font-weight:600;line-height:1.45;margin-top:3px">'+esc(p.name)+'</div></div>' +
+        '<button class="btn btn-outline" style="flex:none;min-height:38px;padding:6px 14px" data-act="close-preview">ปิด</button>' +
+      '</div>' +
+      '<div class="pv-tabs">'+tabs.map(function(t){ return '<button class="'+(tab===t[0]?'on':'')+'" data-act="pv-tab" data-t="'+t[0]+'">'+t[1]+'</button>'; }).join('')+'</div>' +
+    '</div>' +
+    '<div class="pv-body">'+body+'</div>' +
+    '<div class="pv-foot"><button class="btn" style="width:100%" data-act="print-project-form-from-preview" data-pid="'+esc(pid)+'">พิมพ์แบบฟอร์ม</button></div>' +
+  '</div></div>';
+}
 function renderPreviewOverlay(pid){
+  if (isMobileView()) return renderPreviewMobile(pid);
   var body = renderProjectPrintBody(pid);
   if (!body) return '';
   return '<div class="modal-backdrop no-print" data-act="close-preview-bg"><div class="modal" style="max-width:1000px;max-height:88vh;overflow:auto" onclick="event.stopPropagation()">' +
@@ -2582,7 +2660,7 @@ function handleAction(act, el, e){
   if (act==='open-modal'){ UI.modalProjectId = ds.pid; UI.modalSaved=''; render(); return; }
   if (act==='open-strat-preview'){ UI.stratPreviewCode = ds.code; render(); return; }
   if (act==='close-strat-preview' || act==='close-strat-preview-bg'){ if (act==='close-strat-preview-bg' && e.target!==el) return; UI.stratPreviewCode = null; render(); return; }
-  if (act==='strat-preview-open-project'){ UI.previewProjectId = ds.pid; render(); return; }
+  if (act==='strat-preview-open-project'){ UI.previewProjectId = ds.pid; UI.previewTab='overview'; render(); return; }
   if (act==='close-modal' || act==='close-modal-bg'){ if (act==='close-modal-bg' && e.target!==el) return; UI.modalProjectId = null; render(); return; }
 
   if (act==='modal-status'){ setEntry(UI.modalProjectId, UI.entryQuarter, { status: ds.status }); render(); return; }
@@ -2660,9 +2738,10 @@ function handleAction(act, el, e){
   if (act==='tl-drill'){ UI.tlDrill = { gid: ds.gid, q: ds.q }; render(); return; }
   if (act==='tl-drill-quarter'){ UI.tlDrill = { gid: UI.tlDrill.gid, q: ds.q }; render(); return; }
   if (act==='tl-drill-close' || act==='tl-drill-close-bg'){ if (act==='tl-drill-close-bg' && e.target!==el) return; UI.tlDrill = null; render(); return; }
-  if (act==='tl-open-project'){ UI.previewProjectId = ds.pid; render(); return; }
+  if (act==='tl-open-project'){ UI.previewProjectId = ds.pid; UI.previewTab='overview'; render(); return; }
   if (act==='tl-set-quarter'){ D.currentQuarter = ds.q; UI.entryQuarter = ds.q; saveData(); render(); return; }
-  if (act==='open-preview'){ UI.previewProjectId = ds.pid; render(); return; }
+  if (act==='pv-tab'){ UI.previewTab = ds.t; render(); var pb=document.querySelector('.pv-body'); if(pb) pb.scrollTop=0; return; }
+  if (act==='open-preview'){ UI.previewProjectId = ds.pid; UI.previewTab='overview'; render(); return; }
   if (act==='preview-project-form'){ UI.previewProjectId = UI.modalProjectId; render(); return; }
   if (act==='close-preview' || act==='close-preview-bg'){ if (act==='close-preview-bg' && e.target!==el) return; UI.previewProjectId = null; render(); return; }
   if (act==='print-project-form-from-preview'){
@@ -2764,6 +2843,7 @@ function handleImport(e){
 }
 
 // overlays stack; Escape dismisses one layer at a time (topmost first)
+(function(){ var mq = window.matchMedia && window.matchMedia('(max-width:860px)'); if (mq && mq.addEventListener) mq.addEventListener('change', function(){ if (UI.previewProjectId) render(); }); })();
 var OVERLAY_STACK = ['previewProjectId','printProjectId','tlDrill','adminPromptOpen','printDialogOpen','stratPreviewCode','modalProjectId'];
 function closeTopOverlay(){
   for (var i=0;i<OVERLAY_STACK.length;i++){

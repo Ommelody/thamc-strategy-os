@@ -1,4 +1,4 @@
-const CACHE = 'thamc-strategy-v25';
+const CACHE = 'thamc-strategy-v27';
 const ASSETS = ['./', './index.html', './manifest.json', './favicon.svg', './icon-192.png', './icon-512.png', './icon-192-maskable.png', './icon-512-maskable.png', './favicon.png', './favicon-32.png'];
 
 self.addEventListener('install', (e) => {

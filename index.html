@@ -89,6 +89,17 @@ h2{font-size:16px;font-weight:600;margin:0 0 12px}
 .seg button.active{background:#8f2436;color:#fff}
 .modal-backdrop{position:fixed;inset:0;background:rgba(36,27,28,.55);display:flex;align-items:flex-start;justify-content:center;padding:36px 20px;z-index:60;overflow-y:auto}
 .modal{width:100%;max-width:900px;background:#fff;border-radius:18px;box-shadow:0 30px 70px rgba(36,27,28,.35)}
+.pv-sheet{display:flex;flex-direction:column;overflow:hidden !important;max-height:86vh}
+.pv-head{flex:none;padding:20px 22px 0;border-bottom:1px solid #f0eae9}
+.pv-tabs{display:flex;gap:4px;margin-top:14px;overflow-x:auto;scrollbar-width:none}
+.pv-tabs button{flex:1 0 auto;border:none;background:none;border-radius:0;min-height:42px;padding:8px 12px;font-size:13.5px;font-weight:600;color:#9b8f8e;border-bottom:2.5px solid transparent;cursor:pointer}
+.pv-tabs button.on{color:#8f2436;border-bottom-color:#8f2436}
+.pv-body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:16px 22px 20px;background:#f7f4f3}
+.pv-block{background:#fff;border:1px solid #efe7e6;border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.pv-label{font-size:11.5px;font-weight:600;color:#9b8f8e;margin-bottom:4px}
+.pv-val{font-size:14.5px;line-height:1.65;color:#241b1c;white-space:pre-line;overflow-wrap:anywhere}
+.pv-empty{text-align:center;color:#9b8f8e;font-size:13px;padding:30px 0}
+.pv-foot{flex:none;padding:14px 22px calc(14px + env(safe-area-inset-bottom));border-top:1px solid #f0eae9;background:#fff;display:flex;gap:10px}
 .modal-sec{padding:22px 26px;border-bottom:1px solid #f0eae9}
 label.field{display:flex;flex-direction:column;gap:6px}
 label.field span{font-size:12px;font-weight:500;color:#4c4241}
@@ -164,17 +175,7 @@ body.printing-project .project-print-sheet{display:block}
     max-height:calc(100dvh - 8px - env(safe-area-inset-top)) !important;max-height:calc(100vh - 8px - env(safe-area-inset-top));
     overflow-y:auto !important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
   @supports (height:100dvh){ .modal{max-height:calc(100dvh - 8px - env(safe-area-inset-top)) !important} }
-  .pv-sheet{display:flex;flex-direction:column;overflow:hidden !important;height:calc(100dvh - 8px - env(safe-area-inset-top))}
-  .pv-head{flex:none;padding:16px 16px 0;border-bottom:1px solid #f0eae9}
-  .pv-tabs{display:flex;gap:4px;margin-top:14px;overflow-x:auto;scrollbar-width:none}
-  .pv-tabs button{flex:1 0 auto;border:none;background:none;border-radius:0;min-height:42px;padding:8px 10px;font-size:13.5px;font-weight:600;color:#9b8f8e;border-bottom:2.5px solid transparent}
-  .pv-tabs button.on{color:#8f2436;border-bottom-color:#8f2436}
-  .pv-body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:14px 14px 18px;background:#f7f4f3}
-  .pv-block{background:#fff;border:1px solid #efe7e6;border-radius:14px;padding:13px 15px;margin-bottom:10px}
-  .pv-label{font-size:11.5px;font-weight:600;color:#9b8f8e;margin-bottom:4px}
-  .pv-val{font-size:14.5px;line-height:1.65;color:#241b1c;white-space:pre-line;overflow-wrap:anywhere}
-  .pv-empty{text-align:center;color:#9b8f8e;font-size:13px;padding:30px 0}
-  .pv-foot{flex:none;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid #f0eae9;background:#fff}
+  .pv-sheet{height:calc(100dvh - 8px - env(safe-area-inset-top))}
   .modal-sec{padding:16px 16px}
   .modal-sec.row,.modal-sec > .row{gap:8px}
   .modal-sec > .row > .btn{flex:1 1 auto}
@@ -610,6 +611,39 @@ function seedAaciDetail(data){
   };
 }
 
+/* ---------- Project 1.1.4 detail (from โครงการพัฒนาแพ็กเกจบริการเฉพาะทางและการตรวจสุขภาพเชิงลึก.docx) ---------- */
+function seedPackage114Detail(data){
+  if (data.fiscalYears.indexOf('2570') === -1) { data.fiscalYears.push('2570'); data.fiscalYears.sort(); }
+  var target = null;
+  data.strategies.forEach(function(s){ s.subs.forEach(function(u){ u.groups.forEach(function(g){ g.projects.forEach(function(p){
+    if (/พัฒนาแพ็กเกจบริการเฉพาะทางและการตรวจสุขภาพเชิงลึก/.test(p.name)) target = p;
+  }); }); }); });
+  if (!target) return;
+  var existing = data.details[target.id];
+  if (existing && Array.isArray(existing.steps) && existing.steps.length) return;
+  var base = data.fiscalYears.indexOf('2570') * 12;
+  var pos = { 'ต.ค.':0,'พ.ย.':1,'ธ.ค.':2,'ม.ค.':3,'ก.พ.':4,'มี.ค.':5,'เม.ย.':6,'พ.ค.':7,'มิ.ย.':8,'ก.ค.':9,'ส.ค.':10,'ก.ย.':11 };
+  var m = function(name){ return base + pos[name]; };
+  data.details[target.id] = {
+    goal: 'พัฒนาแพ็กเกจบริการเฉพาะทางและการตรวจสุขภาพเชิงลึกที่มีความหลากหลาย เหมาะสมกับช่วงวัย เพศ ปัจจัยเสี่ยง และความต้องการของผู้รับบริการ พร้อมระบบบริการแบบ One Stop Service และระบบติดตามหลังการตรวจ โดยใช้ศักยภาพบริการที่มีอยู่ของคลินิกสุขภาพให้เกิดประโยชน์สูงสุด',
+    objective: '1) ยกระดับจากการตรวจสุขภาพทั่วไปสู่บริการตรวจสุขภาพเชิงลึกแบบครบวงจร\n2) พัฒนาแพ็กเกจที่เหมาะสมกับช่วงวัย เพศ และปัจจัยเสี่ยงของผู้รับบริการ\n3) เชื่อมโยงการตรวจสุขภาพกับบริการตรวจวินิจฉัยและหัตถการที่มีอยู่ภายในศูนย์การแพทย์\n4) เพิ่มคุณค่าของบริการด้วยกระบวนการ ตรวจ–วิเคราะห์–แปลผล–ให้คำแนะนำ–ติดตามต่อเนื่อง\n5) สร้างผลิตภัณฑ์บริการสำหรับลูกค้ารายบุคคล ลูกค้าองค์กร และบริษัทคู่สัญญา\n6) เพิ่มจำนวนผู้รับบริการ รายได้ และการกลับมาใช้บริการซ้ำ',
+    target: 'ผู้รับบริการรายบุคคล / องค์กร / บริษัทคู่สัญญา แบ่งตามช่วงวัย เพศ ปัจจัยเสี่ยง และระดับบริการ — กลุ่มวัยทำงาน, กลุ่มอายุ 40 ปีขึ้นไป, กลุ่มเสี่ยงโรคหัวใจและหลอดเลือด, กลุ่มที่ต้องการบริการสุขภาพสตรี, รัฐวิสาหกิจและบริษัทคู่สัญญา\nรวมถึงผู้รับบริการเดิมที่ขาดการติดตาม/ยังไม่กลับมาใช้บริการตามระยะเวลาที่เหมาะสม และผู้ที่สนใจบริการเฉพาะทาง เช่น Check-up',
+    output: 'Output: มี Package พร้อมให้บริการ ≥ 5 รูปแบบ · มี Add-on list และเกณฑ์ใช้งานชัดเจน · มี Costing/Pricing และ Gross Margin ครบทุก Package · มีระบบ Health Risk Assessment และ Personalized Health Advice · มีระบบ CRM ติดตามหลังตรวจ/นัดหมาย\nOutcome: ผู้รับบริการจาก Package เพิ่มขึ้นจากฐานปี 2569 · รายได้จาก Package และ Add-on เพิ่มขึ้นตามเป้าหมาย · ความพึงพอใจ ≥ 90% · องค์กร/บริษัทคู่สัญญาเพิ่มขึ้นจากฐานเดิม · มีระบบส่งต่อและติดตามผู้มีผลผิดปกติ',
+    kpi: 'มี Package พร้อมให้บริการอย่างน้อย 5 รูปแบบ\nจำนวนผู้รับบริการจาก Package เพิ่มขึ้นจากฐานปี 2569\nมีรายได้จาก Package และบริการ Add-on ตามเป้าหมายที่ผู้บริหารกำหนด\nมี Costing/Gross Margin ครบทุก Package\nความพึงพอใจของผู้รับบริการ ≥ 90%\nจำนวนองค์กร/บริษัทคู่สัญญาที่ใช้บริการเพิ่มขึ้นจากฐานเดิม\nมีระบบ CRM ติดตามหลังตรวจและนัดหมายครั้งถัดไป\nมีระบบส่งต่อและติดตามผู้ที่มีผลผิดปกติ',
+    budget: 'จัดทำตามต้นทุนจริงของแต่ละ Package โดยพิจารณาค่าตรวจ ค่าวัสดุ ค่าแรง และค่าบริการของหน่วยงานที่เกี่ยวข้อง (ระบบ CRM และประชาสัมพันธ์) — จัดทำ Cost Sheet และกำหนดราคาขายโดยพิจารณา Gross Margin และจุดคุ้มทุนก่อนเปิดบริการ',
+    area: 'พื้นที่ดำเนินการ: คลินิกสุขภาพ ศูนย์การแพทย์ธรรมศาสตร์ และหน่วยงานการตลาด รวมถึง OPD ต่างๆ ที่เกี่ยวข้อง',
+    owner: 'ผู้รับผิดชอบหลัก: คลินิกสุขภาพ ศูนย์การแพทย์ธรรมศาสตร์ ประสานทีมแพทย์ พยาบาล ห้องปฏิบัติการ หน่วยตรวจวินิจฉัย การตลาด การเงิน และหน่วยงานที่เกี่ยวข้อง',
+    adminNote: 'นำเข้าจากไฟล์ "โครงการพัฒนาแพ็กเกจบริการเฉพาะทางและการตรวจสุขภาพเชิงลึก.docx" — กลยุทธ์ 1.4 ในเอกสารต้นฉบับ (Specialty Packages & Personalized Screening) ระยะเวลาโครงการ: ปีงบประมาณ 2569–2570',
+    startMonth: m('ต.ค.'), endMonth: m('ก.ย.'),
+    steps: [
+      { name: 'Q1/2570 — วิเคราะห์บริการ/กลุ่มลูกค้า ออกแบบ Package และกำหนดเกณฑ์ทางการแพทย์', from: m('ต.ค.'), to: m('ธ.ค.') },
+      { name: 'Q2/2570 — Costing/Pricing, จัดทำ SOP, เตรียมบุคลากรและระบบ Appointment', from: m('ม.ค.'), to: m('มี.ค.') },
+      { name: 'Q3/2570 — Pilot Package และเก็บข้อมูลจริง', from: m('เม.ย.'), to: m('มิ.ย.') },
+      { name: 'Q4/2570 — ประเมินผล ปรับ Package และเริ่มทำการตลาดเชิงรุก', from: m('ก.ค.'), to: m('ก.ย.') }
+    ]
+  };
+}
+
 /* ---------- AACI strategy-4 template import (แผนปฏิบัติการ ยุทธศาสตร์ที่4 AACI (รูปแบบเทมเพลต).docx) ----------
    Each row of the template becomes its OWN project (4.1.1–4.1.10) under a dedicated new sub/group,
    matching the template's one-row-per-activity structure instead of folding them into a single project. */
@@ -675,6 +709,7 @@ D = loadData();
 ensureAuthData(D);
 seedSampleDetail(D);
 seedAaciDetail(D);
+seedPackage114Detail(D);
 removeAaciDuplicateSub(D);
 (function(){
   var validQuarters = fyQuarters(D.fiscalYears);
@@ -693,7 +728,7 @@ function setEntry(pid, q, patch){
   D.entries[key] = Object.assign({}, getEntry(pid,q), patch);
   saveData();
 }
-function getDetail(pid){ return Object.assign({ target:'', output:'', kpi:'', budget:'', area:'', owner:'', ownerUserId:'', deptId:'', deptIds:[], startMonth:0, endMonth:0, steps:[], kpis:[], phases:[], adminNote:'' }, D.details[pid] || {}); }
+function getDetail(pid){ return Object.assign({ goal:'', objective:'', target:'', output:'', kpi:'', budget:'', area:'', owner:'', ownerUserId:'', deptId:'', deptIds:[], startMonth:0, endMonth:0, steps:[], kpis:[], phases:[], adminNote:'' }, D.details[pid] || {}); }
 function setDetail(pid, patch){ D.details[pid] = Object.assign({}, getDetail(pid), patch); saveData(); }
 function calcKpiPercent(kpis, values){
   var valid = (kpis||[]).filter(function(k){ return Number(k.target)>0; });
@@ -2104,7 +2139,10 @@ function renderStratPreview(){
   }); }); });
   return '<div class="modal-backdrop" data-act="close-strat-preview-bg"><div class="modal" style="max-width:640px;max-height:86vh;overflow:auto" onclick="event.stopPropagation()">' +
     '<div class="modal-sec row" style="justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:1">' +
-      '<div><span class="pill" style="background:#fdf1f2;color:#8f2436">ยุทธศาสตร์ที่ '+esc(s.code)+'</span><div style="font-size:16px;font-weight:600;margin-top:8px">'+esc(s.name)+'</div></div>' +
+      '<div style="min-width:0"><span class="pill" style="background:#fdf1f2;color:#8f2436">ยุทธศาสตร์ที่ '+esc(s.code)+'</span><div style="font-size:16px;font-weight:600;margin-top:8px">'+esc(s.name)+'</div>' +
+        (s.goal ? '<div style="font-size:12.5px;color:#7a6f6e;line-height:1.7;margin-top:8px;text-wrap:pretty">'+esc(s.goal)+'</div>' : '') +
+        (s.subs.length ? '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">'+s.subs.map(function(u){ return '<span class="pill" style="font-size:11px">กลยุทธ์ '+esc(u.id)+' '+esc(u.name)+'</span>'; }).join('')+'</div>' : '') +
+      '</div>' +
       '<button class="btn btn-outline" style="padding:6px 12px" data-act="close-strat-preview">×</button>' +
     '</div>' +
     '<div class="modal-sec" style="border-bottom:none">'+rows+'</div>' +
@@ -2191,6 +2229,8 @@ function renderModal(){
       '<div style="font-size:13.5px;font-weight:600;margin-bottom:4px">รายละเอียดการปฏิบัติตามเทมเพลตแผนปฏิบัติการ</div>' +
       '<div class="muted" style="font-size:11.5px;margin-bottom:16px">ตัวชี้วัดให้กรอกที่ตาราง KPI ด้านบน — ส่วนนี้เก็บรายละเอียดเชิงบรรยายตามเทมเพลต (ลากขยายกล่องข้อความที่มุมขวาล่างได้)</div>' +
       '<div style="display:flex;flex-direction:column;gap:14px">' +
+        '<label class="field"><span>เป้าหมายโครงการ</span><textarea rows="2" style="resize:vertical;min-height:52px" placeholder="โครงการนี้ต้องการบรรลุอะไร" data-act="modal-field" data-f="goal">'+esc(det.goal)+'</textarea></label>' +
+        '<label class="field"><span>วัตถุประสงค์</span><textarea rows="3" style="resize:vertical;min-height:62px" placeholder="1. ...&#10;2. ..." data-act="modal-field" data-f="objective">'+esc(det.objective)+'</textarea></label>' +
         '<label class="field"><span>กลุ่มเป้าหมาย</span><textarea rows="3" style="resize:vertical;min-height:62px" data-act="modal-field" data-f="target">'+esc(det.target)+'</textarea></label>' +
         '<label class="field"><span>Output / Outcome (ผลผลิต / ผลลัพธ์ที่คาดหวัง)</span><textarea rows="3" style="resize:vertical;min-height:62px" data-act="modal-field" data-f="output">'+esc(det.output)+'</textarea></label>' +
         '<label class="field"><span>พื้นที่ดำเนินการ</span><textarea rows="2" style="resize:vertical;min-height:48px" data-act="modal-field" data-f="area">'+esc(det.area)+'</textarea></label>' +
@@ -2295,8 +2335,10 @@ function renderProjectPrintBody(pid){
       '<div style="font-size:12.5px;font-weight:600;margin-top:5px">ยุทธศาสตร์ที่ '+esc(ctx.s.code)+' '+esc(ctx.s.name)+'</div>' +
     '</div>' +
     '<table style="width:100%;border-collapse:collapse;margin-top:14px">' +
-      '<tr><th style="width:110px;text-align:left;background:#fdf1f2;font-size:11px;padding:8px 10px;border:1px solid #e6dedd;vertical-align:top">เป้าหมาย</th>' +
-        '<td style="font-size:11px;padding:8px 10px;border:1px solid #e6dedd;line-height:1.6">'+esc(ctx.s.goal||'—')+'</td></tr>' +
+      '<tr><th style="width:110px;text-align:left;background:#fdf1f2;font-size:11px;padding:8px 10px;border:1px solid #e6dedd;vertical-align:top">เป้าหมายโครงการ</th>' +
+        '<td style="font-size:11px;padding:8px 10px;border:1px solid #e6dedd;line-height:1.6;white-space:pre-line">'+esc(det.goal||'—')+'</td></tr>' +
+      '<tr><th style="text-align:left;background:#fdf1f2;font-size:11px;padding:8px 10px;border:1px solid #e6dedd;vertical-align:top">วัตถุประสงค์</th>' +
+        '<td style="font-size:11px;padding:8px 10px;border:1px solid #e6dedd;line-height:1.6;white-space:pre-line">'+esc(det.objective||'—')+'</td></tr>' +
       '<tr><th style="text-align:left;background:#fdf1f2;font-size:11px;padding:8px 10px;border:1px solid #e6dedd;vertical-align:top">กลยุทธ์</th>' +
         '<td style="font-size:11px;padding:8px 10px;border:1px solid #e6dedd;line-height:1.6"><b>กลยุทธ์ '+esc(ctx.u.id)+': '+esc(ctx.u.name)+'</b>'+(ctx.u.desc?'<br>'+esc(ctx.u.desc):'')+'<br><span style="color:#7a6f6e">'+esc(ctx.g.id)+' '+esc(ctx.g.name)+'</span></td></tr>' +
     '</table>' +
@@ -2359,6 +2401,8 @@ function renderPreviewMobile(pid){
         '<div style="display:flex;align-items:center;gap:12px;margin-top:6px"><div style="flex:1;height:9px;border-radius:9px;background:#efe7e6;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,#8f2436,#f2b526)"></div></div><span class="mono" style="font-size:15px;font-weight:600;color:#8f2436">'+pct+'%</span></div>' +
         '<div style="font-size:12.5px;color:#7a6f6e;margin-top:6px">สถานะ: '+esc(e.status||'ยังไม่เริ่ม')+'</div></div>' +
       block('รายละเอียดโครงการ', p.desc) +
+      block('เป้าหมายโครงการ', det.goal) +
+      block('วัตถุประสงค์', det.objective) +
       block('หน่วยงานรับผิดชอบ', deptNamesText(pid)) +
       block('ผู้รับผิดชอบ', det.owner) +
       block('ระยะเวลา', (months[det.startMonth]||'')+(months[det.endMonth]?' – '+months[det.endMonth]:''));
@@ -2383,7 +2427,7 @@ function renderPreviewMobile(pid){
     }).join('') : '<div class="pv-empty">ยังไม่ระบุขั้นตอนดำเนินการ</div>';
     (det.phases||[]).forEach(function(ph){ body += block('เฟสปีงบ '+esc(ph.fy||''), (ph.name||'')+' · '+(Number(ph.percent)||0)+'%'+(ph.done?' · ปิดเฟสแล้ว':'')); });
   }
-  return '<div class="modal-backdrop no-print" data-act="close-preview-bg"><div class="modal pv-sheet" onclick="event.stopPropagation()">' +
+  return '<div class="modal-backdrop no-print" data-act="close-preview-bg"><div class="modal pv-sheet" style="max-width:720px" onclick="event.stopPropagation()">' +
     '<div class="pv-head">' +
       '<div style="display:flex;align-items:flex-start;gap:10px">' +
         '<div style="flex:1;min-width:0"><div class="eyebrow">พรีวิวโครงการ</div><div style="font-size:15.5px;font-weight:600;line-height:1.45;margin-top:3px">'+esc(p.name)+'</div></div>' +
@@ -2392,17 +2436,19 @@ function renderPreviewMobile(pid){
       '<div class="pv-tabs">'+tabs.map(function(t){ return '<button class="'+(tab===t[0]?'on':'')+'" data-act="pv-tab" data-t="'+t[0]+'">'+t[1]+'</button>'; }).join('')+'</div>' +
     '</div>' +
     '<div class="pv-body">'+body+'</div>' +
-    '<div class="pv-foot"><button class="btn" style="width:100%" data-act="print-project-form-from-preview" data-pid="'+esc(pid)+'">พิมพ์แบบฟอร์ม</button></div>' +
+    '<div class="pv-foot"><button class="btn btn-outline" style="flex:1" data-act="preview-full-form" data-pid="'+esc(pid)+'">ดูตารางแบบฟอร์มเต็ม</button><button class="btn" style="flex:1" data-act="print-project-form-from-preview" data-pid="'+esc(pid)+'">พิมพ์แบบฟอร์ม</button></div>' +
   '</div></div>';
 }
 function renderPreviewOverlay(pid){
-  if (isMobileView()) return renderPreviewMobile(pid);
-  var body = renderProjectPrintBody(pid);
+  if (UI.previewFullTable) { var body2 = renderProjectPrintBody(pid); if (body2) return renderPreviewOverlayTable(pid, body2); }
+  return renderPreviewMobile(pid);
+}
+function renderPreviewOverlayTable(pid, body){
   if (!body) return '';
   return '<div class="modal-backdrop no-print" data-act="close-preview-bg"><div class="modal" style="max-width:1000px;max-height:88vh;overflow:auto" onclick="event.stopPropagation()">' +
     '<div class="modal-sec row" style="justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1">' +
       '<div style="font-size:13.5px;font-weight:600">พรีวิวแบบฟอร์ม</div>' +
-      '<div class="row" style="gap:8px"><button class="btn" data-act="print-project-form-from-preview" data-pid="'+esc(pid)+'">พิมพ์</button><button class="btn btn-outline" data-act="close-preview">ปิด</button></div>' +
+      '<div class="row" style="gap:8px"><button class="btn btn-outline" data-act="preview-tabbed" data-pid="'+esc(pid)+'">ดูแบบแท็บ</button><button class="btn" data-act="print-project-form-from-preview" data-pid="'+esc(pid)+'">พิมพ์</button><button class="btn btn-outline" data-act="close-preview">ปิด</button></div>' +
     '</div>' +
     '<div style="border-top:1px solid #f0eae9">'+body+'</div>' +
   '</div></div>';
@@ -2660,7 +2706,7 @@ function handleAction(act, el, e){
   if (act==='open-modal'){ UI.modalProjectId = ds.pid; UI.modalSaved=''; render(); return; }
   if (act==='open-strat-preview'){ UI.stratPreviewCode = ds.code; render(); return; }
   if (act==='close-strat-preview' || act==='close-strat-preview-bg'){ if (act==='close-strat-preview-bg' && e.target!==el) return; UI.stratPreviewCode = null; render(); return; }
-  if (act==='strat-preview-open-project'){ UI.previewProjectId = ds.pid; UI.previewTab='overview'; render(); return; }
+  if (act==='strat-preview-open-project'){ UI.previewProjectId = ds.pid; UI.previewTab='overview'; UI.previewFullTable=false; render(); return; }
   if (act==='close-modal' || act==='close-modal-bg'){ if (act==='close-modal-bg' && e.target!==el) return; UI.modalProjectId = null; render(); return; }
 
   if (act==='modal-status'){ setEntry(UI.modalProjectId, UI.entryQuarter, { status: ds.status }); render(); return; }
@@ -2738,10 +2784,12 @@ function handleAction(act, el, e){
   if (act==='tl-drill'){ UI.tlDrill = { gid: ds.gid, q: ds.q }; render(); return; }
   if (act==='tl-drill-quarter'){ UI.tlDrill = { gid: UI.tlDrill.gid, q: ds.q }; render(); return; }
   if (act==='tl-drill-close' || act==='tl-drill-close-bg'){ if (act==='tl-drill-close-bg' && e.target!==el) return; UI.tlDrill = null; render(); return; }
-  if (act==='tl-open-project'){ UI.previewProjectId = ds.pid; UI.previewTab='overview'; render(); return; }
+  if (act==='tl-open-project'){ UI.previewProjectId = ds.pid; UI.previewTab='overview'; UI.previewFullTable=false; render(); return; }
   if (act==='tl-set-quarter'){ D.currentQuarter = ds.q; UI.entryQuarter = ds.q; saveData(); render(); return; }
   if (act==='pv-tab'){ UI.previewTab = ds.t; render(); var pb=document.querySelector('.pv-body'); if(pb) pb.scrollTop=0; return; }
-  if (act==='open-preview'){ UI.previewProjectId = ds.pid; UI.previewTab='overview'; render(); return; }
+  if (act==='open-preview'){ UI.previewProjectId = ds.pid; UI.previewTab='overview'; UI.previewFullTable=false; render(); return; }
+  if (act==='preview-full-form'){ UI.previewFullTable = true; render(); return; }
+  if (act==='preview-tabbed'){ UI.previewFullTable = false; render(); return; }
   if (act==='preview-project-form'){ UI.previewProjectId = UI.modalProjectId; render(); return; }
   if (act==='close-preview' || act==='close-preview-bg'){ if (act==='close-preview-bg' && e.target!==el) return; UI.previewProjectId = null; render(); return; }
   if (act==='print-project-form-from-preview'){

@@ -726,7 +726,7 @@ function setEntry(pid, q, patch){
   D.entries[key] = Object.assign({}, getEntry(pid,q), patch);
   saveData();
 }
-function getDetail(pid){ return Object.assign({ goal:'', objective:'', target:'', output:'', kpi:'', budget:'', area:'', owner:'', ownerUserId:'', deptId:'', deptIds:[], startMonth:0, endMonth:0, steps:[], kpis:[], phases:[], adminNote:'' }, D.details[pid] || {}); }
+function getDetail(pid){ return Object.assign({ goal:'', objective:'', target:'', output:'', kpi:'', budget:'', area:'', owner:'', ownerUserId:'', deptId:'', deptIds:[], startMonth:0, endMonth:0, subprojects:[], steps:[], kpis:[], phases:[], adminNote:'' }, D.details[pid] || {}); }
 function setDetail(pid, patch){ D.details[pid] = Object.assign({}, getDetail(pid), patch); saveData(); }
 function calcKpiPercent(kpis, values){
   var valid = (kpis||[]).filter(function(k){ return Number(k.target)>0; });
@@ -754,6 +754,22 @@ function calcKpiPercentCumulative(pid, kpis, q){
     return acc + best;
   }, 0);
   return Math.round(sum/valid.length);
+}
+function getSubKpiValues(pid, subId, q){ return (D.subKpiValues && D.subKpiValues[pid+'__'+subId+'__'+q]) || {}; }
+function getSubKpiValue(pid, subId, q, kid){ return getSubKpiValues(pid,subId,q)[kid] || { current:'', fileName:'', fileData:'' }; }
+function setSubKpiValue(pid, subId, q, kid, patch){
+  D.subKpiValues = D.subKpiValues || {};
+  var key = pid+'__'+subId+'__'+q;
+  D.subKpiValues[key] = Object.assign({}, D.subKpiValues[key]||{});
+  D.subKpiValues[key][kid] = Object.assign({}, getSubKpiValue(pid,subId,q,kid), patch);
+  saveData();
+}
+function getSubEntry(pid, subId, q){ var key=pid+'__'+subId+'__'+q; return (D.subEntries && D.subEntries[key]) || { status:'ยังไม่เริ่ม', percent:0, note:'' }; }
+function setSubEntry(pid, subId, q, patch){
+  D.subEntries = D.subEntries || {};
+  var key = pid+'__'+subId+'__'+q;
+  D.subEntries[key] = Object.assign({}, getSubEntry(pid,subId,q), patch);
+  saveData();
 }
 function getKpiValues(pid, q){ return (D.kpiValues && D.kpiValues[pid+'__'+q]) || {}; }
 function getKpiValue(pid, q, kid){ return getKpiValues(pid,q)[kid] || { current:'', fileName:'', fileData:'' }; }
@@ -2240,6 +2256,7 @@ function renderModal(){
       '</div>' +
     '</div>' +
     renderPhasesSection(p.id, det) +
+    renderSubprojectsSection(p.id, det, q) +
     '<div class="modal-sec">' +
       '<div class="row" style="justify-content:space-between;margin-bottom:14px"><div style="font-size:13.5px;font-weight:600">ระยะเวลา / ขั้นตอนดำเนินการ</div><button class="btn btn-ghost" data-act="step-add">+ เพิ่มขั้นตอน</button></div>' +
       '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px">' +
@@ -2258,6 +2275,76 @@ function renderModal(){
   '</div></div>';
 }
 
+/* ---------- sub-projects ---------- */
+function renderSubKpiTable(pid, si, kpis, q){
+  kpis = kpis || [];
+  if (!kpis.length) return '<div style="font-size:11.5px;color:#9b8f8e;padding:6px 0">ยังไม่มี KPI ของโครงการย่อยนี้</div>';
+  var subId = null;
+  var rows = kpis.map(function(k){
+    var v = getSubKpiValue(pid, k.__subId||'', q, k.id);
+    var pct = Number(k.target)>0 ? Math.round(Math.min(100, Math.max(0, (Number(v.current)||0)/Number(k.target)*100))) : 0;
+    return '<tr style="border-top:1px solid #f2eceb">' +
+      '<td style="padding:6px 4px"><input type="text" placeholder="ชื่อตัวชี้วัด" value="'+esc(k.name)+'" data-act="subproj-kpi-field" data-si="'+si+'" data-kid="'+esc(k.id)+'" data-f="name" style="width:100%;font-size:12px"></td>' +
+      '<td style="padding:6px 4px;width:80px"><input type="number" value="'+(k.target==null?'':k.target)+'" data-act="subproj-kpi-field" data-si="'+si+'" data-kid="'+esc(k.id)+'" data-f="target" style="width:100%;font-size:12px"></td>' +
+      '<td style="padding:6px 4px;width:80px"><input type="number" value="'+(v.current===''||v.current==null?'':v.current)+'" data-act="subproj-kpi-current" data-si="'+si+'" data-kid="'+esc(k.id)+'" style="width:100%;font-size:12px"></td>' +
+      '<td style="padding:6px 4px;width:70px"><input type="text" placeholder="หน่วย" value="'+esc(k.unit||'')+'" data-act="subproj-kpi-field" data-si="'+si+'" data-kid="'+esc(k.id)+'" data-f="unit" style="width:100%;font-size:12px"></td>' +
+      '<td style="padding:6px 4px;width:48px;text-align:center" class="mono">'+pct+'%</td>' +
+      '<td style="padding:6px 4px;width:28px"><button class="btn btn-danger" style="padding:5px" data-act="subproj-kpi-remove" data-si="'+si+'" data-kid="'+esc(k.id)+'">×</button></td>' +
+    '</tr>';
+  }).join('');
+  return '<div style="overflow-x:auto"><table class="table" style="min-width:480px"><thead><tr><th>ตัวชี้วัด</th><th>เป้าหมาย</th><th>ปัจจุบัน</th><th>หน่วย</th><th>%</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+function renderSubStepsSection(pid, si, steps, months){
+  steps = steps || [];
+  var rows = steps.map(function(s,j){
+    return '<div style="border-top:1px solid #f0eae9;padding:8px 0;display:flex;flex-direction:column;gap:6px">' +
+      '<input style="width:100%;font-size:12px" placeholder="ชื่อขั้นตอน" value="'+esc(s.name)+'" data-act="subproj-step-name" data-si="'+si+'" data-sj="'+j+'">' +
+      '<div class="row" style="gap:6px;flex-wrap:wrap">' +
+        '<select style="flex:1 1 100px;font-size:12px" data-act="subproj-step-from" data-si="'+si+'" data-sj="'+j+'">'+months.map(function(m,mi){return '<option value="'+mi+'"'+(mi===s.from?' selected':'')+'>'+m+'</option>';}).join('')+'</select>' +
+        '<select style="flex:1 1 100px;font-size:12px" data-act="subproj-step-to" data-si="'+si+'" data-sj="'+j+'">'+months.map(function(m,mi){return '<option value="'+mi+'"'+(mi===s.to?' selected':'')+'>'+m+'</option>';}).join('')+'</select>' +
+        '<button type="button" class="chip-toggle'+(s.done?' on':'')+'" data-act="subproj-step-done" data-si="'+si+'" data-sj="'+j+'"><span class="chip-mark">✓</span>'+(s.done?'ทำแล้ว':'ยังไม่ทำ')+'</button>' +
+        '<button class="btn btn-danger" style="padding:5px 8px" data-act="subproj-step-remove" data-si="'+si+'" data-sj="'+j+'">×</button>' +
+      '</div></div>';
+  }).join('');
+  return rows || '<div style="font-size:11.5px;color:#9b8f8e;padding:6px 0">ยังไม่มีขั้นตอนของโครงการย่อยนี้</div>';
+}
+function renderSubprojectsSection(pid, det, q){
+  var subs = det.subprojects || [];
+  var months = fyMonths(D.fiscalYears);
+  var rows = subs.map(function(sp, i){
+    var e = getSubEntry(pid, sp.id, q);
+    var statusBtns = STATUS_LIST.map(function(opt){
+      var on = e.status===opt;
+      return '<button type="button" style="padding:6px 10px;border-radius:8px;font-size:11px;font-weight:500;border:1px solid '+(on?STATUS_COLORS[opt]:'#e6dedd')+';background:'+(on?STATUS_COLORS[opt]:'#fdfbfb')+';color:'+(on?STATUS_TEXT[opt]:'#7a6f6e')+'" data-act="subproj-status" data-si="'+i+'" data-status="'+opt+'">'+opt+'</button>';
+    }).join('');
+    var kpisForTable = (sp.kpis||[]).map(function(k){ return Object.assign({}, k, { __subId: sp.id }); });
+    return '<div style="border-top:1px solid #f2eceb;padding:12px 0;display:flex;flex-direction:column;gap:10px">' +
+      '<div class="row" style="gap:8px;flex-wrap:wrap">' +
+        '<input style="flex:2 1 220px" placeholder="ชื่อโครงการย่อย" value="'+esc(sp.name)+'" data-act="subproj-name" data-si="'+i+'">' +
+        '<input style="flex:1 1 160px" placeholder="ผู้รับผิดชอบ" value="'+esc(sp.owner||'')+'" data-act="subproj-owner" data-si="'+i+'">' +
+        '<button class="btn btn-danger" style="padding:6px 10px" data-act="subproj-remove" data-si="'+i+'">×</button>' +
+      '</div>' +
+      '<div class="row" style="gap:6px;flex-wrap:wrap">'+statusBtns+'</div>' +
+      '<div class="row" style="gap:10px;align-items:center">' +
+        '<label style="font-size:11px;color:#9b8f8e;display:flex;gap:6px;align-items:center">% <input type="number" min="0" max="100" style="width:70px" value="'+(Number(e.percent)||0)+'" data-act="subproj-percent" data-si="'+i+'"></label>' +
+        '<input type="text" style="flex:1" placeholder="หมายเหตุ" value="'+esc(e.note||'')+'" data-act="subproj-note" data-si="'+i+'">' +
+      '</div>' +
+      '<div style="background:#f7f4f3;border-radius:10px;padding:10px 12px">' +
+        '<div class="row" style="justify-content:space-between;margin-bottom:4px"><span style="font-size:11.5px;font-weight:600;color:#7a6f6e">KPI ของโครงการย่อย</span><button class="btn btn-ghost" style="padding:4px 9px;font-size:11px" data-act="subproj-kpi-add" data-si="'+i+'">+ เพิ่ม KPI</button></div>' +
+        renderSubKpiTable(pid, i, kpisForTable, q) +
+      '</div>' +
+      '<div style="background:#f7f4f3;border-radius:10px;padding:10px 12px">' +
+        '<div class="row" style="justify-content:space-between;margin-bottom:4px"><span style="font-size:11.5px;font-weight:600;color:#7a6f6e">ขั้นตอนของโครงการย่อย</span><button class="btn btn-ghost" style="padding:4px 9px;font-size:11px" data-act="subproj-step-add" data-si="'+i+'">+ เพิ่มขั้นตอน</button></div>' +
+        renderSubStepsSection(pid, i, sp.steps, months) +
+      '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="modal-sec">' +
+    '<div class="row" style="justify-content:space-between;margin-bottom:6px"><div style="font-size:13.5px;font-weight:600">โครงการย่อย</div><button class="btn btn-ghost" data-act="subproj-add">+ เพิ่มโครงการย่อย</button></div>' +
+    '<div class="muted" style="font-size:11.5px;margin-bottom:4px">สำหรับโครงการที่มีงานย่อยหลายส่วน แต่ละส่วนมีสถานะ/% ความสำเร็จ, KPI และขั้นตอนของตัวเอง แยกจากโครงการหลัก (ผลรายไตรมาส '+esc(q)+')</div>' +
+    (rows || '<div style="padding:10px 0;text-align:center;color:#9b8f8e;font-size:12px">ยังไม่มีโครงการย่อย</div>') +
+  '</div>';
+}
 /* ---------- multi-year phases ---------- */
 function renderPhasesSection(pid, det){
   var phases = det.phases || [];
@@ -2426,6 +2513,14 @@ function renderPreviewMobile(pid){
         '<div style="min-width:0"><div class="pv-val">'+esc(s.name||'—')+'</div><div class="mono" style="font-size:11.5px;color:#9b8f8e;margin-top:5px">'+esc(months[s.from]||'')+(s.to!==s.from&&months[s.to]?' – '+esc(months[s.to]):'')+'</div></div></div>';
     }).join('') : '<div class="pv-empty">ยังไม่ระบุขั้นตอนดำเนินการ</div>';
     (det.phases||[]).forEach(function(ph){ body += block('เฟสปีงบ '+esc(ph.fy||''), (ph.name||'')+' · '+(Number(ph.percent)||0)+'%'+(ph.done?' · ปิดเฟสแล้ว':'')); });
+    if ((det.subprojects||[]).length){
+      body += '<div class="pv-block"><div class="pv-label">โครงการย่อย</div>' + det.subprojects.map(function(sp){
+        var se = getSubEntry(pid, sp.id, q);
+        var kpiLines = (sp.kpis||[]).map(function(k){ var v=getSubKpiValue(pid, sp.id, q, k.id); return '　· '+esc(k.name||'—')+': '+(v.current===''||v.current==null?0:v.current)+'/'+(k.target==null?0:k.target)+' '+esc(k.unit||''); }).join('<br>');
+        var stepLines = (sp.steps||[]).map(function(s){ return '　'+(s.done?'✓':'○')+' '+esc(s.name||'—'); }).join('<br>');
+        return '<div style="padding:8px 0;border-top:1px solid #f0eae9"><div class="pv-val" style="font-weight:600">'+esc(sp.name||'—')+(sp.owner?' <span style="font-weight:400;color:#9b8f8e;font-size:12px">· '+esc(sp.owner)+'</span>':'')+'</div><div style="font-size:12px;color:#7a6f6e;margin-top:3px">'+esc(se.status||'ยังไม่เริ่ม')+' · '+(Number(se.percent)||0)+'%'+(se.note?' · '+esc(se.note):'')+'</div>'+(kpiLines?'<div style="font-size:11.5px;color:#7a6f6e;margin-top:5px">'+kpiLines+'</div>':'')+(stepLines?'<div style="font-size:11.5px;color:#7a6f6e;margin-top:5px">'+stepLines+'</div>':'')+'</div>';
+      }).join('') + '</div>';
+    }
   }
   return '<div class="modal-backdrop no-print" data-act="close-preview-bg"><div class="modal pv-sheet" style="max-width:720px" onclick="event.stopPropagation()">' +
     '<div class="pv-head">' +
@@ -2774,6 +2869,43 @@ function handleAction(act, el, e){
     var dpd=getDetail(UI.modalProjectId);
     var phd=(dpd.phases||[]).map(function(x,i){ return i===Number(ds.si) ? Object.assign({},x,{done:!x.done}) : x; });
     setDetail(UI.modalProjectId, { phases: phd }); render(); return;
+  }
+  if (act==='subproj-add'){ var dsub=getDetail(UI.modalProjectId); var subs=(dsub.subprojects||[]).concat([{ id: uid(), name:'', owner:'' }]); setDetail(UI.modalProjectId, { subprojects: subs }); render(); return; }
+  if (act==='subproj-remove'){ var dsub2=getDetail(UI.modalProjectId); var subs2=(dsub2.subprojects||[]).filter(function(x,i){ return i!==Number(ds.si); }); setDetail(UI.modalProjectId, { subprojects: subs2 }); render(); return; }
+  if (act==='subproj-name'){ var dsub3=getDetail(UI.modalProjectId); var subs3=(dsub3.subprojects||[]).map(function(x,i){ return i===Number(ds.si) ? Object.assign({},x,{name:el.value}) : x; }); setDetail(UI.modalProjectId, { subprojects: subs3 }); return; }
+  if (act==='subproj-owner'){ var dsub4=getDetail(UI.modalProjectId); var subs4=(dsub4.subprojects||[]).map(function(x,i){ return i===Number(ds.si) ? Object.assign({},x,{owner:el.value}) : x; }); setDetail(UI.modalProjectId, { subprojects: subs4 }); return; }
+  if (act==='subproj-status'){ var dsub5=getDetail(UI.modalProjectId); var sp5=(dsub5.subprojects||[])[Number(ds.si)]; if (sp5) setSubEntry(UI.modalProjectId, sp5.id, UI.entryQuarter, { status: ds.status }); render(); return; }
+  if (act==='subproj-percent'){ var dsub6=getDetail(UI.modalProjectId); var sp6=(dsub6.subprojects||[])[Number(ds.si)]; if (sp6) setSubEntry(UI.modalProjectId, sp6.id, UI.entryQuarter, { percent: Number(el.value) }); return; }
+  if (act==='subproj-note'){ var dsub7=getDetail(UI.modalProjectId); var sp7=(dsub7.subprojects||[])[Number(ds.si)]; if (sp7) setSubEntry(UI.modalProjectId, sp7.id, UI.entryQuarter, { note: el.value }); return; }
+  if (act==='subproj-kpi-add'){
+    var dka=getDetail(UI.modalProjectId); var subsKa=(dka.subprojects||[]).map(function(x,i){ if (i!==Number(ds.si)) return x; var ks=(x.kpis||[]).concat([{ id: uid(), name:'', target:'', unit:'' }]); return Object.assign({},x,{kpis:ks}); }); setDetail(UI.modalProjectId, { subprojects: subsKa }); render(); return;
+  }
+  if (act==='subproj-kpi-remove'){
+    var dkr=getDetail(UI.modalProjectId); var subsKr=(dkr.subprojects||[]).map(function(x,i){ if (i!==Number(ds.si)) return x; var ks=(x.kpis||[]).filter(function(k){ return k.id!==ds.kid; }); return Object.assign({},x,{kpis:ks}); }); setDetail(UI.modalProjectId, { subprojects: subsKr }); render(); return;
+  }
+  if (act==='subproj-kpi-field'){
+    var dkf=getDetail(UI.modalProjectId); var subsKf=(dkf.subprojects||[]).map(function(x,i){ if (i!==Number(ds.si)) return x; var ks=(x.kpis||[]).map(function(k){ if (k.id!==ds.kid) return k; var patch={}; patch[ds.f] = (ds.f==='name'||ds.f==='unit') ? el.value : (el.value===''?'':Number(el.value)); return Object.assign({},k,patch); }); return Object.assign({},x,{kpis:ks}); }); setDetail(UI.modalProjectId, { subprojects: subsKf }); return;
+  }
+  if (act==='subproj-kpi-current'){
+    var dsp=getDetail(UI.modalProjectId); var spc=(dsp.subprojects||[])[Number(ds.si)]; if (spc) setSubKpiValue(UI.modalProjectId, spc.id, UI.entryQuarter, ds.kid, { current: el.value===''?'':Number(el.value) }); render(); return;
+  }
+  if (act==='subproj-step-add'){
+    var dsa=getDetail(UI.modalProjectId); var subsSa=(dsa.subprojects||[]).map(function(x,i){ if (i!==Number(ds.si)) return x; var st=(x.steps||[]).concat([{ name:'', from: dsa.startMonth||0, to: dsa.startMonth||0 }]); return Object.assign({},x,{steps:st}); }); setDetail(UI.modalProjectId, { subprojects: subsSa }); render(); return;
+  }
+  if (act==='subproj-step-remove'){
+    var dsr=getDetail(UI.modalProjectId); var subsSr=(dsr.subprojects||[]).map(function(x,i){ if (i!==Number(ds.si)) return x; var st=(x.steps||[]).filter(function(s,j){ return j!==Number(ds.sj); }); return Object.assign({},x,{steps:st}); }); setDetail(UI.modalProjectId, { subprojects: subsSr }); render(); return;
+  }
+  if (act==='subproj-step-name'){
+    var dsn=getDetail(UI.modalProjectId); var subsSn=(dsn.subprojects||[]).map(function(x,i){ if (i!==Number(ds.si)) return x; var st=(x.steps||[]).map(function(s,j){ return j===Number(ds.sj) ? Object.assign({},s,{name:el.value}) : s; }); return Object.assign({},x,{steps:st}); }); setDetail(UI.modalProjectId, { subprojects: subsSn }); return;
+  }
+  if (act==='subproj-step-from'){
+    var dsf=getDetail(UI.modalProjectId); var v1=Number(el.value); var subsSf=(dsf.subprojects||[]).map(function(x,i){ if (i!==Number(ds.si)) return x; var st=(x.steps||[]).map(function(s,j){ return j===Number(ds.sj) ? Object.assign({},s,{from:v1, to:Math.max(v1,s.to)}) : s; }); return Object.assign({},x,{steps:st}); }); setDetail(UI.modalProjectId, { subprojects: subsSf }); render(); return;
+  }
+  if (act==='subproj-step-to'){
+    var dst=getDetail(UI.modalProjectId); var v2=Number(el.value); var subsSt=(dst.subprojects||[]).map(function(x,i){ if (i!==Number(ds.si)) return x; var st=(x.steps||[]).map(function(s,j){ return j===Number(ds.sj) ? Object.assign({},s,{to:v2, from:Math.min(v2,s.from)}) : s; }); return Object.assign({},x,{steps:st}); }); setDetail(UI.modalProjectId, { subprojects: subsSt }); render(); return;
+  }
+  if (act==='subproj-step-done'){
+    var dsd=getDetail(UI.modalProjectId); var subsSd=(dsd.subprojects||[]).map(function(x,i){ if (i!==Number(ds.si)) return x; var st=(x.steps||[]).map(function(s,j){ return j===Number(ds.sj) ? Object.assign({},s,{done:!s.done}) : s; }); return Object.assign({},x,{steps:st}); }); setDetail(UI.modalProjectId, { subprojects: subsSd }); render(); return;
   }
   if (act==='step-add'){ var d=getDetail(UI.modalProjectId); var steps=(d.steps||[]).concat([{ name:'', from:d.startMonth, to:d.startMonth }]); setDetail(UI.modalProjectId, { steps: steps }); UI.focusKey = focusKeyFor('step-name', { si: steps.length-1 }); render(); return; }
   if (act==='step-name'){ var d2=getDetail(UI.modalProjectId); var steps2=(d2.steps||[]).map(function(s,i){ return i===Number(ds.si) ? Object.assign({},s,{name:el.value}) : s; }); setDetail(UI.modalProjectId,{steps:steps2}); return; }

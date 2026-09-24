@@ -956,6 +956,7 @@ function render(){
       (UI.printDialogOpen ? renderPrintDialog() : '') +
       (UI.adminPromptOpen ? renderAdminPrompt() : '') +
       (UI.tlDrill ? renderTimelineDrill() : '') +
+      (UI.registryPreviewOpen ? renderRegistryPreviewModal() : '') +
     '</div>' + (UI.printProjectId ? renderProjectPrintSheet(UI.printProjectId) : '') + (UI.previewProjectId ? renderPreviewOverlay(UI.previewProjectId) : '');
   attachActions(root);
   document.body.classList.toggle('has-overlay', !!root.parentNode && !!document.querySelector('.modal-backdrop'));
@@ -1310,7 +1311,7 @@ function renderRegistry(){
       '<td style="padding:10px 6px;min-width:240px"><textarea rows="2" data-act="reg-set-desc" data-pid="'+esc(p.id)+'" style="width:100%;font-size:11.5px;resize:vertical">'+esc(p.desc||'')+'</textarea></td>' +
       '<td style="padding:10px 6px;width:190px">'+deptCell+'</td>' +
       '<td style="padding:10px 6px;min-width:170px"><textarea rows="2" placeholder="หมายเหตุของแอดมิน" data-act="reg-set-note" data-pid="'+esc(p.id)+'" style="width:100%;font-size:11.5px;resize:vertical">'+esc(det.adminNote||'')+'</textarea></td>' +
-      '<td style="padding:10px 6px;width:34px"><button class="btn btn-danger" style="padding:6px" data-act="reg-delete" data-pid="'+esc(p.id)+'" title="ลบโครงการ">×</button></td>' +
+      '<td style="padding:10px 6px;width:76px"><div class="row" style="gap:5px"><button class="btn btn-outline" style="padding:6px 9px;font-size:11px" data-act="open-preview" data-pid="'+esc(p.id)+'" title="พรีวิวโครงการ">พรีวิว</button><button class="btn btn-danger" style="padding:6px" data-act="reg-delete" data-pid="'+esc(p.id)+'" title="ลบโครงการ">×</button></div></td>' +
     '</tr>';
   }, D.strategies);
 
@@ -1324,6 +1325,7 @@ function renderRegistry(){
       '<div><div class="eyebrow">PROJECT REGISTRY</div><h1>ทะเบียนโครงการ</h1><div class="muted" style="font-size:13px">เก็บโครงการทั้งหมด ทั้งที่ใช้และพักไว้ — ติ๊ก “ใช้” เพื่อนำกลับมาดำเนินการ</div></div>' +
       '<div class="row" style="gap:8px;flex-wrap:wrap;align-items:flex-end">' +
         '<input type="text" placeholder="ค้นหาชื่อโครงการ…" value="'+esc(UI.registryQuery||'')+'" data-act="reg-search" style="width:200px">' +
+        '<button class="btn btn-outline" data-act="reg-preview-all">พรีวิวภาพรวม (ตาราง)</button>' +
         '<select data-act="reg-filter">' +
           '<option value="all"'+(UI.registryShow==='all'?' selected':'')+'>ทั้งหมด ('+totalAll+')</option>' +
           '<option value="active"'+(UI.registryShow==='active'?' selected':'')+'>ใช้งานอยู่ ('+totalActive+')</option>' +
@@ -1340,11 +1342,37 @@ function renderRegistry(){
       '</div>' +
     '</div>' +
     '<div style="overflow-x:auto"><table class="table" style="min-width:1000px">' +
-      '<thead><tr><th style="width:48px;text-align:center">ใช้</th><th style="width:48px;text-align:center">ด่วน</th><th>ชื่อโครงการ</th><th>รายละเอียด</th><th>หน่วยงาน</th><th>หมายเหตุ</th><th></th></tr></thead>' +
+      '<thead><tr><th style="width:48px;text-align:center">ใช้</th><th style="width:48px;text-align:center">ด่วน</th><th>ชื่อโครงการ</th><th>รายละเอียด</th><th>หน่วยงาน</th><th>หมายเหตุ</th><th>พรีวิว</th></tr></thead>' +
       '<tbody>'+(rows || '<tr><td colspan="7" style="padding:26px;text-align:center;color:#9b8f8e">ไม่พบโครงการที่ตรงเงื่อนไข</td></tr>')+'</tbody>' +
     '</table></div>' +
     '<div class="muted" style="font-size:12px;margin-top:12px">แสดง '+shown+' จาก '+totalAll+' โครงการ</div>' +
   '</div>';
+}
+function renderRegistryPreviewModal(){
+  var qStr = (UI.registryQuery||'').toLowerCase();
+  var rows = '', shown = 0;
+  eachProject(function(p, ctx){
+    if (UI.registryShow==='active' && !isActiveProject(p)) return;
+    if (UI.registryShow==='inactive' && isActiveProject(p)) return;
+    if (qStr && (p.name||'').toLowerCase().indexOf(qStr)===-1 && (p.desc||'').toLowerCase().indexOf(qStr)===-1) return;
+    shown++;
+    rows += '<tr style="border-top:1px solid #f2eceb;'+(isActiveProject(p)?'':'background:#faf7f7;opacity:.7')+'">' +
+      '<td class="mono" style="padding:8px 6px;font-size:10.5px;color:#9b8f8e;white-space:nowrap">'+esc(ctx.s.code)+' · '+esc(ctx.g.id)+'</td>' +
+      '<td style="padding:8px 6px;font-size:12px;font-weight:600">'+esc(p.name)+priorityBadge(p,'margin-left:6px')+'</td>' +
+      '<td style="padding:8px 6px;font-size:11px;color:#7a6f6e">'+esc(deptNamesText(p.id)||'—')+'</td>' +
+      '<td style="padding:8px 6px;text-align:center;font-size:11px">'+(isActiveProject(p)?'<span style="color:#2f5f45;font-weight:600">ใช้</span>':'<span style="color:#9b8f8e">พัก</span>')+'</td>' +
+    '</tr>';
+  }, D.strategies);
+  return '<div class="modal-backdrop no-print" data-act="reg-preview-close-bg"><div class="modal" style="max-width:900px;max-height:88vh;overflow:auto" onclick="event.stopPropagation()">' +
+    '<div class="modal-sec row" style="justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1">' +
+      '<div><div style="font-size:14.5px;font-weight:600">พรีวิวภาพรวมโครงการทั้งหมด</div><div class="muted" style="font-size:12px;margin-top:3px">แสดง '+shown+' โครงการ ตามตัวกรอง/คำค้นหาปัจจุบัน</div></div>' +
+      '<div class="row" style="gap:8px"><button class="btn" data-act="reg-preview-print">พิมพ์</button><button class="btn btn-outline" data-act="reg-preview-close">ปิด</button></div>' +
+    '</div>' +
+    '<div style="border-top:1px solid #f0eae9;overflow-x:auto"><table class="table" style="min-width:680px">' +
+      '<thead><tr><th>ยุทธ · กลุ่ม</th><th>ชื่อโครงการ</th><th>หน่วยงาน</th><th style="text-align:center">สถานะ</th></tr></thead>' +
+      '<tbody>'+(rows || '<tr><td colspan="4" style="padding:24px;text-align:center;color:#9b8f8e">ไม่พบโครงการที่ตรงเงื่อนไข</td></tr>')+'</tbody>' +
+    '</table></div>' +
+  '</div></div>';
 }
 
 /* ---------- settings: departments & users ---------- */
@@ -2639,6 +2667,9 @@ function handleAction(act, el, e){
     render(); return;
   }
   if (act==='set-forms-tab'){ UI.formsTab = ds.ftab; render(); return; }
+  if (act==='reg-preview-all'){ UI.registryPreviewOpen = true; render(); return; }
+  if (act==='reg-preview-close' || act==='reg-preview-close-bg'){ if (act==='reg-preview-close-bg' && e.target!==el) return; UI.registryPreviewOpen = false; render(); return; }
+  if (act==='reg-preview-print'){ window.print(); return; }
   if (act==='open-sample-form'){
     UI.previewProjectId = 'sample-corporate-health'; render(); return;
   }

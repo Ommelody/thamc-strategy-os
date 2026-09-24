@@ -921,21 +921,28 @@ function isTypingNow(){
   var t = (a.tagName||'').toUpperCase();
   return t==='INPUT' || t==='TEXTAREA' || t==='SELECT';
 }
+function syncFingerprint(){
+  try { return JSON.stringify(snapshotOut()); } catch(e){ return ''; }
+}
+// Always merges the sheet in and repaints only when something actually changed.
+// (No revision-number gate: device clocks drift, and a phone whose clock ran ahead
+// would otherwise decide it was always newer than the sheet and never update.)
 function autoSyncTick(){
   if (!D.sheetUrl) return;
   if (CLOUD.busy || CLOUD.pulling || CLOUD.pushTimer || isTypingNow()) return;
-  if (document.querySelector('.modal-backdrop')) return; // don't yank a dialog out from under the user
   CLOUD.busy = true;
   fetchRemote()
     .then(function(r){
       CLOUD.busy = false;
       if (!r.remote || !r.remote.strategies) return;
-      if (r.rev && Number(D.rev||0) >= r.rev) { CLOUD.state='ok'; stampSync(); renderCloudBadge(); return; }
+      var before = syncFingerprint();
       CLOUD.pulling = true;
       applyRemote(r.remote, r.rev);
       CLOUD.pulling = false;
-      saveLocalOnly();
       CLOUD.state='ok'; stampSync();
+      if (syncFingerprint() === before) { renderCloudBadge(); return; }
+      saveLocalOnly();
+      if (isTypingNow()) { renderCloudBadge(); return; }
       render();
     })
     .catch(function(){ CLOUD.busy = false; });
@@ -971,12 +978,7 @@ function cloudPull(opts){
         cloudPush(true);
         render(); return;
       }
-      var remoteRev = Number(res.rev||remote.rev||0), localRev = Number(D.rev||0);
-      if (!opts.force && remoteRev && localRev && remoteRev < localRev) {
-        CLOUD.state='ok'; stampSync();
-        CLOUD.msg='ข้อมูลในเครื่องใหม่กว่าชีต — กด “ส่งขึ้นชีต” เพื่ออัปเดตให้ทุกคน';
-        done(); return;
-      }
+      var remoteRev = Number(res.rev||remote.rev||0);
       if (opts.force) {
         SYNC_KEYS.forEach(function(k){ if (remote[k] !== undefined) D[k] = remote[k]; });
         D.rev = remoteRev || Date.now();

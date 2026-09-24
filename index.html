@@ -723,11 +723,11 @@ function groupKey(s,u,g){ return s.code+'|'+u.id+'|'+g.id; }
 function getEntry(pid, q){ return (D.entries[pid+'__'+q]) || { status:'ยังไม่เริ่ม', percent:0, note:'' }; }
 function setEntry(pid, q, patch){
   var key = pid+'__'+q;
-  D.entries[key] = Object.assign({}, getEntry(pid,q), patch);
+  D.entries[key] = Object.assign({}, getEntry(pid,q), patch, { _t: Date.now() });
   saveData();
 }
 function getDetail(pid){ return Object.assign({ goal:'', objective:'', target:'', output:'', kpi:'', budget:'', area:'', owner:'', ownerUserId:'', deptId:'', deptIds:[], startMonth:0, endMonth:0, subprojects:[], steps:[], kpis:[], phases:[], adminNote:'' }, D.details[pid] || {}); }
-function setDetail(pid, patch){ D.details[pid] = Object.assign({}, getDetail(pid), patch); saveData(); }
+function setDetail(pid, patch){ D.details[pid] = Object.assign({}, getDetail(pid), patch, { _t: Date.now() }); saveData(); }
 function calcKpiPercent(kpis, values){
   var valid = (kpis||[]).filter(function(k){ return Number(k.target)>0; });
   if (!valid.length) return null;
@@ -760,7 +760,7 @@ function getSubKpiValue(pid, subId, q, kid){ return getSubKpiValues(pid,subId,q)
 function setSubKpiValue(pid, subId, q, kid, patch){
   D.subKpiValues = D.subKpiValues || {};
   var key = pid+'__'+subId+'__'+q;
-  D.subKpiValues[key] = Object.assign({}, D.subKpiValues[key]||{});
+  D.subKpiValues[key] = Object.assign({}, D.subKpiValues[key]||{}, { _t: Date.now() });
   D.subKpiValues[key][kid] = Object.assign({}, getSubKpiValue(pid,subId,q,kid), patch);
   saveData();
 }
@@ -768,7 +768,7 @@ function getSubEntry(pid, subId, q){ var key=pid+'__'+subId+'__'+q; return (D.su
 function setSubEntry(pid, subId, q, patch){
   D.subEntries = D.subEntries || {};
   var key = pid+'__'+subId+'__'+q;
-  D.subEntries[key] = Object.assign({}, getSubEntry(pid,subId,q), patch);
+  D.subEntries[key] = Object.assign({}, getSubEntry(pid,subId,q), patch, { _t: Date.now() });
   saveData();
 }
 function getKpiValues(pid, q){ return (D.kpiValues && D.kpiValues[pid+'__'+q]) || {}; }
@@ -776,7 +776,7 @@ function getKpiValue(pid, q, kid){ return getKpiValues(pid,q)[kid] || { current:
 function setKpiValue(pid, q, kid, patch){
   D.kpiValues = D.kpiValues || {};
   var key = pid+'__'+q;
-  D.kpiValues[key] = Object.assign({}, D.kpiValues[key]||{});
+  D.kpiValues[key] = Object.assign({}, D.kpiValues[key]||{}, { _t: Date.now() });
   D.kpiValues[key][kid] = Object.assign({}, getKpiValue(pid,q,kid), patch);
   saveData();
 }
@@ -799,8 +799,48 @@ function pushDetail(pid){
    The whole dataset travels as ONE JSON snapshot with a revision number, so every
    device converges on the same state instead of each keeping its own localStorage copy.
    localStorage stays as the offline cache / fallback when the sheet is unreachable. */
-var CLOUD = { state:'idle', msg:'', lastSync:null, pushTimer:null, pulling:false };
-var SYNC_KEYS = ['strategies','fiscalYears','currentQuarter','entries','details','kpiValues','users','departments','seedVersion','sampleSeeded'];
+var CLOUD = { state:'idle', msg:'', lastSync:null, pushTimer:null, pulling:false, base:null, pollTimer:null, pollMs:9000, busy:false };
+var SYNC_KEYS = ['strategies','fiscalYears','currentQuarter','entries','details','kpiValues','subEntries','subKpiValues','users','departments','seedVersion','sampleSeeded'];
+var RECORD_KEYS = ['entries','details','kpiValues','subEntries','subKpiValues'];
+var STRUCT_KEYS = ['strategies','fiscalYears','currentQuarter','users','departments','seedVersion','sampleSeeded'];
+
+// snapshot of the struct keys exactly as they were at the last successful sync, so a merge
+// can tell "this device changed the structure" from "another device changed it".
+function rememberBase(){
+  CLOUD.base = {};
+  STRUCT_KEYS.forEach(function(k){ try { CLOUD.base[k] = JSON.stringify(D[k]); } catch(e){ CLOUD.base[k] = ''; } });
+}
+function structChangedLocally(k){
+  if (!CLOUD.base) return true;
+  var now = ''; try { now = JSON.stringify(D[k]); } catch(e){}
+  return now !== CLOUD.base[k];
+}
+// record maps merge per KEY using each record's own _t stamp — two devices editing
+// different projects/quarters no longer clobber one another.
+function mergeRecordMap(localMap, remoteMap){
+  var out = Object.assign({}, remoteMap || {});
+  Object.keys(localMap || {}).forEach(function(key){
+    var mine = localMap[key], theirs = out[key];
+    if (!theirs) { out[key] = mine; return; }
+    var mt = Number((mine && mine._t) || 0), tt = Number((theirs && theirs._t) || 0);
+    out[key] = mt >= tt ? mine : theirs;
+  });
+  return out;
+}
+// merges a remote snapshot into D instead of overwriting it wholesale
+function applyRemote(remote, remoteRev){
+  RECORD_KEYS.forEach(function(k){
+    if (remote[k] !== undefined) D[k] = mergeRecordMap(D[k] || {}, remote[k] || {});
+  });
+  STRUCT_KEYS.forEach(function(k){
+    if (remote[k] === undefined) return;
+    if (structChangedLocally(k)) return; // keep this device's newer structure edit; the push will share it
+    D[k] = remote[k];
+  });
+  D.rev = Math.max(Number(remoteRev||0), Number(D.rev||0)) || Date.now();
+  ensureAuthData(D);
+  rememberBase();
+}
 
 function snapshotOut(){
   var out = {};
@@ -821,26 +861,91 @@ function stampSync(){
 }
 
 // Debounced so typing a field doesn't fire one request per keystroke.
+function fetchRemote(){
+  return fetch(D.sheetUrl + (D.sheetUrl.indexOf('?')>-1?'&':'?') + 'type=snapshot&t=' + Date.now())
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      var remote = res && (res.payload || res.data);
+      if (typeof remote === 'string') { try { remote = JSON.parse(remote); } catch(e){ remote = null; } }
+      return { remote: remote, rev: Number((res&&res.rev) || (remote&&remote.rev) || 0) };
+    });
+}
+function sendSnapshot(){
+  D.rev = Date.now();
+  return fetch(D.sheetUrl, {
+    method: 'POST',
+    headers: { 'Content-Type':'text/plain;charset=utf-8' },
+    body: JSON.stringify({ type:'snapshot', rev: D.rev, by: (currentUser()||{}).username||'', payload: snapshotOut() })
+  }).then(function(r){ return r.json().catch(function(){ return {}; }); });
+}
+// Reads the sheet first and merges it under this device's change, so a device holding
+// stale data can no longer wipe out what other people saved in the meantime.
 function cloudPush(immediate){
   if (!D.sheetUrl) return;
   if (CLOUD.pushTimer) clearTimeout(CLOUD.pushTimer);
   var run = function(){
     CLOUD.pushTimer = null;
+    if (CLOUD.busy) { CLOUD.pushTimer = setTimeout(run, 800); return; }
+    CLOUD.busy = true;
     CLOUD.state = 'pushing'; renderCloudBadge();
-    D.rev = Date.now();
-    fetch(D.sheetUrl, {
-      method: 'POST',
-      headers: { 'Content-Type':'text/plain;charset=utf-8' },
-      body: JSON.stringify({ type:'snapshot', rev: D.rev, by: (currentUser()||{}).username||'', payload: snapshotOut() })
-    }).then(function(r){ return r.json().catch(function(){ return {}; }); })
+    fetchRemote()
+      .catch(function(){ return { remote:null, rev:0 }; })
+      .then(function(r){
+        if (r.remote && r.remote.strategies) {
+          CLOUD.pulling = true;
+          applyRemote(r.remote, r.rev);
+          CLOUD.pulling = false;
+        }
+        return sendSnapshot();
+      })
       .then(function(){
         CLOUD.state='ok';
         if (CLOUD.msg && CLOUD.msg.indexOf('ส่งขึ้นชีต')===0) CLOUD.msg='';
-        stampSync(); saveLocalOnly(); renderCloudBadge();
+        stampSync(); rememberBase(); saveLocalOnly(); renderCloudBadge();
+        CLOUD.busy = false;
+        render();
       })
-      .catch(function(){ CLOUD.state='error'; CLOUD.msg='ส่งขึ้นชีตไม่สำเร็จ — บันทึกไว้ในเครื่องแล้ว'; renderCloudBadge(); });
+      .catch(function(){
+        CLOUD.state='error'; CLOUD.msg='ส่งขึ้นชีตไม่สำเร็จ — บันทึกไว้ในเครื่องแล้ว';
+        renderCloudBadge(); CLOUD.busy = false;
+      });
   };
   if (immediate) run(); else CLOUD.pushTimer = setTimeout(run, 1200);
+}
+
+// Background auto-sync: every device keeps pulling on its own, so nobody has to refresh.
+// Skipped while the user is typing in a field or while a push is in flight.
+function isTypingNow(){
+  var a = document.activeElement;
+  if (!a) return false;
+  var t = (a.tagName||'').toUpperCase();
+  return t==='INPUT' || t==='TEXTAREA' || t==='SELECT';
+}
+function autoSyncTick(){
+  if (!D.sheetUrl) return;
+  if (CLOUD.busy || CLOUD.pulling || CLOUD.pushTimer || isTypingNow()) return;
+  if (document.querySelector('.modal-backdrop')) return; // don't yank a dialog out from under the user
+  CLOUD.busy = true;
+  fetchRemote()
+    .then(function(r){
+      CLOUD.busy = false;
+      if (!r.remote || !r.remote.strategies) return;
+      if (r.rev && Number(D.rev||0) >= r.rev) { CLOUD.state='ok'; stampSync(); renderCloudBadge(); return; }
+      CLOUD.pulling = true;
+      applyRemote(r.remote, r.rev);
+      CLOUD.pulling = false;
+      saveLocalOnly();
+      CLOUD.state='ok'; stampSync();
+      render();
+    })
+    .catch(function(){ CLOUD.busy = false; });
+}
+function startAutoSync(){
+  if (CLOUD.pollTimer) clearInterval(CLOUD.pollTimer);
+  CLOUD.pollTimer = setInterval(autoSyncTick, CLOUD.pollMs);
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) autoSyncTick(); });
+  window.addEventListener('online', function(){ autoSyncTick(); });
+  window.addEventListener('focus', function(){ autoSyncTick(); });
 }
 
 function saveLocalOnly(){
@@ -872,9 +977,14 @@ function cloudPull(opts){
         CLOUD.msg='ข้อมูลในเครื่องใหม่กว่าชีต — กด “ส่งขึ้นชีต” เพื่ออัปเดตให้ทุกคน';
         done(); return;
       }
-      SYNC_KEYS.forEach(function(k){ if (remote[k] !== undefined) D[k] = remote[k]; });
-      D.rev = remoteRev || Date.now();
-      ensureAuthData(D);
+      if (opts.force) {
+        SYNC_KEYS.forEach(function(k){ if (remote[k] !== undefined) D[k] = remote[k]; });
+        D.rev = remoteRev || Date.now();
+        ensureAuthData(D);
+        rememberBase();
+      } else {
+        applyRemote(remote, remoteRev);
+      }
       saveLocalOnly();
       CLOUD.state='ok'; CLOUD.msg=''; stampSync();
       done();
@@ -3077,8 +3187,10 @@ document.addEventListener('keydown', function(e){
 });
 
 render();
+rememberBase();
 // the sheet is the source of truth: pick up whatever other devices saved
 if (D.sheetUrl) cloudPull();
+startAutoSync();
 window.onafterprint = function(){
   document.body.classList.remove('printing-project');
   if (UI.printFilter) { UI.printFilter = null; render(); }

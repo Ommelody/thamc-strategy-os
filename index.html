@@ -2256,7 +2256,6 @@ function renderModal(){
       '</div>' +
     '</div>' +
     renderPhasesSection(p.id, det) +
-    renderSubprojectsSection(p.id, det, q) +
     '<div class="modal-sec">' +
       '<div class="row" style="justify-content:space-between;margin-bottom:14px"><div style="font-size:13.5px;font-weight:600">ระยะเวลา / ขั้นตอนดำเนินการ</div><button class="btn btn-ghost" data-act="step-add">+ เพิ่มขั้นตอน</button></div>' +
       '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px">' +
@@ -2265,6 +2264,7 @@ function renderModal(){
       '</div>' +
       '<div class="card" style="padding:12px 14px"><div style="display:flex;margin-bottom:8px">'+monthHeader+'</div>'+stepsHtml+'</div>' +
     '</div>' +
+    renderSubprojectsSection(p.id, det, q) +
     '<div class="modal-sec row" style="border-bottom:none">' +
       '<button class="btn" data-act="modal-save">บันทึกข้อมูล</button>' +
       '<button class="btn btn-outline" data-act="preview-project-form">พรีวิวรายงาน</button>' +
